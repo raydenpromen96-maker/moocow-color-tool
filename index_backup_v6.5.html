@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MooCow Mini 調色ツール / Color Mixing Tool / 调色工具 v6.5 (专业修复版)</title>
+<style>
+/* ======================== CSS 样式 ======================== */
+body {font-family: 'Segoe UI', 'Yu Gothic', 'Hiragino Sans', Tahoma, Geneva, Verdana, sans-serif;margin: 0;padding: 10px;background-color: #f4f4f4;color: #333;transition: all 0.3s ease;font-size: 14px;}
+.container {max-width: 1200px;margin: auto;background: #fff;padding: 20px;border-radius: 12px;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);}
+.header {display: flex;justify-content: space-between;align-items: center;margin-bottom: 20px;border-bottom: 3px solid #3498db;padding-bottom: 10px;flex-wrap: wrap;gap: 10px;}
+h1 {color: #2c3e50;margin: 0;flex: 1;font-size: 1.5em;min-width: 200px;}
+.language-switcher {display: flex;gap: 6px;align-items: center;flex-shrink: 0;}
+.lang-btn {padding: 8px 12px;border: 2px solid #3498db;background: transparent;color: #3498db;border-radius: 6px;cursor: pointer;font-weight: bold;transition: all 0.3s;font-size: 0.85em;min-width: 45px;text-align: center;}
+.lang-btn.active {background: #3498db;color: white;}
+.lang-btn:hover {background: #2980b9;color: white;border-color: #2980b9;}
+.input-section {display: grid;grid-template-columns: 1fr 1fr 1fr;gap: 15px;margin-bottom: 20px;}
+.input-group, .display-area {margin-bottom: 20px;padding: 15px;border: 1px solid #ddd;border-radius: 8px;background: #fafafa;}
+label {display: block;margin-bottom: 8px;font-weight: bold;color: #34495e;font-size: 0.9em;}
+.input-container {position: relative;display: flex;gap: 10px;}
+#ralInput {flex: 1;padding: 12px;font-size: 1em;border: 2px solid #ccc;border-radius: 6px;transition: border-color 0.3s;min-height: 20px;}
+#ralInput:focus {border-color: #3498db;outline: none;}
+#ralSelect, #volumeSelect {flex: 1;padding: 12px;font-size: 1em;border: 2px solid #ccc;border-radius: 6px;background: white;cursor: pointer;min-height: 44px;}
+#ralSelect:focus, #volumeSelect:focus {border-color: #3498db;outline: none;}
+#colorPreview {height: 80px;border: 1px solid #ccc;border-radius: 6px;margin-top: 10px;transition: background-color 0.5s;display: flex;align-items: center;justify-content: center;font-size: 1em;color: #fff;text-shadow: 0 0 5px #000;font-weight: bold;}
+.color-palette {margin-bottom: 20px;padding: 15px;border: 1px solid #ddd;border-radius: 8px;background: #fafafa;}
+.color-palette h3 {margin-top: 0;margin-bottom: 15px;color: #2c3e50;font-size: 1.1em;}
+.color-grid {display: grid;grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));gap: 6px;max-height: 300px;overflow-y: auto;padding: 10px;border: 1px solid #eee;border-radius: 6px;background: white;}
+.color-swatch {width: 100%;height: 50px;border: 2px solid #ddd;border-radius: 6px;cursor: pointer;transition: all 0.3s;position: relative;display: flex;align-items: center;justify-content: center;font-size: 9px;font-weight: bold;text-shadow: 0 0 3px rgba(0,0,0,0.8);color: white;min-height: 50px;}
+.color-swatch:hover {transform: scale(1.05);border-color: #3498db;box-shadow: 0 2px 8px rgba(0,0,0,0.3);z-index: 10;}
+.color-swatch.selected {border-color: #e74c3c;border-width: 3px;transform: scale(1.02);}
+.color-swatch .tooltip {position: absolute;bottom: -35px;left: 50%;transform: translateX(-50%);background: rgba(0,0,0,0.9);color: white;padding: 4px 8px;border-radius: 4px;font-size: 10px;white-space: nowrap;opacity: 0;pointer-events: none;transition: opacity 0.3s;z-index: 20;max-width: 120px;text-align: center;}
+.color-swatch:hover .tooltip {opacity: 1;}
+.details-grid {display: grid;grid-template-columns: 1fr 1fr;gap: 15px;margin-top: 15px;}
+.detail-item {padding: 10px;background: #ecf0f1;border-radius: 4px;}
+.detail-item strong {display: block;color: #2c3e50;}
+#recipeList {list-style: none;padding: 0;}
+#recipeList li {padding: 8px 0;border-bottom: 1px dashed #ddd;display: flex;justify-content: space-between;align-items: center;}
+#recipeList li:last-child {border-bottom: none;}
+.paint-weight {font-weight: bold;color: #27ae60;}
+.paint-weight-grams {font-weight: bold;color: #e67e22;font-size: 1.1em;}
+.error-message {color: #e74c3c;font-weight: bold;text-align: center;margin-top: 20px;}
+.volume-info {background: #e8f5e8;border: 2px solid #27ae60;border-radius: 8px;padding: 12px;margin-top: 10px;text-align: center;}
+.volume-info h4 {margin: 0 0 8px 0;color: #27ae60;font-size: 1em;}
+.volume-display {font-size: 1.1em;font-weight: bold;color: #2c3e50;}
+.color-difference {margin-top: 20px;padding: 15px;border: 1px solid #ddd;border-radius: 8px;background: #f8f9fa;}
+.color-difference h3 {margin-top: 0;margin-bottom: 15px;color: #2c3e50;font-size: 1.1em;}
+.comparison-section {display: grid;grid-template-columns: 1fr 1fr;gap: 15px;margin-bottom: 15px;}
+.color-input-group {padding: 10px;border: 1px solid #ddd;border-radius: 6px;background: white;}
+.color-input-group label {font-size: 0.9em;margin-bottom: 5px;}
+.color-input-group input {width: 100%;padding: 8px;border: 1px solid #ccc;border-radius: 4px;font-size: 0.9em;box-sizing: border-box;}
+.color-input-group input[type="number"] {-moz-appearance: textfield;}
+.color-input-group input[type="number"]::-webkit-outer-spin-button,
+.color-input-group input[type="number"]::-webkit-inner-spin-button {-webkit-appearance: none;margin: 0;}
+.color-preview-small {width: 100%;height: 40px;border: 1px solid #ccc;border-radius: 4px;margin-top: 5px;display: flex;align-items: center;justify-content: center;font-size: 0.8em;font-weight: bold;color: white;text-shadow: 0 0 3px #000;}
+.delta-e-result {text-align: center;padding: 15px;border-radius: 8px;font-weight: bold;font-size: 1.2em;}
+.delta-e-excellent {background: #d4edda;color: #155724;border: 1px solid #c3e6cb;}
+.delta-e-good {background: #fff3cd;color: #856404;border: 1px solid #ffeaa7;}
+.delta-e-poor {background: #f8d7da;color: #721c24;border: 1px solid #f5c6cb;}
+.delta-e-info {margin-top: 10px;font-size: 0.85em;color: #6c757d;text-align: center;}
+.hidden {display: none !important;}
+.debug-info {background: #f8f9fa;border: 1px solid #dee2e6;border-radius: 4px;padding: 10px;margin-top: 10px;font-family: monospace;font-size: 11px;max-height: 200px;overflow-y: auto;}
+.btn {padding: 8px 16px;border: none;border-radius: 6px;cursor: pointer;font-weight: bold;transition: all 0.3s;font-size: 0.9em;}
+.btn-primary {background: #3498db;color: white;}
+.btn-primary:hover {background: #2980b9;}
+.btn-secondary {background: #95a5a6;color: white;}
+.btn-secondary:hover {background: #7f8c8d;}
+@media (max-width: 768px) {body {padding: 5px;font-size: 13px;}.container {padding: 15px;border-radius: 8px;}.header {flex-direction: column;gap: 10px;text-align: center;margin-bottom: 15px;}h1 {font-size: 1.3em;min-width: auto;text-align: center;}.language-switcher {gap: 4px;justify-content: center;}.lang-btn {padding: 6px 10px;font-size: 0.8em;min-width: 40px;}.input-section {grid-template-columns: 1fr;gap: 10px;margin-bottom: 15px;}.input-group {padding: 12px;margin-bottom: 15px;}label {font-size: 0.85em;margin-bottom: 6px;}#ralInput, #ralSelect, #volumeSelect {padding: 10px;font-size: 0.9em;min-height: 40px;}#colorPreview {height: 60px;font-size: 0.9em;margin-top: 8px;}.volume-info {padding: 10px;margin-top: 8px;}.volume-info h4 {font-size: 0.9em;margin-bottom: 6px;}.volume-display {font-size: 1em;}.color-palette {padding: 12px;margin-bottom: 15px;}.color-palette h3 {font-size: 1em;margin-bottom: 10px;}.color-grid {grid-template-columns: repeat(6, 1fr);gap: 4px;max-height: 250px;padding: 8px;}.color-swatch {height: 40px;font-size: 8px;min-height: 40px;}.color-swatch .tooltip {font-size: 9px;padding: 3px 6px;bottom: -30px;}.details-grid {grid-template-columns: 1fr;gap: 10px;}.detail-item {padding: 8px;}.comparison-section {grid-template-columns: 1fr;gap: 10px;}.color-input-group {padding: 8px;}.color-preview-small {height: 35px;font-size: 0.75em;}.delta-e-result {padding: 12px;font-size: 1.1em;}.delta-e-info {font-size: 0.8em;}#recipeList li {flex-direction: column;align-items: flex-start;gap: 5px;padding: 10px 0;}.paint-weight-grams {font-size: 1em;}}
+@media (max-width: 480px) {body {padding: 3px;font-size: 12px;}.container {padding: 10px;}h1 {font-size: 1.2em;}.lang-btn {padding: 5px 8px;font-size: 0.75em;min-width: 35px;}.color-grid {grid-template-columns: repeat(5, 1fr);gap: 3px;}.color-swatch {height: 35px;font-size: 7px;min-height: 35px;}#ralInput, #ralSelect, #volumeSelect {padding: 8px;font-size: 0.85em;}#colorPreview {height: 50px;font-size: 0.8em;}}
+.color-grid::-webkit-scrollbar {width: 6px;}
+.color-grid::-webkit-scrollbar-track {background: #f1f1f1;border-radius: 3px;}
+.color-grid::-webkit-scrollbar-thumb {background: #888;border-radius: 3px;}
+.color-grid::-webkit-scrollbar-thumb:hover {background: #555;}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1><span class="zh">🎨 MooCow Mini 调色工具 v6.5 (专业修复版)</span><span class="en hidden">🎨 MooCow Mini Color Mixing Tool v6.5 (Professional)</span><span class="ja hidden">🎨 MooCow Mini 調色ツール v6.5 (プロ版)</span></h1>
+<div class="language-switcher">
+<button class="lang-btn active" onclick="switchLanguage('zh')">中文</button>
+<button class="lang-btn" onclick="switchLanguage('en')">EN</button>
+<button class="lang-btn" onclick="switchLanguage('ja')">日本語</button>
+</div>
+</div>
+
+<div class="input-section">
+<div class="input-group">
+<label for="ralInput"><span class="zh">输入 RAL 色号 (例如: 3020)</span><span class="en hidden">Enter RAL Color Code (e.g.: 3020)</span><span class="ja hidden">RAL色番号を入力 (例: 3020)</span></label>
+<div class="input-container">
+<input type="text" id="ralInput" placeholder="">
+</div>
+<div id="colorPreview"><span class="zh">输入色号或选择色块进行查询</span><span class="en hidden">Enter color code or select color swatch</span><span class="ja hidden">色番号を入力するか色見本を選択</span></div>
+</div>
+
+<div class="input-group">
+<label for="ralSelect"><span class="zh">或从下拉菜单选择 RAL 色号</span><span class="en hidden">Or select RAL color code from dropdown</span><span class="ja hidden">またはドロップダウンからRAL色番号を選択</span></label>
+<select id="ralSelect">
+<option value=""><span class="zh">请选择 RAL 色号...</span><span class="en hidden">Please select RAL color code...</span><span class="ja hidden">RAL色番号を選択してください...</span></option>
+</select>
+</div>
+
+<div class="input-group">
+<label for="volumeSelect"><span class="zh">选择透明基础漆容量</span><span class="en hidden">Select Clear Base Volume</span><span class="ja hidden">透明ベース塗料の容量を選択</span></label>
+<select id="volumeSelect">
+<option value="500">500ml</option>
+<option value="1000" selected>1L (1000ml)</option>
+<option value="5000">5L (5000ml)</option>
+<option value="20000">20L (20000ml)</option>
+</select>
+<div class="volume-info">
+<h4><span class="zh">选定容量</span><span class="en hidden">Selected Volume</span><span class="ja hidden">選択容量</span></h4>
+<div class="volume-display" id="volumeDisplay">1L (1000ml)</div>
+</div>
+</div>
+</div>
+
+<div class="color-palette">
+<h3><span class="zh">🎨 RAL 色卡选择 (点击色块快速选择)</span><span class="en hidden">🎨 RAL Color Palette (Click to select)</span><span class="ja hidden">🎨 RAL カラーパレット (クリックして選択)</span></h3>
+<div class="color-grid" id="colorGrid">
+<!-- 颜色块将通过JavaScript动态生成 -->
+</div>
+</div>
+
+<div class="display-area" id="colorDisplay" style="display: none;">
+<div class="details-grid">
+<div class="detail-item">
+<strong><span class="zh">颜色信息</span><span class="en hidden">Color Information</span><span class="ja hidden">色情報</span></strong>
+<div id="colorInfo"></div>
+</div>
+<div class="detail-item">
+<strong><span class="zh">颜料配方</span><span class="en hidden">Pigment Recipe</span><span class="ja hidden">顔料配合</span></strong>
+<ul id="recipeList"></ul>
+</div>
+</div>
+</div>
+
+<div class="error-message" id="errorMsg" style="display: none;">
+<span class="zh">未找到该 RAL 色号，请检查输入是否正确</span>
+<span class="en hidden">RAL color code not found, please check your input</span>
+<span class="ja hidden">RAL色番号が見つかりません。入力を確認してください</span>
+</div>
+
+<div class="color-difference">
+<h3><span class="zh">🔬 色差计算 (Delta E)</span><span class="en hidden">🔬 Color Difference (Delta E)</span><span class="ja hidden">🔬 色差計算 (Delta E)</span></h3>
+<div class="comparison-section">
+<div class="color-input-group">
+<label><span class="zh">目标颜色 (LAB值)</span><span class="en hidden">Target Color (LAB Values)</span><span class="ja hidden">目標色 (LAB値)</span></label>
+<input type="number" id="targetL" placeholder="L (0-100)" min="0" max="100" step="0.1">
+<input type="number" id="targetA" placeholder="a (-128 to 127)" min="-128" max="127" step="0.1">
+<input type="number" id="targetB" placeholder="b (-128 to 127)" min="-128" max="127" step="0.1">
+<div class="color-preview-small" id="targetColorPreview"><span class="zh">目标颜色</span><span class="en hidden">Target Color</span><span class="ja hidden">目標色</span></div>
+</div>
+<div class="color-input-group">
+<label><span class="zh">实际颜色 (LAB值)</span><span class="en hidden">Actual Color (LAB Values)</span><span class="ja hidden">実際の色 (LAB値)</span></label>
+<input type="number" id="actualL" placeholder="L (0-100)" min="0" max="100" step="0.1">
+<input type="number" id="actualA" placeholder="a (-128 to 127)" min="-128" max="127" step="0.1">
+<input type="number" id="actualB" placeholder="b (-128 to 127)" min="-128" max="127" step="0.1">
+<div class="color-preview-small" id="actualColorPreview"><span class="zh">实际颜色</span><span class="en hidden">Actual Color</span><span class="ja hidden">実際の色</span></div>
+</div>
+</div>
+<div style="text-align: center; margin-bottom: 15px;">
+<button class="btn btn-primary" onclick="calculateDeltaE()"><span class="zh">计算色差</span><span class="en hidden">Calculate Delta E</span><span class="ja hidden">色差を計算</span></button>
+<button class="btn btn-secondary" onclick="useCurrentColor()"><span class="zh">使用当前颜色</span><span class="en hidden">Use Current Color</span><span class="ja hidden">現在の色を使用</span></button>
+</div>
+<div id="deltaEResult"></div>
+</div>
+
+<div class="debug-info" id="debugInfo" style="display: none;">
+<strong><span class="zh">调试信息</span><span class="en hidden">Debug Information</span><span class="ja hidden">デバッグ情報</span></strong>
+<div id="debugContent"></div>
+</div>
+
+</div>
+
+<script>
+// ======================== 全局变量 ========================
+let currentLanguage = 'zh';
+let currentColorData = null;
+
+// DOM元素引用
+let ralInput, ralSelect, volumeSelect, colorPreview, colorDisplay, errorMsg, recipeList, colorGrid;
+
+// ======================== 修复后的RAL颜色数据 ========================
+const ralPaintMap = {
+    '1000': { name: { zh: '米绿色', en: 'Green beige', ja: 'グリーンベージュ' }, rgb: '#BEBD7F', lab: 'L:75.3, a:-8.2, b:25.4' },
+    '1001': { name: { zh: '米色', en: 'Beige', ja: 'ベージュ' }, rgb: '#C2B078', lab: 'L:72.1, a:-2.1, b:22.8' },
+    '1002': { name: { zh: '沙黄色', en: 'Sand yellow', ja: 'サンドイエロー' }, rgb: '#C6A664', lab: 'L:68.9, a:2.3, b:28.7' },
+    '1003': { name: { zh: '信号黄', en: 'Signal yellow', ja: 'シグナルイエロー' }, rgb: '#E5BE01', lab: 'L:76.2, a:8.1, b:78.9' },
+    '1004': { name: { zh: '金黄', en: 'Golden yellow', ja: 'ゴールデンイエロー' }, rgb: '#CDA434', lab: 'L:67.8, a:12.4, b:65.2' },
+    '1005': { name: { zh: '蜂蜜黄', en: 'Honey yellow', ja: 'ハニーイエロー' }, rgb: '#A98307', lab: 'L:54.2, a:15.6, b:58.3' },
+    '1006': { name: { zh: '玉米黄', en: 'Maize yellow', ja: 'メイズイエロー' }, rgb: '#E4A010', lab: 'L:65.7, a:18.9, b:72.1' },
+    '1007': { name: { zh: '水仙黄', en: 'Daffodil yellow', ja: 'ダフォディルイエロー' }, rgb: '#DC9D00', lab: 'L:64.3, a:21.2, b:75.8' },
+    '1011': { name: { zh: '棕米色', en: 'Brown beige', ja: 'ブラウンベージュ' }, rgb: '#8A6642', lab: 'L:43.2, a:8.7, b:18.9' },
+    '1012': { name: { zh: '柠檬黄', en: 'Lemon yellow', ja: 'レモンイエロー' }, rgb: '#C7B446', lab: 'L:72.5, a:-2.1, b:58.7' },
+    '1013': { name: { zh: '珍珠白', en: 'Oyster white', ja: 'オイスターホワイト' }, rgb: '#EAE6CA', lab: 'L:91.2, a:-2.8, b:12.4' },
+    '1014': { name: { zh: '象牙黄', en: 'Ivory', ja: 'アイボリー' }, rgb: '#E1CC4F', lab: 'L:81.7, a:-8.9, b:65.2' },
+    '1015': { name: { zh: '浅象牙', en: 'Light ivory', ja: 'ライトアイボリー' }, rgb: '#E6D690', lab: 'L:85.3, a:-6.7, b:32.1' },
+    '1016': { name: { zh: '硫黄黄', en: 'Sulphur yellow', ja: 'サルファーイエロー' }, rgb: '#EDFF21', lab: 'L:94.2, a:-18.7, b:89.3' },
+    '1017': { name: { zh: '藏红花黄', en: 'Saffron yellow', ja: 'サフランイエロー' }, rgb: '#F5D033', lab: 'L:83.6, a:2.1, b:78.9' },
+    '1018': { name: { zh: '锌黄', en: 'Zinc yellow', ja: 'ジンクイエロー' }, rgb: '#F8F32B', lab: 'L:91.8, a:-12.3, b:85.7' },
+    '1019': { name: { zh: '灰米色', en: 'Grey beige', ja: 'グレーベージュ' }, rgb: '#9E9764', lab: 'L:61.2, a:-6.8, b:18.9' },
+    '1020': { name: { zh: '橄榄黄', en: 'Olive yellow', ja: 'オリーブイエロー' }, rgb: '#999950', lab: 'L:62.1, a:-8.9, b:32.4' },
+    '1021': { name: { zh: '菜籽黄', en: 'Rape yellow', ja: 'レイプイエロー' }, rgb: '#F3DA0B', lab: 'L:86.7, a:1.2, b:82.3' },
+    '3020': { name: { zh: '交通红', en: 'Traffic red', ja: 'トラフィックレッド' }, rgb: '#B81D13', lab: 'L:40.5, a:59.3, b:48.0' },
+    '9005': { name: { zh: '喷射黑', en: 'Jet black', ja: 'ジェットブラック' }, rgb: '#0A0A0A', lab: 'L:4.2, a:0.1, b:-0.2' },
+    '9010': { name: { zh: '纯白', en: 'Pure white', ja: 'ピュアホワイト' }, rgb: '#F4F4F4', lab: 'L:96.8, a:-0.2, b:1.8' }
+};
+
+// ======================== 修复后的颜料配方系统 ========================
+const PIGMENT_COVERAGE = {
+    'titanium_white': 9.5,    // 钛白粉 - 极高遮盖力
+    'carbon_black': 10.0,     // 炭黑 - 最高遮盖力
+    'iron_oxide_red': 7.0,    // 氧化铁红 - 高遮盖力
+    'iron_oxide_yellow': 6.5, // 氧化铁黄 - 中高遮盖力
+    'ultramarine_blue': 7.5,  // 群青蓝 - 高遮盖力
+    'phthalocyanine_blue': 4.0, // 酞菁蓝 - 中等遮盖力
+    'phthalocyanine_green': 3.5, // 酞菁绿 - 中等遮盖力
+    'quinacridone_violet': 3.0  // 喹吖啶酮紫 - 较低遮盖力
+};
+
+const PIGMENT_NAMES = {
+    'titanium_white': { zh: '钛白粉', en: 'Titanium White', ja: 'チタンホワイト' },
+    'carbon_black': { zh: '炭黑', en: 'Carbon Black', ja: 'カーボンブラック' },
+    'iron_oxide_red': { zh: '氧化铁红', en: 'Iron Oxide Red', ja: '酸化鉄レッド' },
+    'iron_oxide_yellow': { zh: '氧化铁黄', en: 'Iron Oxide Yellow', ja: '酸化鉄イエロー' },
+    'ultramarine_blue': { zh: '群青蓝', en: 'Ultramarine Blue', ja: 'ウルトラマリンブルー' },
+    'phthalocyanine_blue': { zh: '酞菁蓝', en: 'Phthalocyanine Blue', ja: 'フタロシアニンブルー' },
+    'phthalocyanine_green': { zh: '酞菁绿', en: 'Phthalocyanine Green', ja: 'フタロシアニングリーン' },
+    'quinacridone_violet': { zh: '喹吖啶酮紫', en: 'Quinacridone Violet', ja: 'キナクリドンバイオレット' }
+};
+
+const UNITS = {
+    parts: { zh: '份', en: 'parts', ja: '部' },
+    grams: { zh: 'g', en: 'g', ja: 'g' },
+    total_weight: { zh: '总重量', en: 'Total Weight', ja: '総重量' }
+};
+
+// ======================== 修复后的配方计算函数 ========================
+function calculateOptimizedRecipe(L, a, b) {
+    const recipe = {};
+    
+    // 计算色度和色相
+    const chroma = Math.sqrt(a * a + b * b);
+    const hue = Math.atan2(b, a) * 180 / Math.PI;
+    const normalizedHue = hue < 0 ? hue + 360 : hue;
+    
+    // 基础配方计算
+    let baseIntensity = Math.min(chroma / 80, 1.0); // 标准化色度强度
+    
+    // 明度调整 - 修复白色和黑色用量
+    if (L < 20) {
+        // 深色系 - 减少黑色用量，考虑遮盖力
+        const blackAmount = Math.max(0.1, (20 - L) / 20 * 2.0); // 最大2%
+        recipe.carbon_black = Math.round(blackAmount * 10) / 10;
+    } else if (L > 85) {
+        // 浅色系 - 适量白色，避免过度稀释
+        const whiteAmount = Math.max(0.2, (L - 85) / 15 * 1.5); // 最大1.5%
+        recipe.titanium_white = Math.round(whiteAmount * 10) / 10;
+    }
+    
+    // 色相配方 - 基于专业调色经验
+    if (normalizedHue >= 0 && normalizedHue < 60) {
+        // 红-黄区域
+        const redRatio = (60 - normalizedHue) / 60;
+        const yellowRatio = normalizedHue / 60;
+        
+        if (redRatio > 0.1) {
+            recipe.iron_oxide_red = Math.round(redRatio * baseIntensity * 4.0 * 10) / 10;
+        }
+        if (yellowRatio > 0.1) {
+            recipe.iron_oxide_yellow = Math.round(yellowRatio * baseIntensity * 3.5 * 10) / 10;
+        }
+    } else if (normalizedHue >= 60 && normalizedHue < 180) {
+        // 黄-绿-青区域
+        if (normalizedHue < 120) {
+            // 黄-绿
+            const yellowRatio = (120 - normalizedHue) / 60;
+            const greenRatio = (normalizedHue - 60) / 60;
+            
+            if (yellowRatio > 0.1) {
+                recipe.iron_oxide_yellow = Math.round(yellowRatio * baseIntensity * 3.5 * 10) / 10;
+            }
+            if (greenRatio > 0.1) {
+                recipe.phthalocyanine_green = Math.round(greenRatio * baseIntensity * 2.5 * 10) / 10;
+            }
+        } else {
+            // 绿-青
+            const greenRatio = (180 - normalizedHue) / 60;
+            const blueRatio = (normalizedHue - 120) / 60;
+            
+            if (greenRatio > 0.1) {
+                recipe.phthalocyanine_green = Math.round(greenRatio * baseIntensity * 2.5 * 10) / 10;
+            }
+            if (blueRatio > 0.1) {
+                recipe.phthalocyanine_blue = Math.round(blueRatio * baseIntensity * 2.0 * 10) / 10;
+            }
+        }
+    } else if (normalizedHue >= 180 && normalizedHue < 300) {
+        // 青-蓝-紫区域
+        if (normalizedHue < 240) {
+            // 青-蓝
+            const cyanRatio = (240 - normalizedHue) / 60;
+            const blueRatio = (normalizedHue - 180) / 60;
+            
+            if (cyanRatio > 0.1) {
+                recipe.phthalocyanine_blue = Math.round(cyanRatio * baseIntensity * 2.0 * 10) / 10;
+            }
+            if (blueRatio > 0.1) {
+                recipe.ultramarine_blue = Math.round(blueRatio * baseIntensity * 3.0 * 10) / 10;
+            }
+        } else {
+            // 蓝-紫
+            const blueRatio = (300 - normalizedHue) / 60;
+            const violetRatio = (normalizedHue - 240) / 60;
+            
+            if (blueRatio > 0.1) {
+                recipe.ultramarine_blue = Math.round(blueRatio * baseIntensity * 3.0 * 10) / 10;
+            }
+            if (violetRatio > 0.1) {
+                recipe.quinacridone_violet = Math.round(violetRatio * baseIntensity * 2.8 * 10) / 10;
+            }
+        }
+    } else {
+        // 紫-红区域 (300-360)
+        const violetRatio = (360 - normalizedHue) / 60;
+        const redRatio = (normalizedHue - 300) / 60;
+        
+        if (violetRatio > 0.1) {
+            recipe.quinacridone_violet = Math.round(violetRatio * baseIntensity * 2.8 * 10) / 10;
+        }
+        if (redRatio > 0.1) {
+            recipe.iron_oxide_red = Math.round(redRatio * baseIntensity * 4.0 * 10) / 10;
+        }
+    }
+    
+    // 移除过小的用量
+    Object.keys(recipe).forEach(key => {
+        if (recipe[key] < 0.1) {
+            delete recipe[key];
+        }
+    });
+    
+    return recipe;
+}
+
+// 计算颜料重量 - 基于遮盖力和容量
+function calculatePigmentWeight(percentage, volumeMl, pigmentType) {
+    const coverage = PIGMENT_COVERAGE[pigmentType] || 5.0;
+    const baseDensity = 1.2; // 透明基础漆密度 g/ml
+    const pigmentDensity = 3.5; // 平均颜料密度 g/ml
+    
+    // 考虑遮盖力的实际用量调整
+    const adjustedPercentage = percentage / coverage * 5.0;
+    const weightGrams = (volumeMl * baseDensity * adjustedPercentage / 100) * (pigmentDensity / baseDensity);
+    
+    return Math.round(weightGrams * 10) / 10;
+}
+
+// ======================== 修复后的色差计算函数 ========================
+function calculateDeltaE() {
+    try {
+        const targetL = parseFloat(document.getElementById('targetL').value);
+        const targetA = parseFloat(document.getElementById('targetA').value);
+        const targetB = parseFloat(document.getElementById('targetB').value);
+        
+        const actualL = parseFloat(document.getElementById('actualL').value);
+        const actualA = parseFloat(document.getElementById('actualA').value);
+        const actualB = parseFloat(document.getElementById('actualB').value);
+        
+        // 输入验证
+        if (isNaN(targetL) || isNaN(targetA) || isNaN(targetB) || 
+            isNaN(actualL) || isNaN(actualA) || isNaN(actualB)) {
+            throw new Error('请输入完整的LAB值');
+        }
+        
+        if (targetL < 0 || targetL > 100 || actualL < 0 || actualL > 100) {
+            throw new Error('L值必须在0-100之间');
+        }
+        
+        if (targetA < -128 || targetA > 127 || actualA < -128 || actualA > 127 ||
+            targetB < -128 || targetB > 127 || actualB < -128 || actualB > 127) {
+            throw new Error('a和b值必须在-128到127之间');
+        }
+        
+        // CIE76 Delta E计算
+        const deltaL = actualL - targetL;
+        const deltaA = actualA - targetA;
+        const deltaB = actualB - targetB;
+        
+        const deltaE = Math.sqrt(deltaL * deltaL + deltaA * deltaA + deltaB * deltaB);
+        
+        // 显示结果
+        displayDeltaEResult(deltaE);
+        
+        // 更新颜色预览
+        updateColorPreview('targetColorPreview', targetL, targetA, targetB);
+        updateColorPreview('actualColorPreview', actualL, actualA, actualB);
+        
+    } catch (error) {
+        const resultDiv = document.getElementById('deltaEResult');
+        if (resultDiv) {
+            const errorTexts = {
+                zh: '计算错误: ' + error.message,
+                en: 'Calculation error: ' + error.message,
+                ja: '計算エラー: ' + error.message
+            };
+            resultDiv.innerHTML = `<div class="delta-e-result delta-e-poor">${errorTexts[currentLanguage]}</div>`;
+        }
+    }
+}
+
+// 显示Delta E结果
+function displayDeltaEResult(deltaE) {
+    const resultDiv = document.getElementById('deltaEResult');
+    if (!resultDiv) return;
+    
+    let className, description;
+    
+    if (deltaE <= 1.0) {
+        className = 'delta-e-excellent';
+        description = {
+            zh: '优秀 - 人眼几乎无法察觉差异',
+            en: 'Excellent - Barely perceptible difference',
+            ja: '優秀 - 人の目ではほとんど知覚できない差'
+        };
+    } else if (deltaE <= 2.0) {
+        className = 'delta-e-good';
+        description = {
+            zh: '良好 - 仔细观察可察觉差异',
+            en: 'Good - Perceptible through close observation',
+            ja: '良好 - 注意深く観察すると知覚できる差'
+        };
+    } else if (deltaE <= 3.5) {
+        className = 'delta-e-good';
+        description = {
+            zh: '可接受 - 一眼就能察觉差异',
+            en: 'Acceptable - Perceptible at a glance',
+            ja: '許容範囲 - 一目で知覚できる差'
+        };
+    } else {
+        className = 'delta-e-poor';
+        description = {
+            zh: '不可接受 - 明显的颜色差异',
+            en: 'Unacceptable - Obvious color difference',
+            ja: '許容不可 - 明らかな色の違い'
+        };
+    }
+    
+    const deltaETexts = {
+        zh: 'Delta E',
+        en: 'Delta E',
+        ja: 'Delta E'
+    };
+    
+    resultDiv.innerHTML = `
+        <div class="delta-e-result ${className}">
+            ${deltaETexts[currentLanguage]}: ${Math.round(deltaE * 100) / 100}
+        </div>
+        <div class="delta-e-info">${description[currentLanguage]}</div>
+    `;
+}
+
+// 使用当前颜色填充目标LAB值
+function useCurrentColor() {
+    if (!currentColorData) {
+        const errorTexts = {
+            zh: '请先选择一个RAL颜色',
+            en: 'Please select a RAL color first',
+            ja: '最初にRAL色を選択してください'
+        };
+        alert(errorTexts[currentLanguage]);
+        return;
+    }
+    
+    try {
+        const labMatch = currentColorData.lab.match(/L:([\d.-]+), a:([\d.-]+), b:([\d.-]+)/);
+        if (labMatch) {
+            const L = parseFloat(labMatch[1]);
+            const a = parseFloat(labMatch[2]);
+            const b = parseFloat(labMatch[3]);
+            
+            document.getElementById('targetL').value = L;
+            document.getElementById('targetA').value = a;
+            document.getElementById('targetB').value = b;
+            
+            updateColorPreview('targetColorPreview', L, a, b);
+        }
+    } catch (error) {
+        console.error('使用当前颜色失败:', error);
+    }
+}
+
+// 更新颜色预览
+function updateColorPreview(previewId, L, a, b) {
+    const preview = document.getElementById(previewId);
+    if (!preview) return;
+    
+    try {
+        const rgb = labToRgb(L, a, b);
+        const rgbColor = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+        preview.style.backgroundColor = rgbColor;
+        
+        // 自适应文字颜色
+        const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+        preview.style.color = brightness > 128 ? '#000' : '#fff';
+        
+        const labText = `L:${Math.round(L*10)/10} a:${Math.round(a*10)/10} b:${Math.round(b*10)/10}`;
+        preview.innerHTML = labText;
+        
+    } catch (error) {
+        preview.style.backgroundColor = '#ccc';
+        preview.style.color = '#666';
+        preview.innerHTML = 'Invalid';
+    }
+}
+
+// LAB到RGB转换 (修复版)
+function labToRgb(L, a, b) {
+    // LAB to XYZ
+    let y = (L + 16) / 116;
+    let x = a / 500 + y;
+    let z = y - b / 200;
+    
+    const delta = 6 / 29;
+    const deltaSquared = delta * delta;
+    const deltaCubed = delta * delta * delta;
+    
+    x = x > delta ? x * x * x : 3 * deltaSquared * (x - 4 / 29);
+    y = y > delta ? y * y * y : 3 * deltaSquared * (y - 4 / 29);
+    z = z > delta ? z * z * z : 3 * deltaSquared * (z - 4 / 29);
+    
+    // D65标准光源
+    x *= 95.047;
+    y *= 100.000;
+    z *= 108.883;
+    
+    // XYZ to RGB (sRGB)
+    let r = x * 3.2406 + y * -1.5372 + z * -0.4986;
+    let g = x * -0.9689 + y * 1.8758 + z * 0.0415;
+    let bl = x * 0.0557 + y * -0.2040 + z * 1.0570;
+    
+    // 伽马校正
+    r = r > 0.0031308 ? 1.055 * Math.pow(r, 1 / 2.4) - 0.055 : 12.92 * r;
+    g = g > 0.0031308 ? 1.055 * Math.pow(g, 1 / 2.4) - 0.055 : 12.92 * g;
+    bl = bl > 0.0031308 ? 1.055 * Math.pow(bl, 1 / 2.4) - 0.055 : 12.92 * bl;
+    
+    // 限制范围并转换为整数
+    r = Math.max(0, Math.min(255, Math.round(r * 255)));
+    g = Math.max(0, Math.min(255, Math.round(g * 255)));
+    bl = Math.max(0, Math.min(255, Math.round(bl * 255)));
+    
+    return { r, g, b: bl };
+}
+
+// ======================== 其他功能函数 ========================
+function switchLanguage(lang) {
+    currentLanguage = lang;
+    
+    // 更新语言按钮状态
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`[onclick="switchLanguage('${lang}')"]`).classList.add('active');
+    
+    // 显示/隐藏对应语言的文本
+    ['zh', 'en', 'ja'].forEach(l => {
+        const elements = document.querySelectorAll(`.${l}`);
+        elements.forEach(el => {
+            if (l === lang) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        });
+    });
+    
+    // 更新输入框占位符
+    updatePlaceholders();
+    
+    // 更新容量显示
+    updateVolumeDisplay();
+    
+    // 重新生成颜色网格（更新工具提示）
+    generateColorGrid();
+}
+
+function updatePlaceholders() {
+    const placeholders = {
+        zh: '请输入 RAL 四位色号',
+        en: 'Enter 4-digit RAL code',
+        ja: 'RAL 4桁コードを入力'
+    };
+    
+    if (ralInput) {
+        ralInput.placeholder = placeholders[currentLanguage];
+    }
+}
+
+function updateVolumeDisplay() {
+    const volumeDisplay = document.getElementById('volumeDisplay');
+    if (!volumeDisplay || !volumeSelect) return;
+    
+    const volume = volumeSelect.value;
+    const displays = {
+        '500': { zh: '500ml', en: '500ml', ja: '500ml' },
+        '1000': { zh: '1L (1000ml)', en: '1L (1000ml)', ja: '1L (1000ml)' },
+        '5000': { zh: '5L (5000ml)', en: '5L (5000ml)', ja: '5L (5000ml)' },
+        '20000': { zh: '20L (20000ml)', en: '20L (20000ml)', ja: '20L (20000ml)' }
+    };
+    
+    volumeDisplay.textContent = displays[volume][currentLanguage];
+}
+
+function generateColorGrid() {
+    if (!colorGrid) return;
+    
+    colorGrid.innerHTML = '';
+    
+    Object.entries(ralPaintMap).forEach(([code, data]) => {
+        const swatch = document.createElement('div');
+        swatch.className = 'color-swatch';
+        swatch.style.backgroundColor = data.rgb;
+        swatch.textContent = code;
+        swatch.onclick = () => selectColor(code);
+        
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tooltip';
+        tooltip.textContent = `RAL ${code} - ${data.name[currentLanguage]}`;
+        swatch.appendChild(tooltip);
+        
+        colorGrid.appendChild(swatch);
+    });
+}
+
+function selectColor(ralCode) {
+    // 移除之前选中的状态
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+        swatch.classList.remove('selected');
+    });
+    
+    // 添加选中状态
+    event.target.classList.add('selected');
+    
+    // 更新输入框和显示
+    if (ralInput) ralInput.value = ralCode;
+    if (ralSelect) ralSelect.value = ralCode;
+    
+    displayColorInfo(ralCode);
+}
+
+function displayColorInfo(ralCode) {
+    const colorData = ralPaintMap[ralCode];
+    if (!colorData) {
+        showError();
+        return;
+    }
+    
+    currentColorData = colorData;
+    
+    try {
+        // 显示颜色信息
+        if (colorDisplay) colorDisplay.style.display = 'block';
+        if (errorMsg) errorMsg.style.display = 'none';
+        
+        // 更新颜色预览
+        if (colorPreview) {
+            colorPreview.style.backgroundColor = colorData.rgb;
+            colorPreview.innerHTML = `RAL ${ralCode}`;
+            
+            // 自适应文字颜色
+            const rgb = hexToRgb(colorData.rgb);
+            if (rgb) {
+                const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+                colorPreview.style.color = brightness > 128 ? '#000' : '#fff';
+            }
+        }
+        
+        // 更新颜色信息
+        const colorInfo = document.getElementById('colorInfo');
+        if (colorInfo) {
+            const infoTexts = {
+                zh: `RAL ${ralCode} - ${colorData.name.zh}<br>RGB: ${colorData.rgb}<br>LAB: ${colorData.lab}`,
+                en: `RAL ${ralCode} - ${colorData.name.en}<br>RGB: ${colorData.rgb}<br>LAB: ${colorData.lab}`,
+                ja: `RAL ${ralCode} - ${colorData.name.ja}<br>RGB: ${colorData.rgb}<br>LAB: ${colorData.lab}`
+            };
+            colorInfo.innerHTML = infoTexts[currentLanguage];
+        }
+        
+        // 解析LAB值并计算配方
+        const labMatch = colorData.lab.match(/L:([\d.-]+), a:([\d.-]+), b:([\d.-]+)/);
+        if (labMatch) {
+            const L = parseFloat(labMatch[1]);
+            const a = parseFloat(labMatch[2]);
+            const b = parseFloat(labMatch[3]);
+            
+            displayRecipe(L, a, b);
+            showDebugInfo(ralCode, L, a, b);
+        }
+        
+    } catch (error) {
+        console.error('Display color info error:', error);
+        showError();
+    }
+}
+
+function displayRecipe(L, a, b) {
+    if (!recipeList) return;
+    
+    try {
+        const selectedVolume = parseInt(volumeSelect.value);
+        const recipe = calculateOptimizedRecipe(L, a, b);
+        
+        recipeList.innerHTML = '';
+        let totalWeight = 0;
+        
+        for (const [paint, percentage] of Object.entries(recipe)) {
+            if (percentage > 0) {
+                const li = document.createElement('li');
+                const paintName = PIGMENT_NAMES[paint] ? PIGMENT_NAMES[paint][currentLanguage] : paint;
+                const partText = UNITS.parts[currentLanguage];
+                const weightText = UNITS.grams[currentLanguage];
+                const weight = calculatePigmentWeight(percentage, selectedVolume, paint);
+                totalWeight += weight;
+                
+                li.innerHTML = `<span>${paintName}</span><div><span class="paint-weight">${percentage} ${partText}</span><br><span class="paint-weight-grams">${weight} ${weightText}</span></div>`;
+                recipeList.appendChild(li);
+            }
+        }
+        
+        // 添加总重量
+        if (totalWeight > 0) {
+            const totalLi = document.createElement('li');
+            totalLi.style.borderTop = '2px solid #3498db';
+            totalLi.style.fontWeight = 'bold';
+            totalLi.innerHTML = `<span>${UNITS.total_weight[currentLanguage]}</span><span class="paint-weight-grams">${Math.round(totalWeight * 10) / 10}g</span>`;
+            recipeList.appendChild(totalLi);
+        }
+        
+    } catch (error) {
+        console.error('配方显示错误:', error);
+        const errorTexts = {
+            zh: '配方计算错误',
+            en: 'Recipe calculation error',
+            ja: '配合計算エラー'
+        };
+        recipeList.innerHTML = `<li style="color: red;">${errorTexts[currentLanguage]}</li>`;
+    }
+}
+
+function showDebugInfo(ralCode, L, a, b) {
+    const debugInfo = document.getElementById('debugInfo');
+    const debugContent = document.getElementById('debugContent');
+    if (debugInfo && debugContent) {
+        try {
+            const recipe = calculateOptimizedRecipe(L, a, b);
+            const chroma = Math.sqrt(a * a + b * b);
+            const hue = Math.atan2(b, a) * 180 / Math.PI;
+            const normalizedHue = hue < 0 ? hue + 360 : hue;
+            
+            const debugLabels = {
+                zh: { ral: 'RAL', lab: 'LAB', chroma: '色度', hue: '色相', recipe: '配方' },
+                en: { ral: 'RAL', lab: 'LAB', chroma: 'Chroma', hue: 'Hue', recipe: 'Recipe' },
+                ja: { ral: 'RAL', lab: 'LAB', chroma: '彩度', hue: '色相', recipe: '配合' }
+            };
+            const labels = debugLabels[currentLanguage];
+            
+            debugContent.innerHTML = `${labels.ral}: ${ralCode}<br>${labels.lab}: L=${L}, a=${a}, b=${b}<br>${labels.chroma}: ${Math.round(chroma * 100) / 100}<br>${labels.hue}: ${Math.round(normalizedHue * 100) / 100}°<br>${labels.recipe}: ${JSON.stringify(recipe, null, 2)}`;
+            
+            // 检查URL参数是否显示调试信息
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('debug') === 'true') {
+                debugInfo.style.display = 'block';
+            }
+        } catch (error) {
+            const errorTexts = {
+                zh: '调试信息错误',
+                en: 'Debug info error',
+                ja: 'デバッグ情報エラー'
+            };
+            debugContent.innerHTML = `${errorTexts[currentLanguage]}: ${error.message}`;
+        }
+    }
+}
+
+function hideColorInfo() {
+    if (colorDisplay) colorDisplay.style.display = 'none';
+    if (errorMsg) errorMsg.style.display = 'none';
+    if (colorPreview) {
+        colorPreview.style.backgroundColor = '#ccc';
+        const previewTexts = {
+            zh: '输入色号或选择色块进行查询',
+            en: 'Enter color code or select color swatch',
+            ja: '色番号を入力するか色見本を選択'
+        };
+        colorPreview.innerHTML = previewTexts[currentLanguage];
+    }
+    currentColorData = null;
+}
+
+function showError() {
+    if (colorDisplay) colorDisplay.style.display = 'none';
+    if (errorMsg) errorMsg.style.display = 'block';
+    if (colorPreview) {
+        colorPreview.style.backgroundColor = '#e74c3c';
+        const errorTexts = {
+            zh: '未找到该 RAL 色号',
+            en: 'RAL color code not found',
+            ja: 'RAL色番号が見つかりません'
+        };
+        colorPreview.innerHTML = errorTexts[currentLanguage];
+    }
+    currentColorData = null;
+}
+
+function hexToRgb(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
+function populateRalSelect() {
+    if (!ralSelect) return;
+    
+    // 清空现有选项（保留第一个默认选项）
+    while (ralSelect.children.length > 1) {
+        ralSelect.removeChild(ralSelect.lastChild);
+    }
+    
+    // 添加RAL颜色选项
+    Object.entries(ralPaintMap).forEach(([code, data]) => {
+        const option = document.createElement('option');
+        option.value = code;
+        option.textContent = `RAL ${code} - ${data.name[currentLanguage]}`;
+        ralSelect.appendChild(option);
+    });
+}
+
+function initializePage() {
+    try {
+        // 获取DOM元素引用
+        ralInput = document.getElementById('ralInput');
+        ralSelect = document.getElementById('ralSelect');
+        volumeSelect = document.getElementById('volumeSelect');
+        colorPreview = document.getElementById('colorPreview');
+        colorDisplay = document.getElementById('colorDisplay');
+        errorMsg = document.getElementById('errorMsg');
+        recipeList = document.getElementById('recipeList');
+        colorGrid = document.getElementById('colorGrid');
+        
+        // 检查必要元素是否存在
+        if (!ralInput || !ralSelect || !volumeSelect || !colorPreview) {
+            console.error('关键DOM元素未找到');
+            return;
+        }
+        
+        // 初始化界面
+        updatePlaceholders();
+        updateVolumeDisplay();
+        populateRalSelect();
+        generateColorGrid();
+        setupEventListeners();
+        
+        console.log('页面初始化完成');
+        
+    } catch (error) {
+        console.error('页面初始化失败:', error);
+    }
+}
+
+function setupEventListeners() {
+    try {
+        // RAL输入框事件
+        if (ralInput) {
+            ralInput.addEventListener('input', function() {
+                const value = this.value.trim().toUpperCase();
+                if (/^\d{4}$/.test(value)) {
+                    displayColorInfo(value);
+                    if (ralSelect) ralSelect.value = value;
+                } else {
+                    hideColorInfo();
+                    if (ralSelect) ralSelect.value = '';
+                }
+            });
+            
+            ralInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const value = this.value.trim().toUpperCase();
+                    if (/^\d{4}$/.test(value)) {
+                        displayColorInfo(value);
+                    }
+                }
+            });
+        }
+        
+        // RAL下拉菜单事件
+        if (ralSelect) {
+            ralSelect.addEventListener('change', function() {
+                const selectedValue = this.value;
+                if (selectedValue) {
+                    if (ralInput) ralInput.value = selectedValue;
+                    displayColorInfo(selectedValue);
+                } else {
+                    if (ralInput) ralInput.value = '';
+                    hideColorInfo();
+                }
+            });
+        }
+        
+        // 容量选择事件
+        if (volumeSelect) {
+            volumeSelect.addEventListener('change', function() {
+                updateVolumeDisplay();
+                if (ralInput && ralInput.value.trim()) {
+                    const currentRal = ralInput.value.trim();
+                    if (/^\d{4}$/.test(currentRal)) {
+                        displayColorInfo(currentRal);
+                    }
+                }
+            });
+        }
+        
+        // LAB输入框事件 (修复版)
+        const labInputs = ['targetL', 'targetA', 'targetB', 'actualL', 'actualA', 'actualB'];
+        labInputs.forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener('input', function() {
+                    const isTarget = id.startsWith('target');
+                    const previewId = isTarget ? 'targetColorPreview' : 'actualColorPreview';
+                    const lInput = document.getElementById(isTarget ? 'targetL' : 'actualL');
+                    const aInput = document.getElementById(isTarget ? 'targetA' : 'actualA');
+                    const bInput = document.getElementById(isTarget ? 'targetB' : 'actualB');
+                    
+                    if (lInput && aInput && bInput) {
+                        const L = parseFloat(lInput.value);
+                        const a = parseFloat(aInput.value);
+                        const b = parseFloat(bInput.value);
+                        
+                        if (!isNaN(L) && !isNaN(a) && !isNaN(b)) {
+                            updateColorPreview(previewId, L, a, b);
+                        }
+                    }
+                });
+            }
+        });
+        
+        console.log('事件监听器设置完成');
+    } catch (error) {
+        console.error('事件监听器设置失败:', error);
+        return false;
+    }
+}
+
+// 页面加载完成后初始化
+window.addEventListener('DOMContentLoaded', function() {
+    initializePage();
+});
+
+// 备用初始化（防止DOMContentLoaded已经触发）
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        initializePage();
+    });
+} else {
+    initializePage();
+}
+
+// 全局函数暴露（供HTML中的onclick使用）
+window.switchLanguage = switchLanguage;
+window.selectColor = selectColor;
+window.displayColorInfo = displayColorInfo;
+window.calculateDeltaE = calculateDeltaE;
+window.useCurrentColor = useCurrentColor;
+
+// 调试函数（可在控制台使用）
+window.debugColorTool = function() {
+    console.log('RAL颜色数据:', ralPaintMap);
+    console.log('当前语言:', currentLanguage);
+    console.log('当前颜色数据:', currentColorData);
+    console.log('DOM元素状态:', {
+        ralInput: !!ralInput,
+        ralSelect: !!ralSelect,
+        volumeSelect: !!volumeSelect,
+        colorPreview: !!colorPreview,
+        colorDisplay: !!colorDisplay,
+        errorMsg: !!errorMsg,
+        recipeList: !!recipeList,
+        colorGrid: !!colorGrid
+    });
+};
+
+</script>
+</body>
+</html>
