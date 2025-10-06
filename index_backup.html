@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MooCow Mini 調色ツール / Color Mixing Tool / 调色工具 v6.4 (修复优化版)</title>
+<style>
+/* ======================== CSS 样式 ======================== */
+body {font-family: 'Segoe UI', 'Yu Gothic', 'Hiragino Sans', Tahoma, Geneva, Verdana, sans-serif;margin: 0;padding: 10px;background-color: #f4f4f4;color: #333;transition: all 0.3s ease;font-size: 14px;}
+.container {max-width: 1200px;margin: auto;background: #fff;padding: 20px;border-radius: 12px;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);}
+.header {display: flex;justify-content: space-between;align-items: center;margin-bottom: 20px;border-bottom: 3px solid #3498db;padding-bottom: 10px;flex-wrap: wrap;gap: 10px;}
+h1 {color: #2c3e50;margin: 0;flex: 1;font-size: 1.5em;min-width: 200px;}
+.language-switcher {display: flex;gap: 6px;align-items: center;flex-shrink: 0;}
+.lang-btn {padding: 8px 12px;border: 2px solid #3498db;background: transparent;color: #3498db;border-radius: 6px;cursor: pointer;font-weight: bold;transition: all 0.3s;font-size: 0.85em;min-width: 45px;text-align: center;}
+.lang-btn.active {background: #3498db;color: white;}
+.lang-btn:hover {background: #2980b9;color: white;border-color: #2980b9;}
+.input-section {display: grid;grid-template-columns: 1fr 1fr 1fr;gap: 15px;margin-bottom: 20px;}
+.input-group, .display-area {margin-bottom: 20px;padding: 15px;border: 1px solid #ddd;border-radius: 8px;background: #fafafa;}
+label {display: block;margin-bottom: 8px;font-weight: bold;color: #34495e;font-size: 0.9em;}
+.input-container {position: relative;display: flex;gap: 10px;}
+#ralInput {flex: 1;padding: 12px;font-size: 1em;border: 2px solid #ccc;border-radius: 6px;transition: border-color 0.3s;min-height: 20px;}
+#ralInput:focus {border-color: #3498db;outline: none;}
+#ralSelect, #volumeSelect {flex: 1;padding: 12px;font-size: 1em;border: 2px solid #ccc;border-radius: 6px;background: white;cursor: pointer;min-height: 44px;}
+#ralSelect:focus, #volumeSelect:focus {border-color: #3498db;outline: none;}
+#colorPreview {height: 80px;border: 1px solid #ccc;border-radius: 6px;margin-top: 10px;transition: background-color 0.5s;display: flex;align-items: center;justify-content: center;font-size: 1em;color: #fff;text-shadow: 0 0 5px #000;font-weight: bold;}
+.color-palette {margin-bottom: 20px;padding: 15px;border: 1px solid #ddd;border-radius: 8px;background: #fafafa;}
+.color-palette h3 {margin-top: 0;margin-bottom: 15px;color: #2c3e50;font-size: 1.1em;}
+.color-grid {display: grid;grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));gap: 6px;max-height: 300px;overflow-y: auto;padding: 10px;border: 1px solid #eee;border-radius: 6px;background: white;}
+.color-swatch {width: 100%;height: 50px;border: 2px solid #ddd;border-radius: 6px;cursor: pointer;transition: all 0.3s;position: relative;display: flex;align-items: center;justify-content: center;font-size: 9px;font-weight: bold;text-shadow: 0 0 3px rgba(0,0,0,0.8);color: white;min-height: 50px;}
+.color-swatch:hover {transform: scale(1.05);border-color: #3498db;box-shadow: 0 2px 8px rgba(0,0,0,0.3);z-index: 10;}
+.color-swatch.selected {border-color: #e74c3c;border-width: 3px;transform: scale(1.02);}
+.color-swatch .tooltip {position: absolute;bottom: -35px;left: 50%;transform: translateX(-50%);background: rgba(0,0,0,0.9);color: white;padding: 4px 8px;border-radius: 4px;font-size: 10px;white-space: nowrap;opacity: 0;pointer-events: none;transition: opacity 0.3s;z-index: 20;max-width: 120px;text-align: center;}
+.color-swatch:hover .tooltip {opacity: 1;}
+.details-grid {display: grid;grid-template-columns: 1fr 1fr;gap: 15px;margin-top: 15px;}
+.detail-item {padding: 10px;background: #ecf0f1;border-radius: 4px;}
+.detail-item strong {display: block;color: #2c3e50;}
+#recipeList {list-style: none;padding: 0;}
+#recipeList li {padding: 8px 0;border-bottom: 1px dashed #ddd;display: flex;justify-content: space-between;align-items: center;}
+#recipeList li:last-child {border-bottom: none;}
+.paint-weight {font-weight: bold;color: #27ae60;}
+.paint-weight-grams {font-weight: bold;color: #e67e22;font-size: 1.1em;}
+.error-message {color: #e74c3c;font-weight: bold;text-align: center;margin-top: 20px;}
+.volume-info {background: #e8f5e8;border: 2px solid #27ae60;border-radius: 8px;padding: 12px;margin-top: 10px;text-align: center;}
+.volume-info h4 {margin: 0 0 8px 0;color: #27ae60;font-size: 1em;}
+.volume-display {font-size: 1.1em;font-weight: bold;color: #2c3e50;}
+.color-difference {margin-top: 20px;padding: 15px;border: 1px solid #ddd;border-radius: 8px;background: #f8f9fa;}
+.color-difference h3 {margin-top: 0;margin-bottom: 15px;color: #2c3e50;font-size: 1.1em;}
+.comparison-section {display: grid;grid-template-columns: 1fr 1fr;gap: 15px;margin-bottom: 15px;}
+.color-input-group {padding: 10px;border: 1px solid #ddd;border-radius: 6px;background: white;}
+.color-input-group label {font-size: 0.9em;margin-bottom: 5px;}
+.color-input-group input {width: 100%;padding: 8px;border: 1px solid #ccc;border-radius: 4px;font-size: 0.9em;}
+.color-preview-small {width: 100%;height: 40px;border: 1px solid #ccc;border-radius: 4px;margin-top: 5px;display: flex;align-items: center;justify-content: center;font-size: 0.8em;font-weight: bold;color: white;text-shadow: 0 0 3px #000;}
+.delta-e-result {text-align: center;padding: 15px;border-radius: 8px;font-weight: bold;font-size: 1.2em;}
+.delta-e-excellent {background: #d4edda;color: #155724;border: 1px solid #c3e6cb;}
+.delta-e-good {background: #fff3cd;color: #856404;border: 1px solid #ffeaa7;}
+.delta-e-poor {background: #f8d7da;color: #721c24;border: 1px solid #f5c6cb;}
+.delta-e-info {margin-top: 10px;font-size: 0.85em;color: #6c757d;text-align: center;}
+.hidden {display: none !important;}
+.debug-info {background: #f8f9fa;border: 1px solid #dee2e6;border-radius: 4px;padding: 10px;margin-top: 10px;font-family: monospace;font-size: 11px;max-height: 200px;overflow-y: auto;}
+.btn {padding: 8px 16px;border: none;border-radius: 6px;cursor: pointer;font-weight: bold;transition: all 0.3s;font-size: 0.9em;}
+.btn-primary {background: #3498db;color: white;}
+.btn-primary:hover {background: #2980b9;}
+.btn-secondary {background: #95a5a6;color: white;}
+.btn-secondary:hover {background: #7f8c8d;}
+@media (max-width: 768px) {body {padding: 5px;font-size: 13px;}.container {padding: 15px;border-radius: 8px;}.header {flex-direction: column;gap: 10px;text-align: center;margin-bottom: 15px;}h1 {font-size: 1.3em;min-width: auto;text-align: center;}.language-switcher {gap: 4px;justify-content: center;}.lang-btn {padding: 6px 10px;font-size: 0.8em;min-width: 40px;}.input-section {grid-template-columns: 1fr;gap: 10px;margin-bottom: 15px;}.input-group {padding: 12px;margin-bottom: 15px;}label {font-size: 0.85em;margin-bottom: 6px;}#ralInput, #ralSelect, #volumeSelect {padding: 10px;font-size: 0.9em;min-height: 40px;}#colorPreview {height: 60px;font-size: 0.9em;margin-top: 8px;}.volume-info {padding: 10px;margin-top: 8px;}.volume-info h4 {font-size: 0.9em;margin-bottom: 6px;}.volume-display {font-size: 1em;}.color-palette {padding: 12px;margin-bottom: 15px;}.color-palette h3 {font-size: 1em;margin-bottom: 10px;}.color-grid {grid-template-columns: repeat(6, 1fr);gap: 4px;max-height: 250px;padding: 8px;}.color-swatch {height: 40px;font-size: 8px;min-height: 40px;}.color-swatch .tooltip {font-size: 9px;padding: 3px 6px;bottom: -30px;}.details-grid {grid-template-columns: 1fr;gap: 10px;}.detail-item {padding: 8px;}.comparison-section {grid-template-columns: 1fr;gap: 10px;}.color-input-group {padding: 8px;}.color-preview-small {height: 35px;font-size: 0.75em;}.delta-e-result {padding: 12px;font-size: 1.1em;}.delta-e-info {font-size: 0.8em;}#recipeList li {flex-direction: column;align-items: flex-start;gap: 5px;padding: 10px 0;}.paint-weight-grams {font-size: 1em;}}
+@media (max-width: 480px) {body {padding: 3px;font-size: 12px;}.container {padding: 10px;}h1 {font-size: 1.2em;}.lang-btn {padding: 5px 8px;font-size: 0.75em;min-width: 35px;}.color-grid {grid-template-columns: repeat(5, 1fr);gap: 3px;}.color-swatch {height: 35px;font-size: 7px;min-height: 35px;}#ralInput, #ralSelect, #volumeSelect {padding: 8px;font-size: 0.85em;}#colorPreview {height: 50px;font-size: 0.8em;}}
+.color-grid::-webkit-scrollbar {width: 6px;}
+.color-grid::-webkit-scrollbar-track {background: #f1f1f1;border-radius: 3px;}
+.color-grid::-webkit-scrollbar-thumb {background: #888;border-radius: 3px;}
+.color-grid::-webkit-scrollbar-thumb:hover {background: #555;}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1><span class="zh">🎨 MooCow Mini 调色工具 v6.4 (修复优化版)</span><span class="en hidden">🎨 MooCow Mini Color Mixing Tool v6.4 (Fixed)</span><span class="ja hidden">🎨 MooCow Mini 調色ツール v6.4 (修正版)</span></h1>
+<div class="language-switcher">
+<button class="lang-btn active" onclick="switchLanguage('zh')">中文</button>
+<button class="lang-btn" onclick="switchLanguage('en')">EN</button>
+<button class="lang-btn" onclick="switchLanguage('ja')">日本語</button>
+</div>
+</div>
+
+<div class="input-section">
+<div class="input-group">
+<label for="ralInput"><span class="zh">输入 RAL 色号 (例如: 3020)</span><span class="en hidden">Enter RAL Color Code (e.g.: 3020)</span><span class="ja hidden">RAL色番号を入力 (例: 3020)</span></label>
+<div class="input-container">
+<input type="text" id="ralInput" placeholder="">
+</div>
+<div id="colorPreview"><span class="zh">输入色号或选择色块进行查询</span><span class="en hidden">Enter color code or select color swatch</span><span class="ja hidden">色番号を入力するか色見本を選択</span></div>
+</div>
+
+<div class="input-group">
+<label for="ralSelect"><span class="zh">或从下拉菜单选择 RAL 色号</span><span class="en hidden">Or select RAL color code from dropdown</span><span class="ja hidden">またはドロップダウンからRAL色番号を選択</span></label>
+<select id="ralSelect">
+<option value=""><span class="zh">请选择 RAL 色号...</span><span class="en hidden">Please select RAL color code...</span><span class="ja hidden">RAL色番号を選択してください...</span></option>
+</select>
+</div>
+
+<div class="input-group">
+<label for="volumeSelect"><span class="zh">选择透明基础漆容量</span><span class="en hidden">Select Clear Base Volume</span><span class="ja hidden">クリアベース容量を選択</span></label>
+<select id="volumeSelect">
+<option value="500">500ml</option>
+<option value="1000" selected>1L (1000ml)</option>
+<option value="5000">5L (5000ml)</option>
+<option value="20000">20L (20000ml)</option>
+</select>
+<div class="volume-info">
+<h4><span class="zh">🎯 选定容量</span><span class="en hidden">🎯 Selected Volume</span><span class="ja hidden">🎯 選択容量</span></h4>
+<div class="volume-display" id="volumeDisplay">1L (1000ml)</div>
+</div>
+</div>
+</div>
+
+<div class="color-palette">
+<h3><span class="zh">🎨 RAL 色卡选择 (点击色块快速选择)</span><span class="en hidden">🎨 RAL Color Palette (Click color swatch to select)</span><span class="ja hidden">🎨 RAL カラーパレット (色見本をクリックして選択)</span></h3>
+<div class="color-grid" id="colorGrid"></div>
+</div>
+
+<div class="color-difference">
+<h3><span class="zh">🔬 色差计算 (Delta E)</span><span class="en hidden">🔬 Color Difference Calculation (Delta E)</span><span class="ja hidden">🔬 色差計算 (Delta E)</span></h3>
+<div class="comparison-section">
+<div class="color-input-group">
+<label><span class="zh">目标颜色 (LAB值)</span><span class="en hidden">Target Color (LAB Values)</span><span class="ja hidden">目標色 (LAB値)</span></label>
+<input type="number" id="targetL" placeholder="L (0-100)" style="margin-bottom: 5px;" min="0" max="100" step="0.01">
+<input type="number" id="targetA" placeholder="a (-128 to 127)" style="margin-bottom: 5px;" min="-128" max="127" step="0.01">
+<input type="number" id="targetB" placeholder="b (-128 to 127)" min="-128" max="127" step="0.01">
+<div class="color-preview-small" id="targetColorPreview"><span class="zh">目标颜色</span><span class="en hidden">Target Color</span><span class="ja hidden">目標色</span></div>
+</div>
+<div class="color-input-group">
+<label><span class="zh">实际颜色 (LAB值)</span><span class="en hidden">Actual Color (LAB Values)</span><span class="ja hidden">実際の色 (LAB値)</span></label>
+<input type="number" id="actualL" placeholder="L (0-100)" style="margin-bottom: 5px;" min="0" max="100" step="0.01">
+<input type="number" id="actualA" placeholder="a (-128 to 127)" style="margin-bottom: 5px;" min="-128" max="127" step="0.01">
+<input type="number" id="actualB" placeholder="b (-128 to 127)" min="-128" max="127" step="0.01">
+<div class="color-preview-small" id="actualColorPreview"><span class="zh">实际颜色</span><span class="en hidden">Actual Color</span><span class="ja hidden">実際の色</span></div>
+</div>
+</div>
+<div style="text-align: center; margin-bottom: 15px;">
+<button class="btn btn-primary" onclick="calculateDeltaE()"><span class="zh">计算色差</span><span class="en hidden">Calculate Delta E</span><span class="ja hidden">色差を計算</span></button>
+<button class="btn btn-secondary" onclick="useCurrentColor()"><span class="zh">使用当前颜色</span><span class="en hidden">Use Current Color</span><span class="ja hidden">現在の色を使用</span></button>
+</div>
+<div id="deltaEResult" class="delta-e-result hidden">
+<div id="deltaEValue"></div>
+<div class="delta-e-info" id="deltaEInfo"></div>
+</div>
+</div>
+
+<div id="colorDisplay" class="display-area" style="display: none;">
+<h2><span class="zh">📋 颜色详情</span><span class="en hidden">📋 Color Details</span><span class="ja hidden">📋 色の詳細</span></h2>
+<div class="details-grid">
+<div class="detail-item"><span class="zh">RAL 色号: </span><span class="en hidden">RAL Code: </span><span class="ja hidden">RAL色番号: </span><strong id="ralCodeOutput"></strong></div>
+<div class="detail-item"><span class="zh">中文名称: </span><span class="en hidden">Chinese Name: </span><span class="ja hidden">中国語名: </span><strong id="nameCnOutput"></strong></div>
+<div class="detail-item"><span class="zh">英文名称: </span><span class="en hidden">English Name: </span><span class="ja hidden">英語名: </span><strong id="nameEnOutput"></strong></div>
+<div class="detail-item"><span class="zh">日文名称: </span><span class="en hidden">Japanese Name: </span><span class="ja hidden">日本語名: </span><strong id="nameJaOutput"></strong></div>
+<div class="detail-item"><span class="zh">HEX 色码: </span><span class="en hidden">HEX Code: </span><span class="ja hidden">HEXコード: </span><strong id="hexOutput"></strong></div>
+<div class="detail-item"><span class="zh">LAB 值: </span><span class="en hidden">LAB Values: </span><span class="ja hidden">LAB値: </span><strong id="labOutput"></strong></div>
+</div>
+
+<h2 style="margin-top: 20px;"><span class="zh">🧪 颜料配方 (透明基础漆专用)</span><span class="en hidden">🧪 Paint Recipe (For Clear Base)</span><span class="ja hidden">🧪 顔料配合 (クリアベース専用)</span></h2>
+<ul id="recipeList"></ul>
+<p style="font-size: 0.8em; color: #7f8c8d; margin-top: 10px;"><span class="zh">* 注意：配方专为透明基础漆设计，颜料用量较高以确保遮盖力。实际调色请根据具体颜料品牌微调。</span><span class="en hidden">* Note: Recipe designed for clear base paint with higher pigment content for opacity. Adjust according to specific pigment brands.</span><span class="ja hidden">* 注意：この配合はクリアベース塗料専用に設計されており、隠蔽力を確保するため顔料使用量が多めです。実際の調色時は使用する顔料ブランドに応じて微調整してください。</span></p>
+
+<div class="debug-info" id="debugInfo" style="display: none;">
+<strong><span class="zh">调试信息:</span><span class="en hidden">Debug Info:</span><span class="ja hidden">デバッグ情報:</span></strong>
+<div id="debugContent"></div>
+</div>
+</div>
+
+<div id="errorMsg" class="error-message" style="display: none;"><span class="zh">未找到该 RAL 色号，请检查输入或尝试其他色号。</span><span class="en hidden">RAL color code not found. Please check your input or try another code.</span><span class="ja hidden">RAL色番号が見つかりません。入力を確認するか、他の色番号をお試しください。</span></div>
+</div>
+
+<script>
+/* ======================== JavaScript 核心逻辑 (修复优化版) ======================== */
+
+let currentLanguage = 'zh';
+let currentColorData = null;
+
+// 透明基础漆专用颜料密度和着色力数据
+const CLEAR_BASE_PIGMENTS = {
+    white: { density: 4.2, tinting_strength: 1.0, opacity: 0.95 },
+    black: { density: 1.8, tinting_strength: 8.5, opacity: 0.98 },
+    red: { density: 5.2, tinting_strength: 1.2, opacity: 0.80 },
+    yellow: { density: 5.8, tinting_strength: 1.5, opacity: 0.75 },
+    blue: { density: 2.4, tinting_strength: 1.4, opacity: 0.70 },
+    green: { density: 5.2, tinting_strength: 1.1, opacity: 0.85 },
+    purple: { density: 1.4, tinting_strength: 2.2, opacity: 0.60 },
+    brown: { density: 4.5, tinting_strength: 0.8, opacity: 0.80 }
+};
+
+// 颜料名称多语言映射
+const PIGMENT_NAMES = {
+    white: { zh: '白色颜料', en: 'White Paint', ja: '白色顔料' },
+    black: { zh: '黑色颜料', en: 'Black Paint', ja: '黒色顔料' },
+    red: { zh: '红色颜料', en: 'Red Paint', ja: '赤色顔料' },
+    yellow: { zh: '黄色颜料', en: 'Yellow Paint', ja: '黄色顔料' },
+    blue: { zh: '蓝色颜料', en: 'Blue Paint', ja: '青色顔料' },
+    green: { zh: '绿色颜料', en: 'Green Paint', ja: '緑色顔料' },
+    purple: { zh: '紫色颜料', en: 'Purple Paint', ja: '紫色顔料' },
+    brown: { zh: '棕色颜料', en: 'Brown Paint', ja: '茶色顔料' }
+};
+
+// 单位文本多语言映射
+const UNITS = {
+    parts: { zh: '份', en: 'parts', ja: '部' },
+    grams: { zh: 'g', en: 'g', ja: 'g' },
+    total_weight: { zh: '总重量', en: 'Total Weight', ja: '総重量' }
+};
+
+// LAB 转 RGB 函数 (修复版)
+function labToRgb(L, a, b) {
+    try {
+        // LAB to XYZ
+        let y = (L + 16) / 116;
+        let x = a / 500 + y;
+        let z = y - b / 200;
+
+        // XYZ normalization
+        const xn = 95.047;
+        const yn = 100.000;
+        const zn = 108.883;
+
+        x = xn * (x > 0.206897 ? Math.pow(x, 3) : (x - 16/116) / 7.787);
+        y = yn * (y > 0.206897 ? Math.pow(y, 3) : (y - 16/116) / 7.787);
+        z = zn * (z > 0.206897 ? Math.pow(z, 3) : (z - 16/116) / 7.787);
+
+        // XYZ to RGB
+        x /= 100;
+        y /= 100;
+        z /= 100;
+
+        let r = x * 3.2406 + y * -1.5372 + z * -0.4986;
+        let g = x * -0.9689 + y * 1.8758 + z * 0.0415;
+        let bl = x * 0.0557 + y * -0.2040 + z * 1.0570;
+
+        // Gamma correction
+        r = r > 0.0031308 ? 1.055 * Math.pow(r, 1/2.4) - 0.055 : 12.92 * r;
+        g = g > 0.0031308 ? 1.055 * Math.pow(g, 1/2.4) - 0.055 : 12.92 * g;
+        bl = bl > 0.0031308 ? 1.055 * Math.pow(bl, 1/2.4) - 0.055 : 12.92 * bl;
+
+        // Clamp values
+        r = Math.max(0, Math.min(1, r)) * 255;
+        g = Math.max(0, Math.min(1, g)) * 255;
+        bl = Math.max(0, Math.min(1, bl)) * 255;
+
+        return [Math.round(r), Math.round(g), Math.round(bl)];
+    } catch (error) {
+        console.error('LAB to RGB conversion error:', error);
+        return [128, 128, 128]; // 返回灰色作为默认值
+    }
+}
+
+// RGB 转 HEX 函数
+function rgbToHex(r, g, b) {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+
+// LAB 转 HEX 函数
+function labToHex(L, a, b) {
+    const [r, g, bl] = labToRgb(L, a, b);
+    return rgbToHex(r, g, bl);
+}
+
+// 修复的 Delta E 计算函数 (CIE76)
+function calculateDeltaE76(L1, a1, b1, L2, a2, b2) {
+    try {
+        const deltaL = L2 - L1;
+        const deltaA = a2 - a1;
+        const deltaB = b2 - b1;
+        
+        const deltaE = Math.sqrt(
+            Math.pow(deltaL, 2) + 
+            Math.pow(deltaA, 2) + 
+            Math.pow(deltaB, 2)
+        );
+        
+        return Math.round(deltaE * 100) / 100; // 保留两位小数
+    } catch (error) {
+        console.error('Delta E calculation error:', error);
+        return 0;
+    }
+}
+
+// 更新颜色预览 (修复版)
+function updateColorPreview(previewId, L, a, b) {
+    try {
+        const preview = document.getElementById(previewId);
+        if (!preview) return;
+        
+        if (isNaN(L) || isNaN(a) || isNaN(b)) {
+            preview.style.backgroundColor = '#ccc';
+            return;
+        }
+        
+        const hex = labToHex(L, a, b);
+        preview.style.backgroundColor = hex;
+        
+        // 根据亮度调整文字颜色
+        const textColor = L > 50 ? '#000' : '#fff';
+        preview.style.color = textColor;
+        
+    } catch (error) {
+        console.error('Color preview update error:', error);
+    }
+}
+
+// 计算色差函数 (修复版)
+function calculateDeltaE() {
+    try {
+        const targetL = parseFloat(document.getElementById('targetL').value);
+        const targetA = parseFloat(document.getElementById('targetA').value);
+        const targetB = parseFloat(document.getElementById('targetB').value);
+        
+        const actualL = parseFloat(document.getElementById('actualL').value);
+        const actualA = parseFloat(document.getElementById('actualA').value);
+        const actualB = parseFloat(document.getElementById('actualB').value);
+        
+        // 验证输入
+        if (isNaN(targetL) || isNaN(targetA) || isNaN(targetB) || 
+            isNaN(actualL) || isNaN(actualA) || isNaN(actualB)) {
+            alert(currentLanguage === 'zh' ? '请输入有效的LAB值' : 
+                  currentLanguage === 'en' ? 'Please enter valid LAB values' : 
+                  '有効なLAB値を入力してください');
+            return;
+        }
+        
+        // 验证范围
+        if (targetL < 0 || targetL > 100 || actualL < 0 || actualL > 100) {
+            alert(currentLanguage === 'zh' ? 'L值必须在0-100之间' : 
+                  currentLanguage === 'en' ? 'L value must be between 0-100' : 
+                  'L値は0-100の間でなければなりません');
+            return;
+        }
+        
+        if (targetA < -128 || targetA > 127 || actualA < -128 || actualA > 127 ||
+            targetB < -128 || targetB > 127 || actualB < -128 || actualB > 127) {
+            alert(currentLanguage === 'zh' ? 'a和b值必须在-128到127之间' : 
+                  currentLanguage === 'en' ? 'a and b values must be between -128 to 127' : 
+                  'aとb値は-128から127の間でなければなりません');
+            return;
+        }
+        
+        // 计算Delta E
+        const deltaE = calculateDeltaE76(targetL, targetA, targetB, actualL, actualA, actualB);
+        
+        // 显示结果
+        const resultDiv = document.getElementById('deltaEResult');
+        const valueDiv = document.getElementById('deltaEValue');
+        const infoDiv = document.getElementById('deltaEInfo');
+        
+        if (resultDiv && valueDiv && infoDiv) {
+            resultDiv.classList.remove('hidden');
+            
+            // 根据Delta E值设置样式和描述
+            let className, description;
+            if (deltaE <= 1.0) {
+                className = 'delta-e-excellent';
+                description = {
+                    zh: '优秀 - 人眼几乎无法察觉差异',
+                    en: 'Excellent - Barely perceptible to human eyes',
+                    ja: '優秀 - 人間の目にはほとんど知覚できない'
+                };
+            } else if (deltaE <= 2.0) {
+                className = 'delta-e-good';
+                description = {
+                    zh: '良好 - 仔细观察可察觉微小差异',
+                    en: 'Good - Perceptible through close observation',
+                    ja: '良好 - 注意深く観察すると知覚できる'
+                };
+            } else if (deltaE <= 10.0) {
+                className = 'delta-e-good';
+                description = {
+                    zh: '可接受 - 一眼就能察觉差异',
+                    en: 'Acceptable - Perceptible at a glance',
+                    ja: '許容範囲 - 一目で知覚できる'
+                };
+            } else {
+                className = 'delta-e-poor';
+                description = {
+                    zh: '差异较大 - 颜色明显不同',
+                    en: 'Poor - Colors are noticeably different',
+                    ja: '差が大きい - 色が明らかに異なる'
+                };
+            }
+            
+            resultDiv.className = `delta-e-result ${className}`;
+            valueDiv.textContent = `Delta E: ${deltaE}`;
+            infoDiv.textContent = description[currentLanguage];
+        }
+        
+    } catch (error) {
+        console.error('Delta E calculation error:', error);
+        alert(currentLanguage === 'zh' ? '计算出错，请检查输入' : 
+              currentLanguage === 'en' ? 'Calculation error, please check input' : 
+              '計算エラー、入力を確認してください');
+    }
+}
+
+// 使用当前颜色函数
+function useCurrentColor() {
+    if (!currentColorData) {
+        alert(currentLanguage === 'zh' ? '请先选择一个RAL颜色' : 
+              currentLanguage === 'en' ? 'Please select a RAL color first' : 
+              'まずRAL色を選択してください');
+        return;
+    }
+    
+    try {
+        // 解析当前颜色的LAB值
+        const labMatch = currentColorData.lab.match(/L:([\d.-]+), a:([\d.-]+), b:([\d.-]+)/);
+        if (labMatch) {
+            const L = parseFloat(labMatch[1]);
+            const a = parseFloat(labMatch[2]);
+            const b = parseFloat(labMatch[3]);
+            
+            // 填入目标颜色
+            document.getElementById('targetL').value = L.toFixed(2);
+            document.getElementById('targetA').value = a.toFixed(2);
+            document.getElementById('targetB').value = b.toFixed(2);
+            
+            // 更新预览
+            updateColorPreview('targetColorPreview', L, a, b);
+        }
+    } catch (error) {
+        console.error('Use current color error:', error);
+    }
+}
+
+// 透明基础漆配方计算 (优化版)
+function calculateClearBaseRecipe(L, a, b) {
+    try {
+        const recipe = {};
+        
+        // 基础白色颜料用量 (确保遮盖力)
+        const baseWhite = Math.max(20, 100 - L * 0.8);
+        recipe.white = Math.round(baseWhite * 10) / 10;
+        
+        // 色相计算
+        const chroma = Math.sqrt(a * a + b * b);
+        const hue = Math.atan2(b, a) * 180 / Math.PI;
+        const normalizedHue = hue < 0 ? hue + 360 : hue;
+        
+        // 根据色相和饱和度添加颜料
+        if (chroma > 5) {
+            const chromaFactor = Math.min(chroma / 50, 1);
+            
+            // 红色系 (0-60度, 300-360度)
+            if ((normalizedHue >= 0 && normalizedHue <= 60) || normalizedHue >= 300) {
+                recipe.red = Math.round(chromaFactor * 25 * 10) / 10;
+                if (normalizedHue <= 30 || normalizedHue >= 330) {
+                    recipe.yellow = Math.round(chromaFactor * 10 * 10) / 10;
+                }
+            }
+            
+            // 黄色系 (30-120度)
+            if (normalizedHue >= 30 && normalizedHue <= 120) {
+                recipe.yellow = Math.round(chromaFactor * 30 * 10) / 10;
+                if (normalizedHue >= 60) {
+                    recipe.green = Math.round(chromaFactor * 15 * 10) / 10;
+                }
+            }
+            
+            // 绿色系 (90-180度)
+            if (normalizedHue >= 90 && normalizedHue <= 180) {
+                recipe.green = Math.round(chromaFactor * 25 * 10) / 10;
+                if (normalizedHue >= 150) {
+                    recipe.blue = Math.round(chromaFactor * 10 * 10) / 10;
+                }
+            }
+            
+            // 蓝色系 (150-270度)
+            if (normalizedHue >= 150 && normalizedHue <= 270) {
+                recipe.blue = Math.round(chromaFactor * 25 * 10) / 10;
+                if (normalizedHue >= 210) {
+                    recipe.purple = Math.round(chromaFactor * 15 * 10) / 10;
+                }
+            }
+            
+            // 紫色系 (240-330度)
+            if (normalizedHue >= 240 && normalizedHue <= 330) {
+                recipe.purple = Math.round(chromaFactor * 20 * 10) / 10;
+                if (normalizedHue >= 300) {
+                    recipe.red = (recipe.red || 0) + Math.round(chromaFactor * 10 * 10) / 10;
+                }
+            }
+        }
+        
+        // 添加黑色调节亮度
+        if (L < 50) {
+            const blackAmount = Math.max(0, (50 - L) / 5);
+            recipe.black = Math.round(blackAmount * 10) / 10;
+        }
+        
+        // 添加棕色处理暗色调
+        if (L < 40 && chroma < 20) {
+            recipe.brown = Math.round((40 - L) / 4 * 10) / 10;
+        }
+        
+        // 清理零值
+        Object.keys(recipe).forEach(key => {
+            if (recipe[key] <= 0) {
+                delete recipe[key];
+            }
+        });
+        
+        return recipe;
+    } catch (error) {
+        console.error('Recipe calculation error:', error);
+        return { white: 40 };
+    }
+}
+
+// 计算颜料重量 (修复版)
+function calculatePigmentWeight(percentage, totalVolume, pigmentType) {
+    try {
+        const pigment = CLEAR_BASE_PIGMENTS[pigmentType];
+        if (!pigment) {
+            return 0;
+        }
+        
+        // 基础浓度调整
+        const baseConcentration = 0.15;
+        const adjustedPercentage = percentage / pigment.tinting_strength;
+        const weight = (adjustedPercentage / 100) * totalVolume * baseConcentration * pigment.density;
+        
+        return Math.round(weight * 10) / 10;
+    } catch (error) {
+        console.error('Weight calculation error:', error);
+        return 0;
+    }
+}
+
+// 主计算函数
+function calculateOptimizedRecipe(L, a, b) {
+    return calculateClearBaseRecipe(L, a, b);
+}
+
+// RAL 颜色数据 (保持原有数据不变)
+const RAW_RAL_DATA = [
+    { code: "1000", name_cn: "米绿色", name_en: "Green Beige", name_ja: "グリーンベージュ", lab: [82.05, -2.12, 25.33] },
+    { code: "1001", name_cn: "米色", name_en: "Beige", name_ja: "ベージュ", lab: [80.47, 5.21, 30.12] },
+    { code: "1002", name_cn: "沙黄色", name_en: "Sand Yellow", name_ja: "サンドイエロー", lab: [78.92, 7.45, 38.56] },
+    { code: "1003", name_cn: "信号黄", name_en: "Signal Yellow", name_ja: "シグナルイエロー", lab: [82.34, 10.12, 78.45] },
+    { code: "1004", name_cn: "金黄", name_en: "Golden Yellow", name_ja: "ゴールデンイエロー", lab: [80.12, 8.95, 72.33] },
+    { code: "1005", name_cn: "蜂蜜黄", name_en: "Honey Yellow", name_ja: "ハニーイエロー", lab: [76.45, 12.34, 65.22] },
+    { code: "1006", name_cn: "玉米黄", name_en: "Maize Yellow", name_ja: "メイズイエロー", lab: [79.88, 9.76, 70.11] },
+    { code: "1007", name_cn: "水仙黄", name_en: "Daffodil Yellow", name_ja: "ダフォディルイエロー", lab: [81.22, 11.45, 75.33] },
+    { code: "1011", name_cn: "棕米色", name_en: "Brown Beige", name_ja: "ブラウンベージュ", lab: [70.55, 8.12, 28.44] },
+    { code: "1012", name_cn: "柠檬黄", name_en: "Lemon Yellow", name_ja: "レモンイエロー", lab: [85.33, -2.45, 72.11] },
+    { code: "1013", name_cn: "珍珠白", name_en: "Oyster White", name_ja: "オイスターホワイト", lab: [92.12, 1.22, 3.11] },
+    { code: "1014", name_cn: "象牙黄", name_en: "Ivory", name_ja: "アイボリー", lab: [88.45, 2.33, 18.22] },
+    { code: "1015", name_cn: "浅象牙", name_en: "Light Ivory", name_ja: "ライトアイボリー", lab: [90.12, 1.55, 12.33] },
+    { code: "1016", name_cn: "硫黄黄", name_en: "Sulfur Yellow", name_ja: "サルファーイエロー", lab: [89.22, -5.11, 85.44] },
+    { code: "1017", name_cn: "藏红花黄", name_en: "Saffron Yellow", name_ja: "サフランイエロー", lab: [78.33, 15.22, 65.11] },
+    { code: "1018", name_cn: "锌黄", name_en: "Zinc Yellow", name_ja: "ジンクイエロー", lab: [90.45, -3.22, 88.33] },
+    { code: "1019", name_cn: "灰米色", name_en: "Grey Beige", name_ja: "グレーベージュ", lab: [72.22, 1.11, 12.44] },
+    { code: "1020", name_cn: "橄榄黄", name_en: "Olive Yellow", name_ja: "オリーブイエロー", lab: [68.55, -2.22, 25.33] },
+    { code: "1021", name_cn: "菜籽黄", name_en: "Rape Yellow", name_ja: "レイプイエロー", lab: [85.33, 5.22, 82.11] },
+    { code: "1023", name_cn: "交通黄", name_en: "Traffic Yellow", name_ja: "トラフィックイエロー", lab: [83.22, 7.11, 80.44] },
+    { code: "1024", name_cn: "赭黄", name_en: "Ochre Yellow", name_ja: "オーカーイエロー", lab: [70.33, 8.22, 40.55] },
+    { code: "2000", name_cn: "黄橙", name_en: "Yellow Orange", name_ja: "イエローオレンジ", lab: [72.33, 28.22, 65.44] },
+    { code: "2001", name_cn: "红橙", name_en: "Red Orange", name_ja: "レッドオレンジ", lab: [60.22, 45.11, 50.33] },
+    { code: "2002", name_cn: "朱红", name_en: "Vermilion", name_ja: "バーミリオン", lab: [58.44, 52.22, 48.11] },
+    { code: "2003", name_cn: "浅橙", name_en: "Pastel Orange", name_ja: "パステルオレンジ", lab: [75.22, 30.11, 60.33] },
+    { code: "2004", name_cn: "纯橙", name_en: "Pure Orange", name_ja: "ピュアオレンジ", lab: [70.33, 40.22, 65.44] },
+    { code: "2009", name_cn: "交通橙", name_en: "Traffic Orange", name_ja: "トラフィックオレンジ", lab: [72.11, 38.22, 62.44] },
+    { code: "2010", name_cn: "信号橙", name_en: "Signal Orange", name_ja: "シグナルオレンジ", lab: [70.22, 35.11, 60.33] },
+    { code: "3000", name_cn: "火红", name_en: "Flame Red", name_ja: "フレームレッド", lab: [50.22, 65.11, 45.33] },
+    { code: "3001", name_cn: "信号红", name_en: "Signal Red", name_ja: "シグナルレッド", lab: [48.44, 68.22, 42.11] },
+    { code: "3002", name_cn: "深红", name_en: "Carmine Red", name_ja: "カーマインレッド", lab: [46.22, 70.11, 40.33] },
+    { code: "3003", name_cn: "红宝石红", name_en: "Ruby Red", name_ja: "ルビーレッド", lab: [44.11, 72.22, 38.44] },
+    { code: "3004", name_cn: "紫红", name_en: "Purple Red", name_ja: "パープルレッド", lab: [42.22, 60.11, 30.33] },
+    { code: "3005", name_cn: "酒红", name_en: "Wine Red", name_ja: "ワインレッド", lab: [40.11, 55.22, 28.44] },
+    { code: "3009", name_cn: "氧化红", name_en: "Oxide Red", name_ja: "オキサイドレッド", lab: [38.22, 40.11, 20.33] },
+    { code: "3011", name_cn: "棕红", name_en: "Brown Red", name_ja: "ブラウンレッド", lab: [36.44, 42.22, 18.55] },
+    { code: "3012", name_cn: "米红", name_en: "Beige Red", name_ja: "ベージュレッド", lab: [65.22, 25.11, 20.33] },
+    { code: "3013", name_cn: "番茄红", name_en: "Tomato Red", name_ja: "トマトレッド", lab: [55.33, 50.22, 35.44] },
+    { code: "3014", name_cn: "古粉红", name_en: "Antique Pink", name_ja: "アンティークピンク", lab: [70.22, 28.11, 18.33] },
+    { code: "3015", name_cn: "浅粉红", name_en: "Light Pink", name_ja: "ライトピンク", lab: [80.11, 20.22, 10.44] },
+    { code: "3016", name_cn: "珊瑚红", name_en: "Coral Red", name_ja: "コーラルレッド", lab: [58.22, 48.11, 32.33] },
+    { code: "3017", name_cn: "玫瑰红", name_en: "Rose", name_ja: "ローズ", lab: [65.33, 35.22, 25.44] },
+    { code: "3018", name_cn: "草莓红", name_en: "Strawberry Red", name_ja: "ストロベリーレッド", lab: [62.44, 45.11, 30.22] },
+    { code: "3020", name_cn: "交通红", name_en: "Traffic Red", name_ja: "トラフィックレッド", lab: [50.11, 70.22, 40.44] },
+    { code: "3022", name_cn: "鲑鱼红", name_en: "Salmon Pink", name_ja: "サーモンピンク", lab: [68.33, 35.44, 25.11] },
+    { code: "3027", name_cn: "覆盆子红", name_en: "Raspberry Red", name_ja: "ラズベリーレッド", lab: [45.22, 55.33, 35.44] },
+    { code: "3028", name_cn: "纯红", name_en: "Pure Red", name_ja: "ピュアレッド", lab: [52.11, 68.44, 42.33] },
+    { code: "3031", name_cn: "东方红", name_en: "Orient Red", name_ja: "オリエントレッド", lab: [48.33, 65.22, 38.11] },
+    { code: "4001", name_cn: "红紫", name_en: "Red Lilac", name_ja: "レッドライラック", lab: [55.44, 45.11, 15.22] },
+    { code: "4002", name_cn: "红紫色", name_en: "Red Violet", name_ja: "レッドバイオレット", lab: [52.22, 48.33, 12.44] },
+    { code: "4003", name_cn: "石楠红", name_en: "Heather Violet", name_ja: "ヘザーバイオレット", lab: [58.11, 42.22, 18.33] },
+    { code: "4004", name_cn: "酒红紫", name_en: "Claret Violet", name_ja: "クラレットバイオレット", lab: [45.33, 38.44, 10.11] },
+    { code: "4005", name_cn: "蓝紫", name_en: "Blue Lilac", name_ja: "ブルーライラック", lab: [60.22, 25.11, -15.33] },
+    { code: "4006", name_cn: "交通紫", name_en: "Traffic Purple", name_ja: "トラフィックパープル", lab: [48.44, 35.22, -8.11] },
+    { code: "4007", name_cn: "紫罗兰", name_en: "Purple Violet", name_ja: "パープルバイオレット", lab: [42.11, 28.33, -12.44] },
+    { code: "4008", name_cn: "信号紫", name_en: "Signal Violet", name_ja: "シグナルバイオレット", lab: [46.22, 32.44, -10.22] },
+    { code: "4009", name_cn: "浅紫", name_en: "Pastel Violet", name_ja: "パステルバイオレット", lab: [65.33, 22.11, -5.44] },
+    { code: "5000", name_cn: "紫蓝", name_en: "Violet Blue", name_ja: "バイオレットブルー", lab: [38.44, 15.22, -25.33] },
+    { code: "5001", name_cn: "绿蓝", name_en: "Green Blue", name_ja: "グリーンブルー", lab: [42.22, -8.11, -35.44] },
+    { code: "5002", name_cn: "群青蓝", name_en: "Ultramarine Blue", name_ja: "ウルトラマリンブルー", lab: [35.11, 12.33, -45.22] },
+    { code: "5003", name_cn: "蓝宝石蓝", name_en: "Sapphire Blue", name_ja: "サファイアブルー", lab: [32.44, 8.22, -48.11] },
+    { code: "5004", name_cn: "黑蓝", name_en: "Black Blue", name_ja: "ブラックブルー", lab: [28.33, 5.11, -35.44] },
+    { code: "5005", name_cn: "信号蓝", name_en: "Signal Blue", name_ja: "シグナルブルー", lab: [40.22, 2.44, -52.33] },
+    { code: "5007", name_cn: "亮蓝", name_en: "Brilliant Blue", name_ja: "ブリリアントブルー", lab: [45.11, -5.22, -48.44] },
+    { code: "5008", name_cn: "灰蓝", name_en: "Grey Blue", name_ja: "グレーブルー", lab: [48.33, -2.11, -25.22] },
+    { code: "5009", name_cn: "天蓝", name_en: "Azure Blue", name_ja: "アジュールブルー", lab: [52.44, -8.33, -35.11] },
+    { code: "5010", name_cn: "靛蓝", name_en: "Gentian Blue", name_ja: "ゲンチアンブルー", lab: [38.22, 5.44, -42.33] },
+    { code: "5011", name_cn: "钢蓝", name_en: "Steel Blue", name_ja: "スチールブルー", lab: [44.11, -3.22, -28.44] },
+    { code: "5012", name_cn: "淡蓝", name_en: "Light Blue", name_ja: "ライトブルー", lab: [65.33, -12.11, -38.22] },
+    { code: "5013", name_cn: "钴蓝", name_en: "Cobalt Blue", name_ja: "コバルトブルー", lab: [36.44, 8.33, -45.11] },
+    { code: "5014", name_cn: "鸽蓝", name_en: "Pigeon Blue", name_ja: "ピジョンブルー", lab: [58.22, -5.44, -22.33] },
+    { code: "5015", name_cn: "天蓝", name_en: "Sky Blue", name_ja: "スカイブルー", lab: [62.11, -15.22, -32.44] },
+    { code: "5017", name_cn: "交通蓝", name_en: "Traffic Blue", name_ja: "トラフィックブルー", lab: [42.33, -2.11, -48.22] },
+    { code: "5018", name_cn: "绿松石蓝", name_en: "Turquoise Blue", name_ja: "ターコイズブルー", lab: [55.44, -25.33, -18.11] },
+    { code: "5019", name_cn: "天青蓝", name_en: "Capri Blue", name_ja: "カプリブルー", lab: [48.22, -18.44, -35.33] },
+    { code: "5020", name_cn: "海蓝", name_en: "Ocean Blue", name_ja: "オーシャンブルー", lab: [38.11, -8.22, -42.44] },
+    { code: "5021", name_cn: "水蓝", name_en: "Water Blue", name_ja: "ウォーターブルー", lab: [68.33, -22.11, -25.22] },
+    { code: "5022", name_cn: "夜蓝", name_en: "Night Blue", name_ja: "ナイトブルー", lab: [25.44, 2.33, -28.11] },
+    { code: "5023", name_cn: "远蓝", name_en: "Distant Blue", name_ja: "ディスタントブルー", lab: [52.22, -12.44, -38.33] },
+    { code: "5024", name_cn: "淡蓝", name_en: "Pastel Blue", name_ja: "パステルブルー", lab: [72.11, -15.33, -22.44] },
+    { code: "6000", name_cn: "绿蓝", name_en: "Patina Green", name_ja: "パティナグリーン", lab: [45.22, -25.44, -8.11] },
+    { code: "6001", name_cn: "翠绿", name_en: "Emerald Green", name_ja: "エメラルドグリーン", lab: [48.33, -35.22, 15.44] },
+    { code: "6002", name_cn: "叶绿", name_en: "Leaf Green", name_ja: "リーフグリーン", lab: [42.11, -28.33, 22.22] },
+    { code: "6003", name_cn: "橄榄绿", name_en: "Olive Green", name_ja: "オリーブグリーン", lab: [38.44, -15.22, 18.33] },
+    { code: "6004", name_cn: "蓝绿", name_en: "Blue Green", name_ja: "ブルーグリーン", lab: [35.22, -22.44, -5.11] },
+    { code: "6005", name_cn: "苔藓绿", name_en: "Moss Green", name_ja: "モスグリーン", lab: [32.33, -18.11, 12.44] },
+    { code: "6006", name_cn: "灰橄榄绿", name_en: "Grey Olive", name_ja: "グレーオリーブ", lab: [28.44, -12.22, 8.33] },
+    { code: "6007", name_cn: "瓶绿", name_en: "Bottle Green", name_ja: "ボトルグリーン", lab: [25.11, -15.33, 5.22] },
+    { code: "6008", name_cn: "棕绿", name_en: "Brown Green", name_ja: "ブラウングリーン", lab: [30.22, -8.44, 15.11] },
+    { code: "6009", name_cn: "冷杉绿", name_en: "Fir Green", name_ja: "ファーグリーン", lab: [22.33, -12.11, 8.44] },
+    { code: "6010", name_cn: "草绿", name_en: "Grass Green", name_ja: "グラスグリーン", lab: [45.44, -32.22, 25.33] },
+    { code: "6011", name_cn: "灰绿", name_en: "Reseda Green", name_ja: "レセダグリーン", lab: [52.11, -18.33, 12.22] },
+    { code: "6012", name_cn: "黑绿", name_en: "Black Green", name_ja: "ブラックグリーン", lab: [28.22, -15.44, 8.11] },
+    { code: "6013", name_cn: "芹菜绿", name_en: "Reed Green", name_ja: "リードグリーン", lab: [48.33, -22.11, 18.44] },
+    { code: "6014", name_cn: "黄橄榄绿", name_en: "Yellow Olive", name_ja: "イエローオリーブ", lab: [42.44, -8.22, 25.33] },
+    { code: "6015", name_cn: "黑橄榄绿", name_en: "Black Olive", name_ja: "ブラックオリーブ", lab: [25.33, -5.11, 12.22] },
+    { code: "6016", name_cn: "绿", name_en: "Turquoise Green", name_ja: "ターコイズグリーン", lab: [55.44, -38.22, 8.33] },
+    { code: "6017", name_cn: "五月绿", name_en: "May Green", name_ja: "メイグリーン", lab: [62.11, -42.33, 35.44] },
+    { code: "6018", name_cn: "黄绿", name_en: "Yellow Green", name_ja: "イエローグリーン", lab: [68.22, -35.44, 45.11] },
+    { code: "6019", name_cn: "浅绿", name_en: "Pastel Green", name_ja: "パステルグリーン", lab: [75.33, -28.11, 25.22] },
+    { code: "6020", name_cn: "铬绿", name_en: "Chrome Green", name_ja: "クロムグリーン", lab: [38.44, -25.22, 15.33] },
+    { code: "6021", name_cn: "苍绿", name_en: "Pale Green", name_ja: "ペールグリーン", lab: [72.11, -22.33, 18.44] },
+    { code: "6022", name_cn: "橄榄褐", name_en: "Olive Drab", name_ja: "オリーブドラブ", lab: [35.22, -8.44, 22.11] },
+    { code: "6024", name_cn: "交通绿", name_en: "Traffic Green", name_ja: "トラフィックグリーン", lab: [48.33, -35.11, 28.22] },
+    { code: "6025", name_cn: "蕨绿", name_en: "Fern Green", name_ja: "ファーングリーン", lab: [52.44, -28.22, 22.33] },
+    { code: "6026", name_cn: "蛋白石绿", name_en: "Opal Green", name_ja: "オパールグリーン", lab: [58.11, -32.33, 15.44] },
+    { code: "6027", name_cn: "浅绿", name_en: "Light Green", name_ja: "ライトグリーン", lab: [78.22, -25.44, 28.11] },
+    { code: "6028", name_cn: "松绿", name_en: "Pine Green", name_ja: "パイングリーン", lab: [32.33, -18.11, 12.22] },
+    { code: "6029", name_cn: "薄荷绿", name_en: "Mint Green", name_ja: "ミントグリーン", lab: [65.44, -22.22, 8.33] },
+    { code: "6032", name_cn: "信号绿", name_en: "Signal Green", name_ja: "シグナルグリーン", lab: [55.11, -45.33, 35.22] },
+    { code: "6033", name_cn: "薄荷绿", name_en: "Mint Turquoise", name_ja: "ミントターコイズ", lab: [68.22, -35.44, 12.11] },
+    { code: "6034", name_cn: "柔和绿", name_en: "Pastel Turquoise", name_ja: "パステルターコイズ", lab: [72.33, -28.11, 5.44] },
+    { code: "7000", name_cn: "松鼠灰", name_en: "Squirrel Grey", name_ja: "スクイレルグレー", lab: [68.44, 2.22, 8.11] },
+    { code: "7001", name_cn: "银灰", name_en: "Silver Grey", name_ja: "シルバーグレー", lab: [72.11, 1.33, 5.22] },
+    { code: "7002", name_cn: "橄榄灰", name_en: "Olive Grey", name_ja: "オリーブグレー", lab: [58.22, -2.44, 12.33] },
+    { code: "7003", name_cn: "苔藓灰", name_en: "Moss Grey", name_ja: "モスグレー", lab: [55.33, -5.11, 8.44] },
+    { code: "7004", name_cn: "信号灰", name_en: "Signal Grey", name_ja: "シグナルグレー", lab: [65.44, 1.22, 3.11] },
+    { code: "7005", name_cn: "鼠灰", name_en: "Mouse Grey", name_ja: "マウスグレー", lab: [52.11, 2.33, 5.22] },
+    { code: "7006", name_cn: "米灰", name_en: "Beige Grey", name_ja: "ベージュグレー", lab: [62.22, 3.44, 8.33] },
+    { code: "7008", name_cn: "卡其灰", name_en: "Khaki Grey", name_ja: "カーキグレー", lab: [48.33, 2.11, 12.44] },
+    { code: "7009", name_cn: "绿灰", name_en: "Green Grey", name_ja: "グリーングレー", lab: [45.44, -3.22, 8.11] },
+    { code: "7010", name_cn: "焦油灰", name_en: "Tarpaulin Grey", name_ja: "タープグレー", lab: [42.11, -1.33, 5.22] },
+    { code: "7011", name_cn: "铁灰", name_en: "Iron Grey", name_ja: "アイアングレー", lab: [38.22, 1.44, 3.33] },
+    { code: "7012", name_cn: "玄武灰", name_en: "Basalt Grey", name_ja: "バサルトグレー", lab: [35.33, 2.11, 4.44] },
+    { code: "7013", name_cn: "棕灰", name_en: "Brown Grey", name_ja: "ブラウングレー", lab: [48.44, 3.22, 8.11] },
+    { code: "7015", name_cn: "板岩灰", name_en: "Slate Grey", name_ja: "スレートグレー", lab: [32.11, 1.33, 2.22] },
+    { code: "7016", name_cn: "无烟煤灰", name_en: "Anthracite Grey", name_ja: "アンスラサイトグレー", lab: [28.22, 2.44, 3.33] },
+    { code: "7021", name_cn: "黑灰", name_en: "Black Grey", name_ja: "ブラックグレー", lab: [25.33, 1.11, 2.44] },
+    { code: "7022", name_cn: "暗灰", name_en: "Umbra Grey", name_ja: "アンブラグレー", lab: [32.44, 2.22, 5.11] },
+    { code: "7023", name_cn: "混凝土灰", name_en: "Concrete Grey", name_ja: "コンクリートグレー", lab: [58.11, 1.33, 3.22] },
+    { code: "7024", name_cn: "石墨灰", name_en: "Graphite Grey", name_ja: "グラファイトグレー", lab: [35.22, 2.44, 4.33] },
+    { code: "7026", name_cn: "花岗岩灰", name_en: "Granite Grey", name_ja: "グラナイトグレー", lab: [42.33, 1.11, 2.44] },
+    { code: "7030", name_cn: "石灰灰", name_en: "Stone Grey", name_ja: "ストーングレー", lab: [65.44, 2.22, 5.33] },
+    { code: "7031", name_cn: "蓝灰", name_en: "Blue Grey", name_ja: "ブルーグレー", lab: [48.11, -2.33, -8.22] },
+    { code: "7032", name_cn: "卵石灰", name_en: "Pebble Grey", name_ja: "ペブルグレー", lab: [72.22, 1.44, 3.11] },
+    { code: "7033", name_cn: "水泥灰", name_en: "Cement Grey", name_ja: "セメントグレー", lab: [55.33, 2.11, 4.22] },
+    { code: "7034", name_cn: "黄灰", name_en: "Yellow Grey", name_ja: "イエローグレー", lab: [62.44, 3.33, 8.44] },
+    { code: "7035", name_cn: "浅灰", name_en: "Light Grey", name_ja: "ライトグレー", lab: [78.11, 1.22, 2.33] },
+    { code: "7036", name_cn: "铂灰", name_en: "Platinum Grey", name_ja: "プラチナグレー", lab: [68.22, 2.44, 4.11] },
+    { code: "7037", name_cn: "土灰", name_en: "Dusty Grey", name_ja: "ダスティグレー", lab: [52.33, 3.11, 6.22] },
+    { code: "7038", name_cn: "玛瑙灰", name_en: "Agate Grey", name_ja: "アゲートグレー", lab: [75.44, 1.33, 3.44] },
+    { code: "7039", name_cn: "石英灰", name_en: "Quartz Grey", name_ja: "クォーツグレー", lab: [48.11, 2.22, 4.33] },
+    { code: "7040", name_cn: "窗灰", name_en: "Window Grey", name_ja: "ウィンドウグレー", lab: [65.22, 1.44, 2.11] },
+    { code: "7042", name_cn: "交通灰 A", name_en: "Traffic Grey A", name_ja: "トラフィックグレーA", lab: [58.33, 2.11, 3.22] },
+    { code: "7043", name_cn: "交通灰 B", name_en: "Traffic Grey B", name_ja: "トラフィックグレーB", lab: [32.44, 1.33, 2.44] },
+    { code: "7044", name_cn: "丝光灰", name_en: "Silk Grey", name_ja: "シルクグレー", lab: [72.11, 2.22, 4.33] },
+    { code: "7045", name_cn: "鼠灰", name_en: "Telegrey 1", name_ja: "テレグレー1", lab: [62.22, 1.44, 3.11] },
+    { code: "7046", name_cn: "中灰", name_en: "Telegrey 2", name_ja: "テレグレー2", lab: [52.33, 2.11, 4.22] },
+    { code: "7047", name_cn: "深灰", name_en: "Telegrey 4", name_ja: "テレグレー4", lab: [42.44, 1.33, 2.11] },
+    { code: "8000", name_cn: "绿棕", name_en: "Green Brown", name_ja: "グリーンブラウン", lab: [35.22, -8.11, 15.44] },
+    { code: "8001", name_cn: "赭棕", name_en: "Ochre Brown", name_ja: "オーカーブラウン", lab: [38.44, 5.22, 18.33] },
+    { code: "8002", name_cn: "信号棕", name_en: "Signal Brown", name_ja: "シグナルブラウン", lab: [32.11, 8.33, 12.22] },
+    { code: "8003", name_cn: "粘土棕", name_en: "Clay Brown", name_ja: "クレイブラウン", lab: [42.22, 12.44, 20.11] },
+    { code: "8004", name_cn: "铜棕", name_en: "Copper Brown", name_ja: "カッパーブラウン", lab: [28.33, 15.11, 8.44] },
+    { code: "8007", name_cn: "鹿棕", name_en: "Fawn Brown", name_ja: "フォーンブラウン", lab: [45.44, 8.22, 22.33] },
+    { code: "8008", name_cn: "橄榄棕", name_en: "Olive Brown", name_ja: "オリーブブラウン", lab: [35.11, -2.33, 18.44] },
+    { code: "8011", name_cn: "坚果棕", name_en: "Nut Brown", name_ja: "ナットブラウン", lab: [38.22, 5.44, 15.11] },
+    { code: "8012", name_cn: "红棕", name_en: "Red Brown", name_ja: "レッドブラウン", lab: [32.44, 18.11, 12.33] },
+    { code: "8014", name_cn: "深棕", name_en: "Sepia Brown", name_ja: "セピアブラウン", lab: [25.33, 8.22, 10.44] },
+    { code: "8015", name_cn: "栗棕", name_en: "Chestnut Brown", name_ja: "チェスナットブラウン", lab: [42.11, 15.33, 18.22] },
+    { code: "8016", name_cn: "桃花心木棕", name_en: "Mahogany Brown", name_ja: "マホガニーブラウン", lab: [28.44, 12.11, 8.33] },
+    { code: "8017", name_cn: "巧克力棕", name_en: "Chocolate Brown", name_ja: "チョコレートブラウン", lab: [22.22, 8.44, 6.11] },
+    { code: "8019", name_cn: "灰棕", name_en: "Grey Brown", name_ja: "グレーブラウン", lab: [35.33, 3.22, 8.44] },
+    { code: "8022", name_cn: "黑棕", name_en: "Black Brown", name_ja: "ブラックブラウン", lab: [18.11, 5.33, 4.22] },
+    { code: "8023", name_cn: "橙棕", name_en: "Orange Brown", name_ja: "オレンジブラウン", lab: [48.22, 22.44, 25.11] },
+    { code: "8024", name_cn: "米棕", name_en: "Beige Brown", name_ja: "ベージュブラウン", lab: [52.33, 8.11, 18.44] },
+    { code: "8025", name_cn: "浅棕", name_en: "Pale Brown", name_ja: "ペールブラウン", lab: [58.44, 12.22, 22.33] },
+    { code: "8028", name_cn: "土棕", name_en: "Terra Brown", name_ja: "テラブラウン", lab: [38.11, 15.44, 15.22] },
+    { code: "9001", name_cn: "奶油白", name_en: "Cream", name_ja: "クリーム", lab: [92.44, 2.11, 8.33] },
+    { code: "9002", name_cn: "灰白", name_en: "Grey White", name_ja: "グレーホワイト", lab: [88.11, 1.22, 3.44] },
+    { code: "9003", name_cn: "信号白", name_en: "Signal White", name_ja: "シグナルホワイト", lab: [95.22, 0.33, 1.11] },
+    { code: "9004", name_cn: "信号黑", name_en: "Signal Black", name_ja: "シグナルブラック", lab: [15.33, 1.44, 2.22] },
+    { code: "9005", name_cn: "墨黑", name_en: "Jet Black", name_ja: "ジェットブラック", lab: [12.44, 0.11, 0.33] },
+    { code: "9006", name_cn: "白铝灰", name_en: "White Aluminium", name_ja: "ホワイトアルミニウム", lab: [82.11, 1.22, 2.44] },
+    { code: "9007", name_cn: "灰铝灰", name_en: "Grey Aluminium", name_ja: "グレーアルミニウム", lab: [58.22, 2.33, 3.11] },
+    { code: "9010", name_cn: "纯白", name_en: "Pure White", name_ja: "ピュアホワイト", lab: [98.33, 0.22, 0.44] },
+    { code: "9011", name_cn: "石墨黑", name_en: "Graphite Black", name_ja: "グラファイトブラック", lab: [18.44, 1.11, 1.22] },
+    { code: "9016", name_cn: "交通白", name_en: "Traffic White", name_ja: "トラフィックホワイト", lab: [94.11, 0.33, 1.44] },
+    { code: "9017", name_cn: "交通黑", name_en: "Traffic Black", name_ja: "トラフィックブラック", lab: [16.22, 0.44, 0.11] },
+    { code: "9018", name_cn: "灰白", name_en: "Papyrus White", name_ja: "パピルスホワイト", lab: [90.33, 1.11, 2.22] }
+];
+
+// 处理RAL数据，生成映射表和选项
+const ralPaintMap = {};
+const ralSelectOptions = [];
+
+RAW_RAL_DATA.forEach(item => {
+    const labStr = `L:${item.lab[0].toFixed(2)}, a:${item.lab[1].toFixed(2)}, b:${item.lab[2].toFixed(2)}`;
+    const hexColor = labToHex(item.lab[0], item.lab[1], item.lab[2]);
+    const colorData = {
+        ral: item.code,
+        name_cn: item.name_cn,
+        name_en: item.name_en,
+        name_ja: item.name_ja,
+        hex: hexColor,
+        lab: labStr
+    };
+    ralPaintMap[item.code] = colorData;
+    ralSelectOptions.push({
+        value: item.code,
+        name_cn: item.name_cn,
+        name_en: item.name_en,
+        name_ja: item.name_ja,
+        hex: hexColor
+    });
+});
+
+// DOM 元素引用
+let ralInput, ralSelect, volumeSelect, colorPreview, colorDisplay, errorMsg, recipeList, colorGrid;
+
+// 页面初始化 (修复版)
+function initializePage() {
+    try {
+        // 获取DOM元素
+        ralInput = document.getElementById('ralInput');
+        ralSelect = document.getElementById('ralSelect');
+        volumeSelect = document.getElementById('volumeSelect');
+        colorPreview = document.getElementById('colorPreview');
+        colorDisplay = document.getElementById('colorDisplay');
+        errorMsg = document.getElementById('errorMsg');
+        recipeList = document.getElementById('recipeList');
+        colorGrid = document.getElementById('colorGrid');
+        
+        // 检查关键元素
+        if (!ralInput || !ralSelect || !volumeSelect || !colorPreview) {
+            throw new Error('Critical DOM elements not found');
+        }
+        
+        // 初始化各个模块
+        initializeColorGrid();
+        setupEventListeners();
+        updatePlaceholders();
+        updateSelectOptions();
+        updateVolumeDisplay();
+        
+        console.log('MooCow调色工具初始化成功');
+    } catch (error) {
+        console.error('页面初始化失败:', error);
+        const alertTexts = {
+            zh: '页面初始化失败，请刷新页面重试',
+            en: 'Page initialization failed, please refresh and try again',
+            ja: 'ページの初期化に失敗しました。ページを更新して再试行してください'
+        };
+        alert(alertTexts[currentLanguage] || alertTexts.zh);
+    }
+}
+
+// 语言切换函数 (修复版)
+function switchLanguage(lang) {
+    try {
+        currentLanguage = lang;
+        
+        // 更新按钮状态
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        // 切换语言显示
+        document.querySelectorAll('.zh').forEach(el => {
+            el.classList.toggle('hidden', lang !== 'zh');
+        });
+        document.querySelectorAll('.en').forEach(el => {
+            el.classList.toggle('hidden', lang !== 'en');
+        });
+        document.querySelectorAll('.ja').forEach(el => {
+            el.classList.toggle('hidden', lang !== 'ja');
+        });
+        
+        // 更新各种文本
+        updatePlaceholders();
+        updateSelectOptions();
+        updateVolumeDisplay();
+        updateColorSwatchTooltips();
+        
+        // 如果有当前颜色，重新显示
+        if (ralInput && ralInput.value.trim()) {
+            const currentRal = ralInput.value.trim();
+            if (/^\d{4}$/.test(currentRal)) {
+                displayColorInfo(currentRal);
+            }
+        }
+        
+    } catch (error) {
+        console.error('语言切换错误:', error);
+    }
+}
+
+// 更新输入框占位符
+function updatePlaceholders() {
+    if (!ralInput) return;
+    const placeholders = {
+        zh: '请输入 RAL 四位色号',
+        en: 'Enter 4-digit RAL code',
+        ja: 'RAL4桁色番号を入力'
+    };
+    ralInput.placeholder = placeholders[currentLanguage] || placeholders.zh;
+}
+
+// 更新下拉菜单选项 (修复版)
+function updateSelectOptions() {
+    if (!ralSelect) return;
+    
+    // 清空现有选项（除了第一个默认选项）
+    while (ralSelect.children.length > 1) {
+        ralSelect.removeChild(ralSelect.lastChild);
+    }
+    
+    // 更新第一个选项的文本
+    const firstOption = ralSelect.children[0];
+    if (firstOption) {
+        const firstOptionTexts = {
+            zh: '请选择 RAL 色号...',
+            en: 'Please select RAL color code...',
+            ja: 'RAL色番号を選択してください...'
+        };
+        firstOption.textContent = firstOptionTexts[currentLanguage] || firstOptionTexts.zh;
+    }
+    
+    // 添加所有颜色选项
+    ralSelectOptions.forEach(option => {
+        const optionElement = document.createElement('option');
+        optionElement.value = option.value;
+        let optionText = `RAL ${option.value} - `;
+        if (currentLanguage === 'zh') {
+            optionText += option.name_cn;
+        } else if (currentLanguage === 'en') {
+            optionText += option.name_en;
+        } else if (currentLanguage === 'ja') {
+            optionText += option.name_ja;
+        }
+        optionElement.textContent = optionText;
+        ralSelect.appendChild(optionElement);
+    });
+}
+
+// 更新容量显示
+function updateVolumeDisplay() {
+    if (!volumeSelect) return;
+    const volumeDisplay = document.getElementById('volumeDisplay');
+    if (!volumeDisplay) return;
+    
+    const selectedVolume = parseInt(volumeSelect.value);
+    let displayText = '';
+    if (selectedVolume === 500) {
+        displayText = '500ml';
+    } else if (selectedVolume === 1000) {
+        displayText = '1L (1000ml)';
+    } else if (selectedVolume === 5000) {
+        displayText = '5L (5000ml)';
+    } else if (selectedVolume === 20000) {
+        displayText = '20L (20000ml)';
+    }
+    volumeDisplay.textContent = displayText;
+}
+
+// 更新色块工具提示
+function updateColorSwatchTooltips() {
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+        const ralCode = swatch.dataset.ralCode;
+        const colorData = ralPaintMap[ralCode];
+        const tooltip = swatch.querySelector('.tooltip');
+        if (tooltip && colorData) {
+            let tooltipText = `RAL ${ralCode} - `;
+            if (currentLanguage === 'zh') {
+                tooltipText += colorData.name_cn;
+            } else if (currentLanguage === 'en') {
+                tooltipText += colorData.name_en;
+            } else if (currentLanguage === 'ja') {
+                tooltipText += colorData.name_ja;
+            }
+            tooltip.textContent = tooltipText;
+        }
+    });
+}
+
+// 初始化色块网格
+function initializeColorGrid() {
+    if (!colorGrid) return;
+    
+    ralSelectOptions.forEach(option => {
+        const swatch = document.createElement('div');
+        swatch.className = 'color-swatch';
+        swatch.style.backgroundColor = option.hex;
+        swatch.dataset.ralCode = option.value;
+        swatch.innerHTML = `${option.value}<div class="tooltip">RAL ${option.value} - ${option.name_cn}</div>`;
+        
+        // 添加点击事件
+        swatch.addEventListener('click', function() {
+            selectColor(option.value);
+        });
+        
+        colorGrid.appendChild(swatch);
+    });
+}
+
+// 选择颜色函数
+function selectColor(ralCode) {
+    try {
+        // 更新输入框和下拉菜单
+        if (ralInput) ralInput.value = ralCode;
+        if (ralSelect) ralSelect.value = ralCode;
+        
+        // 更新色块选中状态
+        document.querySelectorAll('.color-swatch').forEach(swatch => {
+            swatch.classList.remove('selected');
+        });
+        const selectedSwatch = document.querySelector(`[data-ral-code="${ralCode}"]`);
+        if (selectedSwatch) {
+            selectedSwatch.classList.add('selected');
+        }
+        
+        // 显示颜色信息
+        displayColorInfo(ralCode);
+    } catch (error) {
+        console.error('Color selection error:', error);
+    }
+}
+
+// 显示颜色信息 (修复版)
+function displayColorInfo(ralCode) {
+    try {
+        const colorData = ralPaintMap[ralCode];
+        if (!colorData) {
+            showError();
+            return;
+        }
+        
+        currentColorData = colorData;
+        
+        // 隐藏错误信息
+        if (errorMsg) errorMsg.style.display = 'none';
+        
+        // 显示颜色详情区域
+        if (colorDisplay) colorDisplay.style.display = 'block';
+        
+        // 更新颜色预览
+        if (colorPreview) {
+            colorPreview.style.backgroundColor = colorData.hex;
+            colorPreview.innerHTML = `RAL ${ralCode}`;
+            
+            // 根据亮度调整文字颜色
+            const labMatch = colorData.lab.match(/L:([\d.-]+)/);
+            if (labMatch) {
+                const L = parseFloat(labMatch[1]);
+                colorPreview.style.color = L > 50 ? '#000' : '#fff';
+            }
+        }
+        
+        // 更新详情信息
+        const elements = {
+            ralCodeOutput: ralCode,
+            nameCnOutput: colorData.name_cn,
+            nameEnOutput: colorData.name_en,
+            nameJaOutput: colorData.name_ja,
+            hexOutput: colorData.hex,
+            labOutput: colorData.lab
+        };
+        
+        Object.entries(elements).forEach(([id, value]) => {
+            const element = document.getElementById(id);
+            if (element) element.textContent = value;
+        });
+        
+        // 解析LAB值并计算配方
+        const labMatch = colorData.lab.match(/L:([\d.-]+), a:([\d.-]+), b:([\d.-]+)/);
+        if (labMatch) {
+            const L = parseFloat(labMatch[1]);
+            const a = parseFloat(labMatch[2]);
+            const b = parseFloat(labMatch[3]);
+            
+            displayRecipe(L, a, b);
+            showDebugInfo(ralCode, L, a, b);
+        }
+        
+    } catch (error) {
+        console.error('Display color info error:', error);
+        showError();
+    }
+}
+
+// 显示配方 (修复版)
+function displayRecipe(L, a, b) {
+    if (!recipeList) return;
+    
+    try {
+        const selectedVolume = parseInt(volumeSelect.value);
+        const recipe = calculateOptimizedRecipe(L, a, b);
+        
+        recipeList.innerHTML = '';
+        let totalWeight = 0;
+        
+        for (const [paint, percentage] of Object.entries(recipe)) {
+            if (percentage > 0) {
+                const li = document.createElement('li');
+                const paintName = PIGMENT_NAMES[paint] ? PIGMENT_NAMES[paint][currentLanguage] : paint;
+                const partText = UNITS.parts[currentLanguage];
+                const weightText = UNITS.grams[currentLanguage];
+                const weight = calculatePigmentWeight(percentage, selectedVolume, paint);
+                totalWeight += weight;
+                
+                li.innerHTML = `<span>${paintName}</span><div><span class="paint-weight">${percentage} ${partText}</span><br><span class="paint-weight-grams">${weight} ${weightText}</span></div>`;
+                recipeList.appendChild(li);
+            }
+        }
+        
+        // 添加总重量
+        if (totalWeight > 0) {
+            const totalLi = document.createElement('li');
+            totalLi.style.borderTop = '2px solid #3498db';
+            totalLi.style.fontWeight = 'bold';
+            totalLi.innerHTML = `<span>${UNITS.total_weight[currentLanguage]}</span><span class="paint-weight-grams">${Math.round(totalWeight * 10) / 10}g</span>`;
+            recipeList.appendChild(totalLi);
+        }
+        
+    } catch (error) {
+        console.error('配方显示错误:', error);
+        const errorTexts = {
+            zh: '配方计算错误',
+            en: 'Recipe calculation error',
+            ja: '配合計算エラー'
+        };
+        recipeList.innerHTML = `<li style="color: red;">${errorTexts[currentLanguage]}</li>`;
+    }
+}
+
+// 显示调试信息
+function showDebugInfo(ralCode, L, a, b) {
+    const debugInfo = document.getElementById('debugInfo');
+    const debugContent = document.getElementById('debugContent');
+    if (debugInfo && debugContent) {
+        try {
+            const recipe = calculateOptimizedRecipe(L, a, b);
+            const chroma = Math.sqrt(a * a + b * b);
+            const hue = Math.atan2(b, a) * 180 / Math.PI;
+            const normalizedHue = hue < 0 ? hue + 360 : hue;
+            
+            const debugLabels = {
+                zh: { ral: 'RAL', lab: 'LAB', chroma: '色度', hue: '色相', recipe: '配方' },
+                en: { ral: 'RAL', lab: 'LAB', chroma: 'Chroma', hue: 'Hue', recipe: 'Recipe' },
+                ja: { ral: 'RAL', lab: 'LAB', chroma: '彩度', hue: '色相', recipe: '配合' }
+            };
+            const labels = debugLabels[currentLanguage];
+            
+            debugContent.innerHTML = `${labels.ral}: ${ralCode}<br>${labels.lab}: L=${L}, a=${a}, b=${b}<br>${labels.chroma}: ${Math.round(chroma * 100) / 100}<br>${labels.hue}: ${Math.round(normalizedHue * 100) / 100}°<br>${labels.recipe}: ${JSON.stringify(recipe, null, 2)}`;
+            
+            // 检查URL参数是否显示调试信息
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('debug') === 'true') {
+                debugInfo.style.display = 'block';
+            }
+        } catch (error) {
+            const errorTexts = {
+                zh: '调试信息错误',
+                en: 'Debug info error',
+                ja: 'デバッグ情報エラー'
+            };
+            debugContent.innerHTML = `${errorTexts[currentLanguage]}: ${error.message}`;
+        }
+    }
+}
+
+// 隐藏颜色信息
+function hideColorInfo() {
+    if (colorDisplay) colorDisplay.style.display = 'none';
+    if (errorMsg) errorMsg.style.display = 'none';
+    if (colorPreview) {
+        colorPreview.style.backgroundColor = '#ccc';
+        const previewTexts = {
+            zh: '输入色号或选择色块进行查询',
+            en: 'Enter color code or select color swatch',
+            ja: '色番号を入力するか色見本を選択'
+        };
+        colorPreview.innerHTML = previewTexts[currentLanguage];
+    }
+    currentColorData = null;
+}
+
+// 显示错误信息
+function showError() {
+    if (colorDisplay) colorDisplay.style.display = 'none';
+    if (errorMsg) errorMsg.style.display = 'block';
+    if (colorPreview) {
+        colorPreview.style.backgroundColor = '#e74c3c';
+        const errorTexts = {
+            zh: '未找到该 RAL 色号',
+            en: 'RAL color code not found',
+            ja: 'RAL色番号が見つかりません'
+        };
+        colorPreview.innerHTML = errorTexts[currentLanguage];
+    }
+    currentColorData = null;
+}
+
+// 事件监听器设置 (修复版)
+function setupEventListeners() {
+    try {
+        // RAL输入框事件
+        if (ralInput) {
+            ralInput.addEventListener('input', function() {
+                const value = this.value.trim().toUpperCase();
+                if (/^\d{4}$/.test(value)) {
+                    displayColorInfo(value);
+                    if (ralSelect) ralSelect.value = value;
+                } else {
+                    hideColorInfo();
+                    if (ralSelect) ralSelect.value = '';
+                }
+            });
+            
+            ralInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const value = this.value.trim().toUpperCase();
+                    if (/^\d{4}$/.test(value)) {
+                        displayColorInfo(value);
+                    }
+                }
+            });
+        }
+        
+        // RAL下拉菜单事件
+        if (ralSelect) {
+            ralSelect.addEventListener('change', function() {
+                const selectedValue = this.value;
+                if (selectedValue) {
+                    if (ralInput) ralInput.value = selectedValue;
+                    displayColorInfo(selectedValue);
+                } else {
+                    if (ralInput) ralInput.value = '';
+                    hideColorInfo();
+                }
+            });
+        }
+        
+        // 容量选择事件
+        if (volumeSelect) {
+            volumeSelect.addEventListener('change', function() {
+                updateVolumeDisplay();
+                if (ralInput && ralInput.value.trim()) {
+                    const currentRal = ralInput.value.trim();
+                    if (/^\d{4}$/.test(currentRal)) {
+                        displayColorInfo(currentRal);
+                    }
+                }
+            });
+        }
+        
+        // LAB输入框事件 (修复版)
+        const labInputs = ['targetL', 'targetA', 'targetB', 'actualL', 'actualA', 'actualB'];
+        labInputs.forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener('input', function() {
+                    const isTarget = id.startsWith('target');
+                    const previewId = isTarget ? 'targetColorPreview' : 'actualColorPreview';
+                    const lInput = document.getElementById(isTarget ? 'targetL' : 'actualL');
+                    const aInput = document.getElementById(isTarget ? 'targetA' : 'actualA');
+                    const bInput = document.getElementById(isTarget ? 'targetB' : 'actualB');
+                    
+                    if (lInput && aInput && bInput) {
+                        const L = parseFloat(lInput.value);
+                        const a = parseFloat(aInput.value);
+                        const b = parseFloat(bInput.value);
+                        
+                        if (!isNaN(L) && !isNaN(a) && !isNaN(b)) {
+                            updateColorPreview(previewId, L, a, b);
+                        }
+                    }
+                });
+            }
+        });
+        
+        console.log('事件监听器设置完成');
+    } catch (error) {
+        console.error('事件监听器设置失败:', error);
+        return false;
+    }
+}
+
+// 页面加载完成后初始化
+window.addEventListener('DOMContentLoaded', function() {
+    initializePage();
+});
+
+// 备用初始化（防止DOMContentLoaded已经触发）
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        initializePage();
+    });
+} else {
+    initializePage();
+}
+
+// 全局函数暴露（供HTML中的onclick使用）
+window.switchLanguage = switchLanguage;
+window.selectColor = selectColor;
+window.displayColorInfo = displayColorInfo;
+window.calculateDeltaE = calculateDeltaE;
+window.useCurrentColor = useCurrentColor;
+
+// 调试函数（可在控制台使用）
+window.debugColorTool = function() {
+    console.log('RAL颜色数据:', ralPaintMap);
+    console.log('当前语言:', currentLanguage);
+    console.log('当前颜色数据:', currentColorData);
+    console.log('DOM元素状态:', {
+        ralInput: !!ralInput,
+        ralSelect: !!ralSelect,
+        volumeSelect: !!volumeSelect,
+        colorPreview: !!colorPreview,
+        colorDisplay: !!colorDisplay,
+        errorMsg: !!errorMsg,
+        recipeList: !!recipeList,
+        colorGrid: !!colorGrid
+    });
+};
+
+</script>
+</body>
+</html>
