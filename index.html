@@ -705,9 +705,22 @@ function handleRalInput() {
 
 function handleRalSelect() {
     const ralCode = ralSelect.value;
-    if (ralCode) {
+    if (ralCode && ralCode !== '') {
         if (ralInput) ralInput.value = ralCode;
         displayColorInfo(ralCode);
+        
+        // 强制更新颜色预览
+        const colorData = ralPaintMap[ralCode];
+        if (colorData && colorPreview) {
+            colorPreview.style.backgroundColor = colorData.rgb;
+            colorPreview.innerHTML = `RAL ${ralCode}`;
+            
+            const rgb = hexToRgb(colorData.rgb);
+            if (rgb) {
+                const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+                colorPreview.style.color = brightness > 128 ? '#000' : '#fff';
+            }
+        }
     }
 }
 
@@ -825,14 +838,21 @@ function displayColorInfo(ralCode) {
         if (errorMsg) errorMsg.style.display = 'none';
         
         if (colorPreview) {
-            colorPreview.style.backgroundColor = colorData.rgb;
-            colorPreview.innerHTML = `RAL ${ralCode}`;
+            // 强制清除之前的样式
+            colorPreview.style.backgroundColor = '';
+            colorPreview.innerHTML = '';
             
-            const rgb = hexToRgb(colorData.rgb);
-            if (rgb) {
-                const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
-                colorPreview.style.color = brightness > 128 ? '#000' : '#fff';
-            }
+            // 设置新的颜色和文字
+            setTimeout(() => {
+                colorPreview.style.backgroundColor = colorData.rgb;
+                colorPreview.innerHTML = `RAL ${ralCode}`;
+                
+                const rgb = hexToRgb(colorData.rgb);
+                if (rgb) {
+                    const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+                    colorPreview.style.color = brightness > 128 ? '#000' : '#fff';
+                }
+            }, 10);
         }
         
         const colorInfo = document.getElementById('colorInfo');
