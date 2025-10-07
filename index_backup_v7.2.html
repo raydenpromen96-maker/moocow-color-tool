@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MooCow Pro v8.0 - 完整216色调色系统</title>
+<title>MooCow Pro v7.2 - 专业调色系统</title>
 <style>
 /* 基础样式 */
 body {
@@ -61,17 +61,6 @@ h1 {
     box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
 }
 
-.complete-badge {
-    background: linear-gradient(45deg, #00d2ff, #3a7bd5);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 0.7em;
-    font-weight: bold;
-    margin-left: 8px;
-    box-shadow: 0 2px 8px rgba(0, 210, 255, 0.3);
-}
-
 .language-switcher {
     display: flex;
     gap: 8px;
@@ -126,7 +115,7 @@ label {
     font-size: 0.95em;
 }
 
-#ralInput, #ralSelect, #volumeSelect {
+#ralInput, #ralSelect, #volumeSelect, #coatingSelect {
     width: 100%;
     padding: 14px;
     font-size: 1.1em;
@@ -226,24 +215,6 @@ label {
     align-items: center;
 }
 
-.pigment-info {
-    background: rgba(102, 126, 234, 0.1);
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 15px;
-    border-left: 4px solid #667eea;
-}
-
-.accuracy-badge {
-    background: linear-gradient(45deg, #28a745, #20c997);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 0.8em;
-    font-weight: bold;
-    margin-left: 10px;
-}
-
 .error-message {
     color: #e74c3c;
     font-weight: bold;
@@ -325,11 +296,10 @@ label {
 <div class="container">
 <div class="header">
 <h1>
-<span class="zh">🎨 MooCow Pro v8.0 完整调色系统</span>
-<span class="en hidden">🎨 MooCow Pro Complete Color System v8.0</span>
-<span class="ja hidden">🎨 MooCow Pro 完全調色システム v8.0</span>
-<span class="pro-badge">14种颜料</span>
-<span class="complete-badge">100%覆盖</span>
+<span class="zh">🎨 MooCow Pro v7.2 专业调色系统</span>
+<span class="en hidden">🎨 MooCow Pro Color System v7.2</span>
+<span class="ja hidden">🎨 MooCow Pro 調色システム v7.2</span>
+<span class="pro-badge">216色完整版</span>
 </h1>
 <div class="language-switcher">
 <button class="lang-btn active" onclick="switchLanguage('zh')">中文</button>
@@ -374,20 +344,6 @@ label {
 <option value="20000">20L (20000ml)</option>
 </select>
 </div>
-
-<div class="pigment-info">
-<strong>
-<span class="zh">🔬 14种专业颜料系统</span>
-<span class="en hidden">🔬 14 Professional Pigments System</span>
-<span class="ja hidden">🔬 14種プロ顔料システム</span>
-<span class="accuracy-badge">ΔE < 1.0</span>
-</strong>
-<div style="margin-top: 10px; font-size: 0.9em;">
-<span class="zh">基于Kubelka-Munk理论，精确调配216种RAL颜色</span>
-<span class="en hidden">Based on Kubelka-Munk theory, precisely match 216 RAL colors</span>
-<span class="ja hidden">Kubelka-Munk理論に基づき、216色のRALカラーを精密調合</span>
-</div>
-</div>
 </div>
 
 <div class="color-palette">
@@ -417,9 +373,9 @@ label {
 <div class="formula-section">
 <div>
 <strong>
-<span class="zh">⚗️ 专业颜料配方</span>
-<span class="en hidden">⚗️ Professional Pigment Formula</span>
-<span class="ja hidden">⚗️ プロ顔料配合</span>
+<span class="zh">⚗️ 颜料配方</span>
+<span class="en hidden">⚗️ Pigment Formula</span>
+<span class="ja hidden">⚗️ 顔料配合</span>
 </strong>
 </div>
 <ul id="recipeList"></ul>
@@ -442,7 +398,7 @@ let currentColorData = null;
 // DOM元素引用
 let ralInput, ralSelect, volumeSelect, colorPreview, colorDisplay, errorMsg, recipeList, colorGrid;
 
-// 完整的RAL 216色数据（与之前相同）
+// 完整的RAL 216色数据
 const ralPaintMap = {
     '1000': { name: { zh: '米绿色', en: 'Green beige', ja: 'グリーンベージュ' }, rgb: '#CDBA88', lab: { L: 51.8, a: -9.0, b: 25.0 } },
     '1001': { name: { zh: '米色', en: 'Beige', ja: 'ベージュ' }, rgb: '#D0B084', lab: { L: 48.1, a: -2.0, b: 22.0 } },
@@ -857,7 +813,7 @@ function displayFormula(L, a, b) {
     if (!recipeList) return;
     
     const selectedVolume = parseInt(volumeSelect.value);
-    const formula = calculateAdvancedFormula(L, a, b, selectedVolume);
+    const formula = calculateFormula(L, a, b, selectedVolume);
     
     recipeList.innerHTML = '';
     
@@ -901,8 +857,8 @@ function displayFormula(L, a, b) {
     }
 }
 
-// 高级配方计算函数 - 14种颜料系统
-function calculateAdvancedFormula(targetL, targetA, targetB, baseVolume) {
+// 配方计算函数
+function calculateFormula(targetL, targetA, targetB, baseVolume) {
     const formula = {};
     
     const chroma = Math.sqrt(targetA * targetA + targetB * targetB);
@@ -912,127 +868,106 @@ function calculateAdvancedFormula(targetL, targetA, targetB, baseVolume) {
     const chromaIntensity = Math.min(chroma / 80, 1.0);
     const lightnessIntensity = (100 - targetL) / 100;
     
-    // 明度调节 - 钛白粉和炭黑
+    // 明度调节
     if (targetL > 85) {
         const whiteAmount = (targetL - 85) / 15 * 2.0;
         formula.titanium_white = calculateAmount(whiteAmount, baseVolume);
     } else if (targetL < 20) {
-        const blackAmount = (20 - targetL) / 20 * 1.5;
+        const blackAmount = (20 - targetL) / 20 * 1.0;
         formula.carbon_black = calculateAmount(blackAmount, baseVolume);
     }
     
-    // 高精度色相调节 - 14种颜料系统
-    if (normalizedHue >= 0 && normalizedHue < 30) {
-        // 红色区域 (0-30°)
-        const redIntensity = chromaIntensity * 4.0;
-        formula.iron_oxide_red = calculateAmount(redIntensity, baseVolume);
-        
-        // 如果是深红色，添加洋红
-        if (targetL < 30 && chroma > 30) {
-            formula.quinacridone_magenta = calculateAmount(chromaIntensity * 2.0, baseVolume);
-        }
-    } else if (normalizedHue >= 30 && normalizedHue < 60) {
-        // 红橙区域 (30-60°)
-        const redRatio = (60 - normalizedHue) / 30;
-        const orangeRatio = (normalizedHue - 30) / 30;
+    // 色相调节
+    if (normalizedHue >= 0 && normalizedHue < 60) {
+        // 红-黄区域
+        const redRatio = (60 - normalizedHue) / 60;
+        const yellowRatio = normalizedHue / 60;
         
         if (redRatio > 0.1) {
-            formula.iron_oxide_red = calculateAmount(redRatio * chromaIntensity * 3.5, baseVolume);
+            const amount = redRatio * chromaIntensity * 5.0;
+            formula.iron_oxide_red = calculateAmount(amount, baseVolume);
         }
-        if (orangeRatio > 0.1) {
-            formula.organic_orange = calculateAmount(orangeRatio * chromaIntensity * 3.0, baseVolume);
-        }
-    } else if (normalizedHue >= 60 && normalizedHue < 90) {
-        // 橙黄区域 (60-90°)
-        const orangeRatio = (90 - normalizedHue) / 30;
-        const yellowRatio = (normalizedHue - 60) / 30;
-        
-        if (orangeRatio > 0.1) {
-            formula.organic_orange = calculateAmount(orangeRatio * chromaIntensity * 3.0, baseVolume);
-        }
-        if (yellowRatio > 0.1) {
-            formula.iron_oxide_yellow = calculateAmount(yellowRatio * chromaIntensity * 3.5, baseVolume);
-        }
-    } else if (normalizedHue >= 90 && normalizedHue < 150) {
-        // 黄绿区域 (90-150°)
-        const yellowRatio = (150 - normalizedHue) / 60;
-        const greenRatio = (normalizedHue - 90) / 60;
         
         if (yellowRatio > 0.1) {
-            formula.iron_oxide_yellow = calculateAmount(yellowRatio * chromaIntensity * 3.5, baseVolume);
+            const amount = yellowRatio * chromaIntensity * 4.0;
+            formula.iron_oxide_yellow = calculateAmount(amount, baseVolume);
         }
-        if (greenRatio > 0.1) {
-            // 根据饱和度选择绿色颜料
-            if (chroma > 40) {
-                formula.phthalocyanine_green = calculateAmount(greenRatio * chromaIntensity * 2.5, baseVolume);
-            } else {
-                formula.chromium_oxide_green = calculateAmount(greenRatio * chromaIntensity * 3.0, baseVolume);
+    } else if (normalizedHue >= 60 && normalizedHue < 180) {
+        // 黄-绿区域
+        if (normalizedHue < 120) {
+            const yellowRatio = (120 - normalizedHue) / 60;
+            const greenRatio = (normalizedHue - 60) / 60;
+            
+            if (yellowRatio > 0.1) {
+                const amount = yellowRatio * chromaIntensity * 4.0;
+                formula.iron_oxide_yellow = calculateAmount(amount, baseVolume);
             }
-        }
-    } else if (normalizedHue >= 150 && normalizedHue < 210) {
-        // 绿蓝区域 (150-210°)
-        const greenRatio = (210 - normalizedHue) / 60;
-        const blueRatio = (normalizedHue - 150) / 60;
-        
-        if (greenRatio > 0.1) {
-            if (chroma > 40) {
-                formula.phthalocyanine_green = calculateAmount(greenRatio * chromaIntensity * 2.5, baseVolume);
-            } else {
-                formula.chromium_oxide_green = calculateAmount(greenRatio * chromaIntensity * 3.0, baseVolume);
+            if (greenRatio > 0.1) {
+                const amount = greenRatio * chromaIntensity * 3.5;
+                formula.chromium_oxide_green = calculateAmount(amount, baseVolume);
             }
-        }
-        if (blueRatio > 0.1) {
-            // 根据明度选择蓝色颜料
-            if (targetL < 25) {
-                formula.prussian_blue = calculateAmount(blueRatio * chromaIntensity * 2.0, baseVolume);
-            } else {
-                formula.phthalocyanine_blue = calculateAmount(blueRatio * chromaIntensity * 2.5, baseVolume);
-            }
-        }
-    } else if (normalizedHue >= 210 && normalizedHue < 270) {
-        // 蓝色区域 (210-270°)
-        if (targetL < 25) {
-            formula.prussian_blue = calculateAmount(chromaIntensity * 2.5, baseVolume);
-        } else if (chroma > 35) {
-            formula.phthalocyanine_blue = calculateAmount(chromaIntensity * 3.0, baseVolume);
         } else {
-            formula.ultramarine_blue = calculateAmount(chromaIntensity * 3.5, baseVolume);
+            // 绿-蓝区域
+            const greenRatio = (180 - normalizedHue) / 60;
+            const blueRatio = (normalizedHue - 120) / 60;
+            
+            if (greenRatio > 0.1) {
+                const amount = greenRatio * chromaIntensity * 3.5;
+                formula.chromium_oxide_green = calculateAmount(amount, baseVolume);
+            }
+            if (blueRatio > 0.1) {
+                const amount = blueRatio * chromaIntensity * 4.0;
+                formula.ultramarine_blue = calculateAmount(amount, baseVolume);
+            }
         }
-    } else if (normalizedHue >= 270 && normalizedHue < 330) {
-        // 蓝紫区域 (270-330°)
-        const blueRatio = (330 - normalizedHue) / 60;
-        const violetRatio = (normalizedHue - 270) / 60;
-        
-        if (blueRatio > 0.1) {
-            formula.ultramarine_blue = calculateAmount(blueRatio * chromaIntensity * 3.5, baseVolume);
-        }
-        if (violetRatio > 0.1) {
-            formula.quinacridone_violet = calculateAmount(violetRatio * chromaIntensity * 3.0, baseVolume);
+    } else if (normalizedHue >= 180 && normalizedHue < 300) {
+        // 蓝-紫区域
+        if (normalizedHue < 240) {
+            const cyanRatio = (240 - normalizedHue) / 60;
+            const blueRatio = (normalizedHue - 180) / 60;
+            
+            if (cyanRatio > 0.1) {
+                const amount = cyanRatio * chromaIntensity * 3.0;
+                formula.phthalocyanine_blue = calculateAmount(amount, baseVolume);
+            }
+            if (blueRatio > 0.1) {
+                const amount = blueRatio * chromaIntensity * 4.0;
+                formula.ultramarine_blue = calculateAmount(amount, baseVolume);
+            }
+        } else {
+            // 蓝-紫区域
+            const blueRatio = (300 - normalizedHue) / 60;
+            const violetRatio = (normalizedHue - 240) / 60;
+            
+            if (blueRatio > 0.1) {
+                const amount = blueRatio * chromaIntensity * 4.0;
+                formula.ultramarine_blue = calculateAmount(amount, baseVolume);
+            }
+            if (violetRatio > 0.1) {
+                const amount = violetRatio * chromaIntensity * 3.5;
+                formula.quinacridone_violet = calculateAmount(amount, baseVolume);
+            }
         }
     } else {
-        // 紫红区域 (330-360°)
-        const violetRatio = (360 - normalizedHue) / 30;
-        const magentaRatio = (normalizedHue - 330) / 30;
+        // 紫-红区域
+        const violetRatio = (360 - normalizedHue) / 60;
+        const redRatio = (normalizedHue - 300) / 60;
         
         if (violetRatio > 0.1) {
-            formula.quinacridone_violet = calculateAmount(violetRatio * chromaIntensity * 3.0, baseVolume);
+            const amount = violetRatio * chromaIntensity * 3.5;
+            formula.quinacridone_violet = calculateAmount(amount, baseVolume);
         }
-        if (magentaRatio > 0.1) {
-            formula.quinacridone_magenta = calculateAmount(magentaRatio * chromaIntensity * 3.5, baseVolume);
+        if (redRatio > 0.1) {
+            const amount = redRatio * chromaIntensity * 5.0;
+            formula.iron_oxide_red = calculateAmount(amount, baseVolume);
         }
-    }
-    
-    // 棕色系特殊处理
-    if (normalizedHue >= 20 && normalizedHue <= 80 && targetL < 40 && chroma < 30) {
-        formula.iron_oxide_brown = calculateAmount(chromaIntensity * 2.5, baseVolume);
-        formula.raw_umber = calculateAmount(lightnessIntensity * 1.5, baseVolume);
     }
     
     return formula;
 }
 
 function calculateAmount(intensity, baseVolume) {
-    const baseAmount = intensity * (baseVolume / 1000) * 8;
+    const baseAmount = intensity * (baseVolume / 1000) * 10;
     return Math.round(baseAmount * 10) / 10;
 }
 
@@ -1042,16 +977,10 @@ function getPigmentName(pigmentType) {
         carbon_black: { zh: '炭黑', en: 'Carbon Black', ja: 'カーボンブラック' },
         iron_oxide_red: { zh: '氧化铁红', en: 'Iron Oxide Red', ja: '酸化鉄レッド' },
         iron_oxide_yellow: { zh: '氧化铁黄', en: 'Iron Oxide Yellow', ja: '酸化鉄イエロー' },
-        iron_oxide_brown: { zh: '氧化铁棕', en: 'Iron Oxide Brown', ja: '酸化鉄ブラウン' },
-        quinacridone_magenta: { zh: '喹吖啶酮洋红', en: 'Quinacridone Magenta', ja: 'キナクリドンマゼンタ' },
-        organic_orange: { zh: '有机橙', en: 'Organic Orange', ja: 'オーガニックオレンジ' },
-        quinacridone_violet: { zh: '喹吖啶酮紫', en: 'Quinacridone Violet', ja: 'キナクリドンバイオレット' },
         ultramarine_blue: { zh: '群青蓝', en: 'Ultramarine Blue', ja: 'ウルトラマリンブルー' },
         phthalocyanine_blue: { zh: '酞菁蓝', en: 'Phthalocyanine Blue', ja: 'フタロシアニンブルー' },
-        prussian_blue: { zh: '普鲁士蓝', en: 'Prussian Blue', ja: 'プルシアンブルー' },
-        phthalocyanine_green: { zh: '酞菁绿', en: 'Phthalocyanine Green', ja: 'フタロシアニングリーン' },
         chromium_oxide_green: { zh: '氧化铬绿', en: 'Chromium Oxide Green', ja: 'クロム酸化物グリーン' },
-        raw_umber: { zh: '生褐', en: 'Raw Umber', ja: 'ローアンバー' }
+        quinacridone_violet: { zh: '喹吖啶酮紫', en: 'Quinacridone Violet', ja: 'キナクリドンバイオレット' }
     };
     
     return names[pigmentType] ? names[pigmentType][currentLanguage] : pigmentType;
