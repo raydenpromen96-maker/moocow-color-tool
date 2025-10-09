@@ -608,6 +608,129 @@ const calculateAdvancedFormula = (L, a, b) => {
 // --- 辅助工具函数 ---
 const showError = () => { resultsContainer.style.display='none'; errorMsg.style.display='block'; };
 const hexToRgb = (hex) => { const r=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex); return r?{r:parseInt(r[1],16),g:parseInt(r[2],16),b:parseInt(r[3],16)}:null; };
+
+// --- 初始化和事件监听 ---
+let ralInput, ralSelect, volumeSelect, colorPreview, resultsContainer, errorMsg, recipeList, deltaEDisplay, reviewStatus, currentLanguage = 'zh', currentColorData = null;
+
+const initializeApp = () => {
+    ralInput = document.getElementById('ralInput');
+    ralSelect = document.getElementById('ralSelect');
+    volumeSelect = document.getElementById('volumeSelect');
+    colorPreview = document.getElementById('colorPreview');
+    resultsContainer = document.getElementById('resultsContainer');
+    errorMsg = document.getElementById('errorMsg');
+    recipeList = document.getElementById('recipeList');
+    deltaEDisplay = document.getElementById('deltaEDisplay');
+    reviewStatus = document.getElementById('reviewStatus');
+    
+    // 填充下拉菜单
+    populateRalSelect();
+    
+    // 生成色卡网格
+    generateColorGrid();
+    
+    // 添加事件监听器
+    if (ralInput) {
+        ralInput.addEventListener('input', () => {
+            const ralCode = ralInput.value.trim();
+            if (ralCode && ralPaintMap[ralCode]) {
+                selectColor(ralCode);
+            }
+        });
+    }
+    
+    if (ralSelect) {
+        ralSelect.addEventListener('change', () => {
+            const ralCode = ralSelect.value;
+            if (ralCode) {
+                selectColor(ralCode);
+            }
+        });
+    }
+    
+    if (volumeSelect) {
+        volumeSelect.addEventListener('change', () => {
+            if (currentColorData && ralInput.value) {
+                displayColorInfo(ralInput.value);
+            }
+        });
+    }
+};
+
+const populateRalSelect = () => {
+    if (!ralSelect) return;
+    
+    // 清空现有选项
+    ralSelect.innerHTML = '';
+    
+    // 添加默认选项
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    const defaultTexts = {
+        zh: '或从下拉菜单选择...',
+        en: 'Or select from dropdown...',
+        ja: 'またはドロップダウンから選択...'
+    };
+    defaultOption.textContent = defaultTexts[currentLanguage];
+    ralSelect.appendChild(defaultOption);
+    
+    // 添加所有RAL颜色选项
+    Object.entries(ralPaintMap).forEach(([code, data]) => {
+        const option = document.createElement('option');
+        option.value = code;
+        option.textContent = `RAL ${code} - ${data.name[currentLanguage]}`;
+        ralSelect.appendChild(option);
+    });
+};
+
+const generateColorGrid = () => {
+    const colorGrid = document.getElementById('colorGrid');
+    if (!colorGrid) return;
+    
+    colorGrid.innerHTML = '';
+    
+    Object.entries(ralPaintMap).forEach(([code, data]) => {
+        const swatch = document.createElement('div');
+        swatch.className = 'color-swatch';
+        swatch.style.backgroundColor = data.rgb;
+        swatch.textContent = code;
+        swatch.setAttribute('data-ral', code);
+        swatch.onclick = () => selectColor(code);
+        
+        colorGrid.appendChild(swatch);
+    });
+};
+
+const switchLanguage = (lang) => {
+    currentLanguage = lang;
+    
+    // 更新语言按钮状态
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`[onclick="switchLanguage('${lang}')"]`).classList.add('active');
+    
+    // 显示/隐藏对应语言的元素
+    ['zh', 'en', 'ja'].forEach(l => {
+        const elements = document.querySelectorAll(`.${l}`);
+        elements.forEach(el => {
+            if (l === lang) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        });
+    });
+    
+    // 重新填充下拉菜单
+    populateRalSelect();
+    
+    // 如果有当前颜色，重新显示信息
+    if (currentColorData && ralInput && ralInput.value) {
+        displayColorInfo(ralInput.value);
+    }
+};
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', initializeApp);
 </script>
 
 </body>
