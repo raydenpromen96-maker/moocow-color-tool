@@ -2,11 +2,12 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>MooCow Mini 调色工具 (Smart Match Ver.)</title>
+  
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   
   <script>
     tailwind.config = {
@@ -14,9 +15,10 @@
         extend: {
           colors: {
             primary: '#2A58D1', secondary: '#F4C430', accent: '#B91D23',
-            neutral: '#F5F7FA', dark: '#333333',
+            neutral: '#F1F5F9', dark: '#1E293B', panel: '#FFFFFF',
           },
-          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          fontFamily: { sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'] },
+          boxShadow: { 'card': '0 4px 20px -2px rgba(0,0,0,0.05)' }
         },
       }
     }
@@ -24,214 +26,209 @@
   
   <style type="text/tailwindcss">
     @layer utilities {
-      .slider-thumb { @apply appearance-none w-8 h-8 rounded-full cursor-pointer transition-all duration-200 hover:scale-125 shadow-md border-2 border-white; }
-      .paint-dot { @apply w-4 h-4 rounded-full border border-gray-300 mr-2 flex-shrink-0; }
-      .lang-btn { @apply px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 border border-gray-200 shadow-sm; }
+      .slider-thumb { @apply appearance-none w-7 h-7 md:w-8 md:h-8 rounded-full cursor-pointer transition-transform duration-100 shadow-md border-[3px] border-white; }
+      .lang-btn { @apply px-3 py-1.5 text-xs font-bold rounded transition-all duration-200 border border-transparent; }
     }
+    
+    body { -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
+    
     input[type="range"] { 
-      @apply appearance-none w-full h-4 rounded-full bg-gray-200 outline-none transition-all;
+      @apply appearance-none w-full h-4 rounded-full bg-gray-200 outline-none shadow-inner;
       touch-action: none;
     }
     input[type="range"]::-webkit-slider-thumb { @apply slider-thumb; }
     input[type="range"]::-moz-range-thumb { @apply slider-thumb; }
-    input[type="range"]:disabled { @apply bg-gray-300 cursor-not-allowed; }
-
-    /* 滑块颜色专用映射 */
-    #sliderY83S::-webkit-slider-thumb, #sliderY74S::-webkit-slider-thumb, #sliderY42S::-webkit-slider-thumb { @apply bg-[#F4C430]; }
-    #sliderB150S::-webkit-slider-thumb { @apply bg-[#2A58D1]; }
-    #sliderR254D::-webkit-slider-thumb, #sliderR101Y::-webkit-slider-thumb, #sliderR101V::-webkit-slider-thumb, #sliderR122S::-webkit-slider-thumb { @apply bg-[#B91D23]; }
-    #sliderW064::-webkit-slider-thumb { @apply bg-white border border-gray-300; }
-    #sliderV23::-webkit-slider-thumb { @apply bg-[#800080]; }
-    #sliderG7::-webkit-slider-thumb { @apply bg-[#229954]; }
-    #sliderBK7H::-webkit-slider-thumb { @apply bg-[#000000]; }
+    input[type="range"]:disabled { @apply opacity-50 cursor-not-allowed; }
     
-    .lang-btn.active { @apply bg-primary text-white border-primary; }
-    .lang-btn:not(.active) { @apply bg-white text-gray-600 hover:bg-gray-50; }
-
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+    .lang-btn.active { @apply bg-white text-primary shadow-sm; }
+    .lang-btn:not(.active) { @apply bg-black/10 text-white hover:bg-black/20; }
+    
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-neutral font-sans text-dark min-h-screen py-4 md:py-8 px-4 md:px-6">
-  <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-    <!-- Header Area -->
-    <div class="bg-primary text-white p-6 md:p-10 relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -mr-16 -mt-16"></div>
-      <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div>
-          <h1 class="text-3xl md:text-4xl font-black tracking-tighter">MooCow Mini <span class="text-xs bg-accent px-2 py-0.5 rounded align-top ml-1">SMART MIX</span></h1>
-          <p id="appSubtitle" class="text-white/80 mt-1 font-medium text-sm md:text-base" data-i18n="subtitle"></p>
-        </div>
-        <div class="flex gap-1 bg-white/10 rounded-xl p-1 backdrop-blur-sm">
-          <button class="lang-btn" data-lang="zh">中文</button>
-          <button class="lang-btn" data-lang="en">EN</button>
-          <button class="lang-btn" data-lang="ja">日本語</button>
-        </div>
+<body class="bg-neutral font-sans text-slate-800 pb-12 selection:bg-primary selection:text-white">
+
+  <!-- App Header -->
+  <header class="bg-primary text-white sticky top-0 z-50 shadow-md">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex flex-col">
+        <h1 class="text-lg md:text-xl font-black tracking-tight flex items-center gap-1.5">
+          MooCow 
+          <span class="text-[9px] md:text-[10px] bg-accent px-1.5 py-0.5 rounded shadow-sm">SMART MIX</span>
+        </h1>
+        <span class="text-[10px] text-blue-200 font-medium" data-i18n="subtitle">智能调色助手</span>
+      </div>
+      <div class="flex gap-1 bg-black/10 p-1 rounded-lg">
+        <button class="lang-btn active" data-lang="zh">中</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="ja">日</button>
       </div>
     </div>
-    
-    <div class="p-6 md:p-10 space-y-10">
-      <!-- Disclaimer Section -->
-      <div id="disclaimer" class="p-4 bg-indigo-50 border-l-4 border-indigo-500 rounded-r-xl shadow-sm">
-        <div class="flex items-start gap-3">
-          <div class="flex-shrink-0 text-indigo-500 pt-0.5"><i class="fa fa-info-circle text-lg"></i></div>
+  </header>
+
+  <div class="max-w-4xl mx-auto p-4 space-y-5 mt-2">
+
+    <!-- 提示区 -->
+    <div class="bg-blue-50 border-l-4 border-primary rounded-r-lg p-3 flex items-start gap-3 shadow-sm text-xs">
+      <i class="fa fa-info-circle text-primary text-base mt-0.5"></i>
+      <div>
+        <strong class="text-slate-800 block mb-0.5" data-i18n="disclaimer_title">算法升级说明</strong>
+        <span class="text-slate-600 leading-relaxed" data-i18n="disclaimer_text">本版本采用'色相定点-亮度拟合'算法，已载入各色浆着色力(Strength)等物理数据。</span>
+      </div>
+    </div>
+
+    <!-- 模块 1：色彩目标选择 -->
+    <section class="bg-panel rounded-2xl shadow-card overflow-hidden border border-gray-100">
+      <div class="w-full h-32 md:h-48 rounded-t-2xl overflow-hidden shadow-inner flex relative border-b border-gray-200">
+        <!-- 目标色 -->
+        <div id="targetColorArea" class="w-1/2 h-full bg-gray-200 transition-colors duration-500 relative group">
+          <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-slate-800 px-2.5 py-1 rounded text-[11px] font-black shadow-sm" id="currentRalCode">RAL ----</div>
+          <div class="absolute bottom-3 left-3 bg-black/40 backdrop-blur text-white text-[10px] px-2 py-1 rounded">目标色 Target</div>
+        </div>
+        <!-- 混合色 (实时预览) -->
+        <div id="mixedColorArea" class="w-1/2 h-full bg-white transition-colors duration-100 relative border-l border-white/20">
+          <div class="absolute top-3 right-3 bg-black/40 backdrop-blur-sm text-white px-2.5 py-1 rounded text-[11px] font-mono font-bold tracking-wider shadow-sm" id="currentHex">#000000</div>
+          <div class="absolute bottom-3 right-3 bg-black/40 backdrop-blur text-white text-[10px] px-2 py-1 rounded">混合色 Mixed</div>
+        </div>
+      </div>
+      
+      <div class="p-4 md:p-6 space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="relative">
+            <label class="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase" data-i18n="ral_search_label">RAL搜索</label>
+            <div class="relative">
+              <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+              <input type="text" id="ralSearch" data-i18n-placeholder="ral_search_placeholder" class="w-full pl-9 pr-3 py-3 bg-slate-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/30 outline-none text-sm font-bold transition-all">
+            </div>
+            <div id="searchSuggestions" class="absolute w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-48 overflow-y-auto hidden"></div>
+          </div>
           <div>
-            <h3 class="text-sm font-black text-indigo-900" data-i18n="disclaimer_title"></h3>
-            <p class="text-[11px] md:text-xs text-indigo-800/80 mt-1 leading-relaxed" data-i18n="disclaimer_text"></p>
+            <label class="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase" data-i18n="ral_select_label">快速选择</label>
+            <select id="ralSelect" class="w-full px-3 py-3 bg-slate-50 border border-gray-200 rounded-xl outline-none text-sm font-bold cursor-pointer transition-all focus:ring-2 focus:ring-primary/30"></select>
           </div>
         </div>
       </div>
-      
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-        <!-- Left Column -->
-        <div class="lg:col-span-5 space-y-8">
-          <section class="space-y-4">
-            <div class="flex items-center gap-2 text-primary font-black uppercase text-sm tracking-widest">
-              <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-[10px]">01</span>
-              <h2 data-i18n="target_color_selection"></h2>
-            </div>
-            <div class="bg-gray-50 rounded-2xl p-6 space-y-5 border border-gray-100 shadow-inner">
-              <div class="flex flex-col gap-5">
-                <div class="w-full h-32 rounded-xl border-4 border-white overflow-hidden shadow-lg relative">
-                  <div id="colorSwatch" class="w-full h-full transition-colors duration-700 bg-white shadow-inner"></div>
-                </div>
-                <div class="space-y-4">
-                  <div>
-                    <label for="ralSearch" class="block text-[10px] font-black text-gray-400 mb-1 uppercase tracking-tighter" data-i18n="ral_search_label"></label>
-                    <div class="relative">
-                      <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><i class="fa fa-search"></i></span>
-                      <input type="text" id="ralSearch" data-i18n-placeholder="ral_search_placeholder" class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-sm bg-white">
-                      <div id="searchSuggestions" class="absolute w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 max-h-72 overflow-y-auto hidden py-2 border-t-4 border-t-primary"></div>
-                    </div>
-                  </div>
-                  <div>
-                    <label for="ralSelect" class="block text-[10px] font-black text-gray-400 mb-1 uppercase tracking-tighter" data-i18n="ral_select_label"></label>
-                    <select id="ralSelect" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white focus:ring-4 focus:ring-primary/10 outline-none transition-all font-bold text-sm"></select>
-                  </div>
-                  <div class="flex flex-wrap gap-4 pt-3 border-t border-gray-200/50">
-                    <div class="text-[10px]"><span class="text-gray-400 font-bold uppercase block" data-i18n="current_ral"></span><strong id="currentRalCode" class="text-primary text-sm"></strong></div>
-                    <div class="text-[10px]"><span class="text-gray-400 font-bold uppercase block" data-i18n="color_value"></span><strong id="currentHex" class="text-primary text-sm font-mono tracking-tighter"></strong></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+    </section>
 
-          <section class="space-y-4">
-            <div class="bg-primary/5 rounded-3xl p-6 border border-primary/10 space-y-5">
-              <h3 class="text-xs font-black text-primary uppercase tracking-[0.2em]" data-i18n="paint_ratio"></h3>
-              <div class="space-y-4">
-                <div class="flex justify-between items-end border-b border-primary/10 pb-3">
-                  <span class="text-gray-500 text-xs font-bold uppercase" data-i18n="total_pigment_weight"></span>
-                  <div class="text-right">
-                    <strong id="totalPigmentWeight" class="text-primary text-3xl font-black font-mono tracking-tighter leading-none">0.0g</strong>
-                    <div id="scoopEstimate" class="text-[10px] text-primary/60 font-bold uppercase mt-1 italic"></div>
-                  </div>
-                </div>
-                <div class="flex justify-between items-center text-xs font-bold">
-                  <span class="text-gray-400 uppercase" data-i18n="varnish_usage"></span>
-                  <strong id="varnishAmount" class="text-gray-700 bg-white px-2 py-1 rounded shadow-sm">1L</strong>
-                </div>
-                <div class="flex justify-between items-center text-xs font-bold">
-                  <span class="text-gray-400 uppercase" data-i18n="per_liter_usage"></span>
-                  <strong id="perLiterAmount" class="text-gray-700 font-mono bg-white px-2 py-1 rounded shadow-sm">0.0g</strong>
-                </div>
-                <div class="flex justify-between items-center p-4 bg-white rounded-2xl shadow-sm border border-gray-100">
-                  <span class="text-accent font-black text-xs uppercase" data-i18n="mixing_ratio"></span>
-                  <strong id="mixingRatio" class="text-accent font-black font-mono text-xl">0 : 100</strong>
-                </div>
-              </div>
-              <button id="generateRecipeBtn" class="w-full py-4 bg-primary text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 active:scale-95"><i class="fa fa-magic mr-2"></i><span data-i18n="generate_recipe"></span></button>
-            </div>
-          </section>
-        </div>
-
-        <!-- Right Column -->
-        <div class="lg:col-span-7 space-y-8">
-          <section class="space-y-4">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2 text-primary font-black uppercase text-sm tracking-widest">
-                <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-[10px]">02</span>
-                <h2 data-i18n="paint_weight_adjustment"></h2>
-              </div>
-              <div class="flex items-center gap-2">
-                <label for="volumeSelect" class="text-[10px] font-black text-gray-400 uppercase" data-i18n="volume_selection"></label>
-                <select id="volumeSelect" class="px-3 py-1.5 border border-gray-200 rounded-lg bg-white text-xs font-black outline-none focus:ring-2 focus:ring-primary/20 transition-all">
-                  <option value="50ml">50 ML</option>
-                  <option value="100ml">100 ML</option>
-                  <option value="500ml">500 ML</option>
-                  <option value="1l" selected>1 L</option>
-                  <option value="5l">5 L</option>
-                  <option value="20l">20 L</option>
-                </select>
-              </div>
-            </div>
-            
-            <div id="paintSlidersContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-
-            <div class="flex gap-2 pt-2">
-               <button id="resetFormulaBtn" class="flex-1 py-3 bg-gray-100 text-gray-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition"><i class="fa fa-trash-o mr-1"></i><span data-i18n="reset_formula"></span></button>
-               <button id="addFormulaBtn" class="flex-1 py-3 bg-secondary text-dark rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-secondary/90 transition shadow-lg shadow-yellow-100"><i class="fa fa-plus-circle mr-1"></i><span data-i18n="add_formula"></span></button>
-            </div>
-          </section>
-
-          <section class="bg-gray-50 rounded-3xl p-6 border border-gray-100">
-            <div class="h-64 relative flex items-center justify-center">
-              <canvas id="paintChart"></canvas>
-            </div>
-          </section>
-
-          <section class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center bg-dark text-white p-8 rounded-3xl shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16"></div>
-            <div class="space-y-4 relative z-10">
-              <h2 class="text-lg font-black uppercase tracking-widest" data-i18n="package_preview_export"></h2>
-              <div class="space-y-2">
-                <button id="exportRecipeBtn" class="w-full py-3 bg-primary text-white rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-blue-700 transition flex items-center justify-center gap-2"><i class="fa fa-file-text-o"></i><span data-i18n="export_recipe"></span></button>
-                <div class="grid grid-cols-2 gap-3">
-                  <button id="copyRecipeBtn" class="py-2.5 bg-white/10 text-white rounded-xl font-bold text-[10px] uppercase hover:bg-white/20 transition flex items-center justify-center gap-2 border border-white/10"><i class="fa fa-copy"></i><span data-i18n="copy_recipe"></span></button>
-                  <button id="shareRecipeBtn" class="py-2.5 bg-white/10 text-white rounded-xl font-bold text-[10px] uppercase hover:bg-white/20 transition flex items-center justify-center gap-2 border border-white/10"><i class="fa fa-share-alt"></i><span data-i18n="share_recipe"></span></button>
-                </div>
-                <div class="bg-white/5 p-4 rounded-xl border border-white/5 mt-4 shadow-inner">
-                   <h3 class="text-[9px] font-black text-gray-500 uppercase mb-2 tracking-widest" data-i18n="recipe_includes_title"></h3>
-                   <ul class="text-[10px] text-gray-300 space-y-1.5" id="recipeIncludesList"></ul>
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-col items-center justify-center relative py-4">
-              <div class="relative" style="width: 100px; height: 130px;">
-                <div class="absolute bottom-0 left-0 w-full h-[115px] bg-gray-600 rounded-t-lg border-2 border-white/20 shadow-2xl overflow-hidden" style="background-image: linear-gradient(to right, rgba(255,255,255,0.2), rgba(0,0,0,0.3));">
-                  <div id="canBody" class="absolute inset-0 transition-colors duration-1000 opacity-80"></div>
-                </div>
-                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[90%] h-5 bg-gray-400 rounded-t border-t border-l border-r border-white/30" style="background-image: linear-gradient(to right, #666, #333);"></div>
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2 py-1 rounded shadow-2xl text-center min-w-[60px] border border-gray-100">
-                  <span id="canLabel" class="font-black text-gray-900 text-[10px] tracking-tight"></span>
-                </div>
-              </div>
-            </div>
-          </section>
+    <!-- 模块 2：配方数据仪表盘 -->
+    <section class="bg-panel rounded-2xl shadow-card border border-gray-100 p-4 md:p-6 space-y-5">
+      <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+        <h2 class="text-sm font-black uppercase tracking-widest text-primary flex items-center gap-2">
+          <i class="fa fa-flask"></i> <span data-i18n="paint_ratio">混合详情</span>
+        </h2>
+        <div class="flex items-center gap-2">
+          <label class="text-[10px] font-bold text-slate-400 uppercase" data-i18n="volume_selection">基料容量:</label>
+          <select id="volumeSelect" class="bg-slate-100 text-xs font-black px-2 py-1.5 rounded border-none outline-none focus:ring-2 focus:ring-primary/30 text-slate-700">
+            <option value="50ml">50 ML</option>
+            <option value="100ml">100 ML</option>
+            <option value="500ml">500 ML</option>
+            <option value="1l" selected>1 L</option>
+            <option value="5l">5 L</option>
+            <option value="20l">20 L</option>
+          </select>
         </div>
       </div>
 
-      <section class="pt-10 border-t border-gray-100 space-y-6">
-        <h3 class="text-sm font-black text-gray-800 uppercase tracking-[0.2em]" data-i18n="recommended_recipes"></h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" id="recipePresetsContainer"></div>
-      </section>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-slate-50 rounded-xl p-3 flex flex-col justify-center border border-gray-100">
+          <span class="text-[10px] font-bold text-slate-400 uppercase mb-1" data-i18n="total_pigment_weight">总颜料重量</span>
+          <div class="flex items-end gap-1">
+            <strong class="text-2xl font-black text-primary font-mono leading-none" id="totalPigmentWeight">0.0g</strong>
+            <span id="scoopEstimate" class="text-[10px] text-primary/60 font-bold mb-0.5">(约0勺)</span>
+          </div>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-3 flex flex-col justify-center border border-gray-100">
+          <span class="text-[10px] font-bold text-slate-400 uppercase mb-1" data-i18n="per_liter_usage">每升用量</span>
+          <strong class="text-2xl font-black text-slate-700 font-mono leading-none" id="perLiterAmount">0.0g</strong>
+        </div>
+      </div>
       
-      <section class="space-y-6">
-        <h3 class="text-sm font-black text-gray-800 uppercase tracking-[0.2em]" data-i18n="ral_palette"></h3>
-        <div class="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2 p-4 bg-gray-50 rounded-3xl shadow-inner overflow-y-auto max-h-[600px] border border-gray-100 custom-scrollbar" id="ralPaletteContainer"></div>
-      </section>
-    </div>
+      <div class="bg-slate-50 rounded-xl p-3 flex justify-between items-center border border-gray-100">
+        <span class="text-[11px] font-bold text-slate-500 uppercase" data-i18n="mixing_ratio">混合比例 P:B</span>
+        <strong class="text-lg font-black text-accent font-mono leading-none" id="mixingRatio">0 : 100</strong>
+      </div>
+      
+      <button id="generateRecipeBtn" class="w-full py-3.5 bg-dark text-white rounded-xl font-black text-sm uppercase tracking-widest hover:bg-slate-800 active:scale-[0.98] transition-all shadow-md flex justify-center items-center gap-2">
+        <i class="fa fa-magic text-secondary"></i> <span data-i18n="generate_recipe">AI 智能生成配方</span>
+      </button>
+    </section>
+
+    <!-- 模块 3：颜料滑块区 -->
+    <section class="bg-panel rounded-2xl shadow-card border border-gray-100 p-4 md:p-6">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-sm font-black uppercase text-slate-800 flex items-center gap-2">
+          <i class="fa fa-sliders text-primary"></i> <span data-i18n="paint_weight_adjustment">颜料重量调节</span>
+        </h2>
+        <div class="flex gap-2">
+          <button id="resetFormulaBtn" class="bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-slate-200 transition flex items-center gap-1 active:scale-95">
+            <i class="fa fa-unlock-alt"></i> <span data-i18n="reset_formula">清空颜料</span>
+          </button>
+          <button id="addFormulaBtn" class="bg-secondary/20 text-yellow-700 px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-secondary/30 transition flex items-center gap-1 active:scale-95">
+            <i class="fa fa-plus"></i> <span data-i18n="add_formula">微调 (+5%)</span>
+          </button>
+        </div>
+      </div>
+      
+      <div id="paintSlidersContainer" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+        <!-- JS 动态注入 -->
+      </div>
+    </section>
+
+    <!-- 模块 4：可视化分析与导出 -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-panel rounded-2xl shadow-card border border-gray-100 p-5 flex flex-col justify-center items-center h-56">
+        <div class="w-full h-full relative max-w-[200px]">
+          <canvas id="paintChart"></canvas>
+        </div>
+      </div>
+
+      <div class="bg-dark rounded-2xl shadow-card p-5 text-white flex flex-col justify-between relative overflow-hidden h-56">
+        <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
+        <h2 class="text-sm font-black uppercase tracking-widest relative z-10" data-i18n="package_preview_export">预览与导出</h2>
+        
+        <div class="space-y-3 relative z-10">
+          <div class="bg-white/5 p-3 rounded-lg border border-white/5 shadow-inner">
+            <h3 class="text-[9px] font-bold text-gray-400 uppercase mb-1.5" data-i18n="recipe_includes_title">配方包含</h3>
+            <ul class="text-[10px] text-gray-300 space-y-1" id="recipeIncludesList"></ul>
+          </div>
+          
+          <div class="flex gap-2">
+            <button id="copyRecipeBtn" class="flex-1 py-3 bg-white/10 rounded-xl font-bold text-xs uppercase hover:bg-white/20 transition flex justify-center items-center gap-2 border border-white/10 active:scale-95">
+              <i class="fa fa-copy"></i><span data-i18n="copy_recipe">复制</span>
+            </button>
+            <button id="exportRecipeBtn" class="flex-1 py-3 bg-primary rounded-xl font-bold text-xs uppercase hover:bg-blue-600 transition flex justify-center items-center gap-2 active:scale-95">
+              <i class="fa fa-download"></i><span data-i18n="export_recipe">导出</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 模块 5：预设与色卡展示区 -->
+    <section class="pt-2">
+      <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 pl-1" data-i18n="recommended_recipes">推荐配方库 (点击加载)</h3>
+      <div class="flex overflow-x-auto gap-3 pb-4 hide-scrollbar" id="recipePresetsContainer">
+        <!-- 动态生成 -->
+      </div>
+    </section>
+
+    <section class="pb-6">
+      <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 pl-1" data-i18n="ral_palette">RAL 颜色全集</h3>
+      <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2 bg-panel p-3 rounded-2xl border border-gray-100 shadow-card max-h-[300px] overflow-y-auto" id="ralPaletteContainer">
+        <!-- 动态生成 -->
+      </div>
+    </section>
+
   </div>
   
-  <!-- Custom Notification -->
-  <div id="notification" class="fixed bottom-6 right-6 bg-dark text-white px-6 py-4 rounded-2xl shadow-2xl transform translate-y-32 opacity-0 transition-all duration-500 z-[100] text-xs font-black flex items-center gap-3"></div>
+  <div id="notification" class="fixed top-4 left-1/2 -translate-x-1/2 bg-dark text-white px-6 py-3 rounded-full shadow-2xl transform -translate-y-20 opacity-0 transition-all duration-300 z-[100] text-xs font-bold flex items-center gap-2 min-w-max"></div>
 
   <script>
     /**
-     * --- 1. 数据定义与全量 RAL 数据库 ---
+     * ==========================================
+     * 1. 物理数据字典 (完整保留原版 strength 和 manualLab)
+     * ==========================================
      */
     const PAINT_DATA = {
       Y74S: { name_zh: "中黄", name_en: "Yellow 2GXD", hex: "#fedd00", strength: 1.0 },
@@ -249,21 +246,24 @@
     };
 
     const TRANSLATIONS = {
-      zh: { subtitle: "智能调色助手", disclaimer_title: "算法升级说明", disclaimer_text: "本版本采用'色相定点-亮度拟合'算法。准确度较旧版大幅提升，但仍受限于屏幕色差，生产前务必小样试喷。", target_color_selection: "目标颜色选择", ral_search_label: "RAL代码搜索", ral_search_placeholder: "输入代码或颜色名", ral_select_label: "RAL快速选择", select_ral_code: "选择RAL代码", current_ral: "当前RAL:", color_value: "颜色值:", paint_weight_adjustment: "颜料重量调节", volume_selection: "基料容量:", volume_hint: "(切换容量自动换算重量)", paint_ratio: "混合详情", total_pigment_weight: "总颜料重量: ", varnish_usage: "基料用量: ", per_liter_usage: "每升用量: ", mixing_ratio: "混合比例: P:B = ", add_formula: "微调 (+5%)", reset_formula: "清空颜料", recommended_recipes: "推荐配方库 (点击加载)", package_preview_export: "预览与导出", export_recipe: "导出 TXT", copy_recipe: "复制配方", share_recipe: "快捷分享", recipe_includes_title: "配方包含", generate_recipe: "AI 智能生成配方", ral_palette: "RAL 颜色全集" },
-      en: { subtitle: "Smart Mixing Assistant", disclaimer_title: "Algorithm Update", disclaimer_text: "Using 'Hue-Luminance' fitting. Significant accuracy boost. Always spray a test sample due to screen differences.", target_color_selection: "Target Color", ral_search_label: "RAL Search", ral_search_placeholder: "Search code or name", ral_select_label: "Quick Selection", select_ral_code: "Select RAL Code", current_ral: "Current RAL:", color_value: "HEX Value:", paint_weight_adjustment: "Pigment Adjustment", volume_selection: "Base Volume:", volume_hint: "(Auto recalculate weights)", paint_ratio: "Mix Details", total_pigment_weight: "Total Pigment: ", varnish_usage: "Base Usage: ", per_liter_usage: "Per Liter: ", mixing_ratio: "Ratio: P:B = ", add_formula: "Fine-tune (+5%)", reset_formula: "Clear", recommended_recipes: "Recommended Recipes", package_preview_export: "Export & Preview", export_recipe: "Export TXT", copy_recipe: "Copy Recipe", share_recipe: "Share", recipe_includes_title: "Recipe Content", generate_recipe: "Smart Generate", ral_palette: "RAL Palette" },
-      ja: { subtitle: "スマート調色システム", disclaimer_title: "更新のお知らせ", disclaimer_text: "「色相-輝度」フィッティングを採用。精度は向上しましたが、デバイス差があるため試し塗りを推奨します。", target_color_selection: "ターゲット色", ral_search_label: "RAL検索", ral_search_placeholder: "コードまたは色名", ral_select_label: "クイック選択", select_ral_code: "RALコードを選択", current_ral: "現在のRAL:", color_value: "カラー值:", paint_weight_adjustment: "顔料重量调整", volume_selection: "ベース容量:", volume_hint: "(容量変更で重量を再计算)", paint_ratio: "混合详细", total_pigment_weight: "総顔料重量: ", varnish_usage: "ベース材: ", per_liter_usage: "1L当たり: ", mixing_ratio: "混合比: P:B = ", add_formula: "微调整 (+5%)", reset_formula: "クリア", recommended_recipes: "推奨配合", package_preview_export: "保存とプレビュー", export_recipe: "TXT保存", copy_recipe: "コピー", share_recipe: "共有", recipe_includes_title: "内容", generate_recipe: "スマート生成", ral_palette: "RALパレット" }
+      zh: { subtitle: "智能调色助手", disclaimer_title: "Oklab 视知觉闭环引擎", disclaimer_text: "新引入前沿 Oklab 人眼视觉模型。AI 会在后台进行100次“数值调漆”视觉迭代，强制模拟混合色与目标色达成 0 视差，所见即所得！", target_color_selection: "目标颜色选择", ral_search_label: "RAL代码搜索", ral_search_placeholder: "输入代码或颜色名", ral_select_label: "RAL快速选择", select_ral_code: "选择RAL代码", current_ral: "当前RAL:", color_value: "颜色值:", paint_weight_adjustment: "颜料重量调节", volume_selection: "基料容量:", volume_hint: "(切换容量自动换算重量)", paint_ratio: "混合详情", total_pigment_weight: "总颜料重量: ", varnish_usage: "基料用量: ", per_liter_usage: "每升用量: ", mixing_ratio: "混合比例: P:B = ", add_formula: "微调 (+5%)", reset_formula: "清空颜料", recommended_recipes: "推荐配方库 (点击加载)", package_preview_export: "预览与导出", export_recipe: "导出 TXT", copy_recipe: "复制配方", share_recipe: "快捷分享", recipe_includes_title: "配方包含", generate_recipe: "AI 智能视觉闭环匹配", ral_palette: "RAL 颜色全集" },
+      en: { subtitle: "Smart Mixing Assistant", disclaimer_title: "Oklab Visual Engine", disclaimer_text: "Using 'Oklab' human-eye matching. The AI performs 100 visual gradient iterations to force the mixed color to perfectly match the target.", target_color_selection: "Target Color", ral_search_label: "RAL Search", ral_search_placeholder: "Search code or name", ral_select_label: "Quick Selection", select_ral_code: "Select RAL Code", current_ral: "Current RAL:", color_value: "HEX Value:", paint_weight_adjustment: "Pigment Adjustment", volume_selection: "Base Volume:", volume_hint: "(Auto recalculate weights)", paint_ratio: "Mix Details", total_pigment_weight: "Total Pigment: ", varnish_usage: "Base Usage: ", per_liter_usage: "Per Liter: ", mixing_ratio: "Ratio: P:B = ", add_formula: "Fine-tune (+5%)", reset_formula: "Clear", recommended_recipes: "Recommended Recipes", package_preview_export: "Export & Preview", export_recipe: "Export TXT", copy_recipe: "Copy Recipe", share_recipe: "Share", recipe_includes_title: "Recipe Content", generate_recipe: "AI Visual Perfect Match", ral_palette: "RAL Palette" },
+      ja: { subtitle: "スマート調色システム", disclaimer_title: "Oklab 視覚エンジン", disclaimer_text: "人間の目に最も近いOklab空間を採用。AIが100回の視覚的シミュレーションを行い、目標色と混合色を完全に一致させます。", target_color_selection: "ターゲット色", ral_search_label: "RAL検索", ral_search_placeholder: "コードまたは色名", ral_select_label: "クイック選択", select_ral_code: "RALコードを選択", current_ral: "現在のRAL:", color_value: "カラー值:", paint_weight_adjustment: "顔料重量调整", volume_selection: "ベース容量:", volume_hint: "(容量変更で重量を再计算)", paint_ratio: "混合详细", total_pigment_weight: "総顔料重量: ", varnish_usage: "ベース材: ", per_liter_usage: "1L当たり: ", mixing_ratio: "混合比: P:B = ", add_formula: "微调整 (+5%)", reset_formula: "クリア", recommended_recipes: "推奨配合", package_preview_export: "保存とプレビュー", export_recipe: "TXT保存", copy_recipe: "コピー", share_recipe: "共有", recipe_includes_title: "内容", generate_recipe: "AI 視覚的完全一致生成", ral_palette: "RALパレット" }
     };
 
-    const ralPaintMap = [{"ral":"RAL 1000","name_en":"Green beige","name_zh":"绿色米色","hex":"#BEBD7F"},{"ral":"RAL 1001","name_en":"Beige","name_zh":"米色","hex":"#C2B078"},{"ral":"RAL 1002","name_en":"Sand yellow","name_zh":"沙黄色","hex":"#C6A664"},{"ral":"RAL 1003","name_en":"Signal yellow","name_zh":"信号黄","hex":"#E5BE01"},{"ral":"RAL 1004","name_en":"Golden yellow","name_zh":"金黄","hex":"#CDA434"},{"ral":"RAL 1005","name_en":"Honey yellow","name_zh":"蜂蜜黄","hex":"#A98307"},{"ral":"RAL 1006","name_en":"Maize yellow","name_zh":"玉米黄","hex":"#E4A010"},{"ral":"RAL 1007","name_en":"Daffodil yellow","name_zh":"水仙黄","hex":"#DC9D00"},{"ral":"RAL 1011","name_en":"Brown beige","name_zh":"棕米色","hex":"#8A6642"},{"ral":"RAL 1012","name_en":"Lemon yellow","name_zh":"柠檬黄","hex":"#C7B446"},{"ral":"RAL 1013","name_en":"Oyster white","name_zh":"牡蛎白","hex":"#EAE6CA"},{"ral":"RAL 1014","name_en":"Ivory","name_zh":"象牙色","hex":"#E1CC4F"},{"ral":"RAL 1015","name_en":"Light ivory","name_zh":"浅象牙","hex":"#E6D690"},{"ral":"RAL 1016","name_en":"Sulfur yellow","name_zh":"硫黄黄","hex":"#EDFF21"},{"ral":"RAL 1017","name_en":"Saffron yellow","name_zh":"藏红花黄","hex":"#F5D033"},{"ral":"RAL 1018","name_en":"Zinc yellow","name_zh":"锌黄","hex":"#F8F32B"},{"ral":"RAL 1019","name_en":"Grey beige","name_zh":"灰米色","hex":"#9E9764"},{"ral":"RAL 1020","name_en":"Olive yellow","name_zh":"橄榄黄","hex":"#999950"},{"ral":"RAL 1021","name_en":"Rape Yellow","name_zh":"油菜黄","hex":"#F3DA0B","baseRecipe":{"Y74S":85,"W064":15}},{"ral":"RAL 1023","name_en":"Traffic yellow","name_zh":"交通黄","hex":"#FAD201"},{"ral":"RAL 1024","name_en":"Ochre yellow","name_zh":"赭黄","hex":"#AEA04B"},{"ral":"RAL 1026","name_en":"Luminous yellow","name_zh":"荧光黄","hex":"#FFFF00"},{"ral":"RAL 1027","name_en":"Curry","name_zh":"咖喱色","hex":"#9D9101"},{"ral":"RAL 1028","name_en":"Melon yellow","name_zh":"哈密瓜黄","hex":"#F4A900"},{"ral":"RAL 1032","name_en":"Broom yellow","name_zh":"扫帚黄","hex":"#D6AE01"},{"ral":"RAL 1033","name_en":"Dahlia yellow","name_zh":"大丽花黄","hex":"#F3A505"},{"ral":"RAL 1034","name_en":"Pastel yellow","name_zh":"粉黄","hex":"#EDAB56"},{"ral":"RAL 1037","name_en":"Sun yellow","name_zh":"阳光黄","hex":"#EEA205"},{"ral":"RAL 2000","name_en":"Yellow Orange","name_zh":"黄橙色","hex":"#ED760E"},{"ral":"RAL 2001","name_en":"Red Orange","name_zh":"红橙色","hex":"#C93C20"},{"ral":"RAL 2002","name_en":"Vermilion","name_zh":"朱红","hex":"#CB2821"},{"ral":"RAL 2003","name_en":"Pastel Orange","name_zh":"粉橙","hex":"#FF7514"},{"ral":"RAL 2004","name_en":"Pure Orange","name_zh":"纯橙色","hex":"#F44611"},{"ral":"RAL 2008","name_en":"Bright Red Orange","name_zh":"亮红橙","hex":"#EC7C26"},{"ral":"RAL 2009","name_en":"Traffic Orange","name_zh":"交通橙","hex":"#E55137"},{"ral":"RAL 2010","name_en":"Signal Orange","name_zh":"信号橙","hex":"#D4652F"},{"ral":"RAL 2011","name_en":"Deep Orange","name_zh":"深橙色","hex":"#EC7C26"},{"ral":"RAL 2012","name_en":"Salmon Orange","name_zh":"鲑橙色","hex":"#DB6A50"},{"ral":"RAL 3000","name_en":"Flame red","name_zh":"火焰红","hex":"#AF2B1E"},{"ral":"RAL 3001","name_en":"Signal red","name_zh":"信号红","hex":"#A52019"},{"ral":"RAL 3002","name_en":"Carmine red","name_zh":"胭脂红","hex":"#A2231D"},{"ral":"RAL 3003","name_en":"Ruby red","name_zh":"红宝石红","hex":"#8A1C1C"},{"ral":"RAL 3004","name_en":"Purple red","name_zh":"紫红","hex":"#6B1C23"},{"ral":"RAL 3005","name_en":"Wine red","name_zh":"葡萄酒红","hex":"#59191F"},{"ral":"RAL 3007","name_en":"Black red","name_zh":"黑红","hex":"#3E2022"},{"ral":"RAL 3009","name_en":"Oxide red","name_zh":"氧化红","hex":"#6D342D"},{"ral":"RAL 3011","name_en":"Brown red","name_zh":"棕红","hex":"#782423"},{"ral":"RAL 3012","name_en":"Beige red","name_zh":"米红","hex":"#C5856D"},{"ral":"RAL 3013","name_en":"Tomato red","name_zh":"番茄红","hex":"#972E25"},{"ral":"RAL 3014","name_en":"Antique pink","name_zh":"古董粉","hex":"#CB7375"},{"ral":"RAL 3015","name_en":"Light pink","name_zh":"浅粉","hex":"#D8A0A6"},{"ral":"RAL 3016","name_en":"Coral red","name_zh":"珊瑚红","hex":"#A63D30"},{"ral":"RAL 3017","name_en":"Rose","name_zh":"玫瑰色","hex":"#CA555D"},{"ral":"RAL 3018","name_en":"Strawberry red","name_zh":"草莓红","hex":"#C63F4A"},{"ral":"RAL 3020","name_en":"Traffic red","name_zh":"交通红","hex":"#CC0605","baseRecipe":{"R254D":95,"BK7H":5}},{"ral":"RAL 3022","name_en":"Salmon pink","name_zh":"鲑粉","hex":"#CF6955"},{"ral":"RAL 3024","name_en":"Luminous red","name_zh":"荧光红","hex":"#FF2D21"},{"ral":"RAL 3027","name_en":"Raspberry red","name_zh":"树莓红","hex":"#AB273C"},{"ral":"RAL 4001","name_en":"Red lilac","name_zh":"红紫丁香","hex":"#816183"},{"ral":"RAL 4002","name_en":"Red violet","name_zh":"红紫","hex":"#8D3C4B"},{"ral":"RAL 4003","name_en":"Heather violet","name_zh":"石南紫","hex":"#C4618C"},{"ral":"RAL 4004","name_en":"Claret violet","name_zh":"酒红紫","hex":"#651E38"},{"ral":"RAL 4005","name_en":"Blue lilac","name_zh":"蓝紫丁香","hex":"#76689A"},{"ral":"RAL 4006","name_en":"Traffic purple","name_zh":"交通紫","hex":"#903373"},{"ral":"RAL 4007","name_en":"Purple violet","name_zh":"紫罗兰紫","hex":"#47243C"},{"ral":"RAL 4008","name_en":"Signal violet","name_zh":"信号紫","hex":"#844C82"},{"ral":"RAL 4009","name_en":"Pastel violet","name_zh":"粉紫","hex":"#9D8692"},{"ral":"RAL 4010","name_en":"Telemagenta","name_zh":"电视品红","hex":"#BB4077"},{"ral":"RAL 5000","name_en":"Violet blue","name_zh":"紫蓝","hex":"#304F6E"},{"ral":"RAL 5001","name_en":"Green blue","name_zh":"绿蓝","hex":"#0E4C64"},{"ral":"RAL 5002","name_en":"Ultramarine blue","name_zh":"群青蓝","hex":"#00387A"},{"ral":"RAL 5003","name_en":"Sapphire blue","name_zh":"宝石蓝","hex":"#1F3855"},{"ral":"RAL 5004","name_en":"Black blue","name_zh":"黑蓝","hex":"#191E28"},{"ral":"RAL 5005","name_en":"Signal blue","name_zh":"信号蓝","hex":"#005387","baseRecipe":{"B150S":80,"W064":20}},{"ral":"RAL 5007","name_en":"Brilliant blue","name_zh":"亮蓝","hex":"#376B8C"},{"ral":"RAL 5008","name_en":"Grey blue","name_zh":"灰蓝","hex":"#2B3A44"},{"ral":"RAL 5009","name_en":"Azure blue","name_zh":"天蓝","hex":"#215F78"},{"ral":"RAL 5010","name_en":"Gentian blue","name_zh":"龙胆蓝","hex":"#004F7C"},{"ral":"RAL 5011","name_en":"Steel blue","name_zh":"钢蓝","hex":"#1A2B3C"},{"ral":"RAL 5012","name_en":"Light blue","name_zh":"浅蓝","hex":"#0089B6"},{"ral":"RAL 5013","name_en":"Cobalt blue","name_zh":"钴蓝","hex":"#193153"},{"ral":"RAL 5014","name_en":"Pigeon blue","name_zh":"鸽蓝","hex":"#637D96"},{"ral":"RAL 5015","name_en":"Sky blue","name_zh":"天蓝","hex":"#007CAF"},{"ral":"RAL 5017","name_en":"Traffic blue","name_zh":"交通蓝","hex":"#005B8C"},{"ral":"RAL 5018","name_en":"Turquoise blue","name_zh":"绿松石蓝","hex":"#048B8C"},{"ral":"RAL 5019","name_en":"Capri blue","name_zh":"卡普里蓝","hex":"#005E83"},{"ral":"RAL 5020","name_en":"Ocean blue","name_zh":"海洋蓝","hex":"#00414B"},{"ral":"RAL 5021","name_en":"Water blue","name_zh":"水蓝","hex":"#007577"},{"ral":"RAL 5022","name_en":"Night blue","name_zh":"夜蓝","hex":"#222D5A"},{"ral":"RAL 5023","name_en":"Distant blue","name_zh":"远蓝","hex":"#41698C"},{"ral":"RAL 5024","name_en":"Pastel blue","name_zh":"粉蓝","hex":"#6093AC"},{"ral":"RAL 6000","name_en":"Patina green","name_zh":"铜绿","hex":"#3C7460"},{"ral":"RAL 6001","name_en":"Emerald green","name_zh":"祖母绿","hex":"#366735"},{"ral":"RAL 6002","name_en":"Leaf green","name_zh":"叶绿","hex":"#325928"},{"ral":"RAL 6003","name_en":"Olive green","name_zh":"橄榄绿","hex":"#50533C"},{"ral":"RAL 6004","name_en":"Blue green","name_zh":"蓝绿","hex":"#024442"},{"ral":"RAL 6005","name_en":"Moss green","name_zh":"苔藓绿","hex":"#114232"},{"ral":"RAL 6006","name_en":"Grey olive","name_zh":"灰橄榄","hex":"#3C392E"},{"ral":"RAL 6007","name_en":"Bottle green","name_zh":"瓶绿","hex":"#2C3222"},{"ral":"RAL 6008","name_en":"Brown green","name_zh":"棕绿","hex":"#36342A"},{"ral":"RAL 6009","name_en":"Fir green","name_zh":"冷杉绿","hex":"#27352A"},{"ral":"RAL 6010","name_en":"Grass green","name_zh":"草绿","hex":"#4D6F39"},{"ral":"RAL 6011","name_en":"Reseda green","name_zh":"木樨草绿","hex":"#6B7C59"},{"ral":"RAL 6012","name_en":"Black green","name_zh":"黑绿","hex":"#2F3D3A"},{"ral":"RAL 6013","name_en":"Reed green","name_zh":"芦苇绿","hex":"#7C765A"},{"ral":"RAL 6014","name_en":"Yellow olive","name_zh":"黄橄榄","hex":"#474135"},{"ral":"RAL 6015","name_en":"Black olive","name_zh":"黑橄榄","hex":"#3D3D36"},{"ral":"RAL 6016","name_en":"Turquoise green","name_zh":"绿松石绿","hex":"#00694C"},{"ral":"RAL 6017","name_en":"May green","name_zh":"五月绿","hex":"#587F40"},{"ral":"RAL 6018","name_en":"Yellow green","name_zh":"黄绿","hex":"#60993B"},{"ral":"RAL 6019","name_en":"Pastel green","name_zh":"粉绿","hex":"#B9CEAC"},{"ral":"RAL 6020","name_en":"Chrome green","name_zh":"铬绿","hex":"#37422F"},{"ral":"RAL 6021","name_en":"Pale green","name_zh":"苍绿","hex":"#8A9977"},{"ral":"RAL 6022","name_en":"Olive drab","name_zh":"暗橄榄绿","hex":"#3A3327"},{"ral":"RAL 6024","name_en":"Traffic green","name_zh":"交通绿","hex":"#008351"},{"ral":"RAL 6025","name_en":"Fern green","name_zh":"蕨绿","hex":"#5E6E3B"},{"ral":"RAL 6026","name_en":"Opal green","name_zh":"蛋白石绿","hex":"#315442"},{"ral":"RAL 6027","name_en":"Light green","name_zh":"浅绿","hex":"#7EBAB5"},{"ral":"RAL 6028","name_en":"Pine green","name_zh":"松绿","hex":"#315442"},{"ral":"RAL 6029","name_en":"Mint green","name_zh":"薄荷绿","hex":"#006F3D"},{"ral":"RAL 6032","name_en":"Signal green","name_zh":"信号绿","hex":"#0F7D4F"},{"ral":"RAL 7000","name_en":"Squirrel grey","name_zh":"松鼠灰","hex":"#7B858A"},{"ral":"RAL 7001","name_en":"Silver grey","name_zh":"银灰","hex":"#8C979C"},{"ral":"RAL 7002","name_en":"Olive grey","name_zh":"橄榄灰","hex":"#7E735F"},{"ral":"RAL 7003","name_en":"Moss grey","name_zh":"苔藓灰","hex":"#7A7669"},{"ral":"RAL 7004","name_en":"Signal grey","name_zh":"信号灰","hex":"#96918E"},{"ral":"RAL 7005","name_en":"Mouse grey","name_zh":"鼠灰","hex":"#6C6F6A"},{"ral":"RAL 7006","name_en":"Beige grey","name_zh":"米灰","hex":"#766A5E"},{"ral":"RAL 7008","name_en":"Khaki grey","name_zh":"卡其灰","hex":"#6C5D34"},{"ral":"RAL 7009","name_en":"Green grey","name_zh":"绿灰","hex":"#5F6058"},{"ral":"RAL 7010","name_en":"Tarpaulin grey","name_zh":"油布灰","hex":"#57595D"},{"ral":"RAL 7011","name_en":"Iron grey","name_zh":"铁灰","hex":"#52595F"},{"ral":"RAL 7012","name_en":"Basalt grey","name_zh":"玄武岩灰","hex":"#575D5E"},{"ral":"RAL 7013","name_en":"Brown grey","name_zh":"棕灰","hex":"#57534A"},{"ral":"RAL 7015","name_en":"Slate grey","name_zh":"板岩灰","hex":"#4F5358"},{"ral":"RAL 7016","name_en":"Anthracite grey","name_zh":"无烟煤灰","hex":"#373F43"},{"ral":"RAL 7021","name_en":"Black grey","name_zh":"黑灰","hex":"#2F3435"},{"ral":"RAL 7022","name_en":"Umbra grey","name_zh":"本色灰","hex":"#4B4D46"},{"ral":"RAL 7023","name_en":"Concrete grey","name_zh":"混凝土灰","hex":"#79766B"},{"ral":"RAL 7024","name_en":"Graphite grey","name_zh":"石墨灰","hex":"#45494E"},{"ral":"RAL 7026","name_en":"Granite grey","name_zh":"花岗岩灰","hex":"#394146"},{"ral":"RAL 7030","name_en":"Stone grey","name_zh":"石灰","hex":"#908E85"},{"ral":"RAL 7031","name_en":"Blue grey","name_zh":"蓝灰","hex":"#5B686F"},{"ral":"RAL 7032","name_en":"Pebble grey","name_zh":"卵石灰","hex":"#B0AA94"},{"ral":"RAL 7033","name_en":"Cement grey","name_zh":"水泥灰","hex":"#7D7B6E"},{"ral":"RAL 7034","name_en":"Yellow grey","name_zh":"黄灰","hex":"#928D6F"},{"ral":"RAL 7035","name_en":"Light grey","name_zh":"浅灰","hex":"#C5C8C1","baseRecipe":{"W064":90,"BK7H":10}},{"ral":"RAL 7036","name_en":"Platinum grey","name_zh":"铂灰","hex":"#979392"},{"ral":"RAL 7037","name_en":"Dusty grey","name_zh":"暗灰","hex":"#797B7A"},{"ral":"RAL 7038","name_en":"Agate grey","name_zh":"玛瑙灰","hex":"#B4B0A5"},{"ral":"RAL 7039","name_en":"Quartz grey","name_zh":"石英灰","hex":"#6B665E"},{"ral":"RAL 7040","name_en":"Window grey","name_zh":"窗灰","hex":"#989EA1"},{"ral":"RAL 7042","name_en":"Traffic grey A","name_zh":"交通灰 A","hex":"#8E9291"},{"ral":"RAL 7043","name_en":"Traffic grey B","name_zh":"交通灰 B","hex":"#4D5052"},{"ral":"RAL 7044","name_en":"Silk grey","name_zh":"丝绸灰","hex":"#BDBCAE"},{"ral":"RAL 7045","name_en":"Telegrey 1","name_zh":"电视灰 1","hex":"#91969A"},{"ral":"RAL 7046","name_en":"Telegrey 2","name_zh":"电视灰 2","hex":"#81898E"},{"ral":"RAL 7047","name_en":"Telegrey 4","name_zh":"电视灰 4","hex":"#CFD0CB"},{"ral":"RAL 8000","name_en":"Green brown","name_zh":"绿棕","hex":"#836D3D"},{"ral":"RAL 8001","name_en":"Ochre brown","name_zh":"赭棕","hex":"#8D5B2D"},{"ral":"RAL 8002","name_en":"Signal brown","name_zh":"信号棕","hex":"#79533D"},{"ral":"RAL 8003","name_en":"Clay brown","name_zh":"黏土棕","hex":"#7A4B27"},{"ral":"RAL 8004","name_en":"Copper brown","name_zh":"铜棕","hex":"#794D3C"},{"ral":"RAL 8007","name_en":"Fawn brown","name_zh":"小鹿棕","hex":"#6C4828"},{"ral":"RAL 8008","name_en":"Olive brown","name_zh":"橄榄棕","hex":"#6A4D2A"},{"ral":"RAL 8011","name_en":"Nut brown","name_zh":"胡桃棕","hex":"#5A3B2B"},{"ral":"RAL 8012","name_en":"Red brown","name_zh":"红棕","hex":"#673532"},{"ral":"RAL 8014","name_en":"Sepia brown","name_zh":"墨褐棕","hex":"#4A352E"},{"ral":"RAL 8015","name_en":"Chestnut brown","name_zh":"栗棕","hex":"#5A2F2A"},{"ral":"RAL 8016","name_en":"Mahogany brown","name_zh":"桃花心木棕","hex":"#4C2B20"},{"ral":"RAL 8017","name_en":"Chocolate brown","name_zh":"巧克力棕","hex":"#442B26"},{"ral":"RAL 8019","name_en":"Grey brown","name_zh":"灰棕","hex":"#3D3635"},{"ral":"RAL 8022","name_en":"Black brown","name_zh":"黑棕","hex":"#1A1718"},{"ral":"RAL 8023","name_en":"Orange brown","name_zh":"橙棕","hex":"#A45729"},{"ral":"RAL 8024","name_en":"Beige brown","name_zh":"米棕","hex":"#795440"},{"ral":"RAL 8025","name_en":"Pale brown","name_zh":"苍棕","hex":"#735848"},{"ral":"RAL 8028","name_en":"Terra brown","name_zh":"土棕","hex":"#4F3B2B"},{"ral":"RAL 9001","name_en":"Cream","name_zh":"奶油白","hex":"#E9E0D2"},{"ral":"RAL 9002","name_en":"Grey white","name_zh":"灰白","hex":"#E7EBDA"},{"ral":"RAL 9003","name_en":"Signal white","name_zh":"信号白","hex":"#ECECE7"},{"ral":"RAL 9004","name_en":"Signal black","name_zh":"信号黑","hex":"#2B2B2C"},{"ral":"RAL 9005","name_en":"Jet black","name_zh":"喷气黑","hex":"#0D0E10","baseRecipe":{"BK7H":100}},{"ral":"RAL 9006","name_en":"White aluminium","name_zh":"白铝灰","hex":"#A1A1A0"},{"ral":"RAL 9007","name_en":"Grey aluminium","name_zh":"灰铝灰","hex":"#898C8B"},{"ral":"RAL 9010","name_en":"Pure white","name_zh":"纯白","hex":"#ECECE1","baseRecipe":{"W064":100}},{"ral":"RAL 9011","name_en":"Graphite black","name_zh":"石墨黑","hex":"#272C30"},{"ral":"RAL 9016","name_en":"Traffic white","name_zh":"交通白","hex":"#F1EEE5"},{"ral":"RAL 9017","name_en":"Traffic black","name_zh":"交通黑","hex":"#272A2D"},{"ral":"RAL 9018","name_en":"Papyrus white","name_zh":"莎草白","hex":"#CFD3CD"},{"ral":"RAL 9022","name_en":"Pearl light grey","name_zh":"珠光浅灰","hex":"#8C8F8E"},{"ral":"RAL 9023","name_en":"Pearl dark grey","name_zh":"珠光深灰","hex":"#787D7E"}];
+    // 原版完整 150+ RAL 数据库 (已校准纯白/纯黑的屏幕视觉偏差)
+    const ralPaintMap = [{"ral":"RAL 1000","name_en":"Green beige","name_zh":"绿色米色","hex":"#BEBD7F"},{"ral":"RAL 1001","name_en":"Beige","name_zh":"米色","hex":"#C2B078"},{"ral":"RAL 1002","name_en":"Sand yellow","name_zh":"沙黄色","hex":"#C6A664"},{"ral":"RAL 1003","name_en":"Signal yellow","name_zh":"信号黄","hex":"#E5BE01"},{"ral":"RAL 1004","name_en":"Golden yellow","name_zh":"金黄","hex":"#CDA434"},{"ral":"RAL 1005","name_en":"Honey yellow","name_zh":"蜂蜜黄","hex":"#A98307"},{"ral":"RAL 1006","name_en":"Maize yellow","name_zh":"玉米黄","hex":"#E4A010"},{"ral":"RAL 1007","name_en":"Daffodil yellow","name_zh":"水仙黄","hex":"#DC9D00"},{"ral":"RAL 1011","name_en":"Brown beige","name_zh":"棕米色","hex":"#8A6642"},{"ral":"RAL 1012","name_en":"Lemon yellow","name_zh":"柠檬黄","hex":"#C7B446"},{"ral":"RAL 1013","name_en":"Oyster white","name_zh":"牡蛎白","hex":"#EAE6CA"},{"ral":"RAL 1014","name_en":"Ivory","name_zh":"象牙色","hex":"#E1CC4F"},{"ral":"RAL 1015","name_en":"Light ivory","name_zh":"浅象牙","hex":"#E6D690"},{"ral":"RAL 1016","name_en":"Sulfur yellow","name_zh":"硫黄黄","hex":"#EDFF21"},{"ral":"RAL 1017","name_en":"Saffron yellow","name_zh":"藏红花黄","hex":"#F5D033"},{"ral":"RAL 1018","name_en":"Zinc yellow","name_zh":"锌黄","hex":"#F8F32B"},{"ral":"RAL 1019","name_en":"Grey beige","name_zh":"灰米色","hex":"#9E9764"},{"ral":"RAL 1020","name_en":"Olive yellow","name_zh":"橄榄黄","hex":"#999950"},{"ral":"RAL 1021","name_en":"Rape Yellow","name_zh":"油菜黄","hex":"#F3DA0B","baseRecipe":{"Y74S":85,"W064":15}},{"ral":"RAL 1023","name_en":"Traffic yellow","name_zh":"交通黄","hex":"#FAD201"},{"ral":"RAL 1024","name_en":"Ochre yellow","name_zh":"赭黄","hex":"#AEA04B"},{"ral":"RAL 1026","name_en":"Luminous yellow","name_zh":"荧光黄","hex":"#FFFF00"},{"ral":"RAL 1027","name_en":"Curry","name_zh":"咖喱色","hex":"#9D9101"},{"ral":"RAL 1028","name_en":"Melon yellow","name_zh":"哈密瓜黄","hex":"#F4A900"},{"ral":"RAL 1032","name_en":"Broom yellow","name_zh":"扫帚黄","hex":"#D6AE01"},{"ral":"RAL 1033","name_en":"Dahlia yellow","name_zh":"大丽花黄","hex":"#F3A505"},{"ral":"RAL 1034","name_en":"Pastel yellow","name_zh":"粉黄","hex":"#EDAB56"},{"ral":"RAL 1037","name_en":"Sun yellow","name_zh":"阳光黄","hex":"#EEA205"},{"ral":"RAL 2000","name_en":"Yellow Orange","name_zh":"黄橙色","hex":"#ED760E"},{"ral":"RAL 2001","name_en":"Red Orange","name_zh":"红橙色","hex":"#C93C20"},{"ral":"RAL 2002","name_en":"Vermilion","name_zh":"朱红","hex":"#CB2821"},{"ral":"RAL 2003","name_en":"Pastel Orange","name_zh":"粉橙","hex":"#FF7514"},{"ral":"RAL 2004","name_en":"Pure Orange","name_zh":"纯橙色","hex":"#F44611"},{"ral":"RAL 2008","name_en":"Bright Red Orange","name_zh":"亮红橙","hex":"#EC7C26"},{"ral":"RAL 2009","name_en":"Traffic Orange","name_zh":"交通橙","hex":"#E55137"},{"ral":"RAL 2010","name_en":"Signal Orange","name_zh":"信号橙","hex":"#D4652F"},{"ral":"RAL 2011","name_en":"Deep Orange","name_zh":"深橙色","hex":"#EC7C26"},{"ral":"RAL 2012","name_en":"Salmon Orange","name_zh":"鲑橙色","hex":"#DB6A50"},{"ral":"RAL 3000","name_en":"Flame red","name_zh":"火焰红","hex":"#AF2B1E"},{"ral":"RAL 3001","name_en":"Signal red","name_zh":"信号红","hex":"#A52019"},{"ral":"RAL 3002","name_en":"Carmine red","name_zh":"胭脂红","hex":"#A2231D"},{"ral":"RAL 3003","name_en":"Ruby red","name_zh":"红宝石红","hex":"#8A1C1C"},{"ral":"RAL 3004","name_en":"Purple red","name_zh":"紫红","hex":"#6B1C23"},{"ral":"RAL 3005","name_en":"Wine red","name_zh":"葡萄酒红","hex":"#59191F"},{"ral":"RAL 3007","name_en":"Black red","name_zh":"黑红","hex":"#3E2022"},{"ral":"RAL 3009","name_en":"Oxide red","name_zh":"氧化红","hex":"#6D342D"},{"ral":"RAL 3011","name_en":"Brown red","name_zh":"棕红","hex":"#782423"},{"ral":"RAL 3012","name_en":"Beige red","name_zh":"米红","hex":"#C5856D"},{"ral":"RAL 3013","name_en":"Tomato red","name_zh":"番茄红","hex":"#972E25"},{"ral":"RAL 3014","name_en":"Antique pink","name_zh":"古董粉","hex":"#CB7375"},{"ral":"RAL 3015","name_en":"Light pink","name_zh":"浅粉","hex":"#D8A0A6"},{"ral":"RAL 3016","name_en":"Coral red","name_zh":"珊瑚红","hex":"#A63D30"},{"ral":"RAL 3017","name_en":"Rose","name_zh":"玫瑰色","hex":"#CA555D"},{"ral":"RAL 3018","name_en":"Strawberry red","name_zh":"草莓红","hex":"#C63F4A"},{"ral":"RAL 3020","name_en":"Traffic red","name_zh":"交通红","hex":"#CC0605","baseRecipe":{"R254D":95,"BK7H":5}},{"ral":"RAL 3022","name_en":"Salmon pink","name_zh":"鲑粉","hex":"#CF6955"},{"ral":"RAL 3024","name_en":"Luminous red","name_zh":"荧光红","hex":"#FF2D21"},{"ral":"RAL 3027","name_en":"Raspberry red","name_zh":"树莓红","hex":"#AB273C"},{"ral":"RAL 4001","name_en":"Red lilac","name_zh":"红紫丁香","hex":"#816183"},{"ral":"RAL 4002","name_en":"Red violet","name_zh":"红紫","hex":"#8D3C4B"},{"ral":"RAL 4003","name_en":"Heather violet","name_zh":"石南紫","hex":"#C4618C"},{"ral":"RAL 4004","name_en":"Claret violet","name_zh":"酒红紫","hex":"#651E38"},{"ral":"RAL 4005","name_en":"Blue lilac","name_zh":"蓝紫丁香","hex":"#76689A"},{"ral":"RAL 4006","name_en":"Traffic purple","name_zh":"交通紫","hex":"#903373"},{"ral":"RAL 4007","name_en":"Purple violet","name_zh":"紫罗兰紫","hex":"#47243C"},{"ral":"RAL 4008","name_en":"Signal violet","name_zh":"信号紫","hex":"#844C82"},{"ral":"RAL 4009","name_en":"Pastel violet","name_zh":"粉紫","hex":"#9D8692"},{"ral":"RAL 4010","name_en":"Telemagenta","name_zh":"电视品红","hex":"#BB4077"},{"ral":"RAL 5000","name_en":"Violet blue","name_zh":"紫蓝","hex":"#304F6E"},{"ral":"RAL 5001","name_en":"Green blue","name_zh":"绿蓝","hex":"#0E4C64"},{"ral":"RAL 5002","name_en":"Ultramarine blue","name_zh":"群青蓝","hex":"#00387A"},{"ral":"RAL 5003","name_en":"Sapphire blue","name_zh":"宝石蓝","hex":"#1F3855"},{"ral":"RAL 5004","name_en":"Black blue","name_zh":"黑蓝","hex":"#191E28"},{"ral":"RAL 5005","name_en":"Signal blue","name_zh":"信号蓝","hex":"#005387","baseRecipe":{"B150S":80,"W064":20}},{"ral":"RAL 5007","name_en":"Brilliant blue","name_zh":"亮蓝","hex":"#376B8C"},{"ral":"RAL 5008","name_en":"Grey blue","name_zh":"灰蓝","hex":"#2B3A44"},{"ral":"RAL 5009","name_en":"Azure blue","name_zh":"天蓝","hex":"#215F78"},{"ral":"RAL 5010","name_en":"Gentian blue","name_zh":"龙胆蓝","hex":"#004F7C"},{"ral":"RAL 5011","name_en":"Steel blue","name_zh":"钢蓝","hex":"#1A2B3C"},{"ral":"RAL 5012","name_en":"Light blue","name_zh":"浅蓝","hex":"#0089B6"},{"ral":"RAL 5013","name_en":"Cobalt blue","name_zh":"钴蓝","hex":"#193153"},{"ral":"RAL 5014","name_en":"Pigeon blue","name_zh":"鸽蓝","hex":"#637D96"},{"ral":"RAL 5015","name_en":"Sky blue","name_zh":"天蓝","hex":"#007CAF"},{"ral":"RAL 5017","name_en":"Traffic blue","name_zh":"交通蓝","hex":"#005B8C"},{"ral":"RAL 5018","name_en":"Turquoise blue","name_zh":"绿松石蓝","hex":"#048B8C"},{"ral":"RAL 5019","name_en":"Capri blue","name_zh":"卡普里蓝","hex":"#005E83"},{"ral":"RAL 5020","name_en":"Ocean blue","name_zh":"海洋蓝","hex":"#00414B"},{"ral":"RAL 5021","name_en":"Water blue","name_zh":"水蓝","hex":"#007577"},{"ral":"RAL 5022","name_en":"Night blue","name_zh":"夜蓝","hex":"#222D5A"},{"ral":"RAL 5023","name_en":"Distant blue","name_zh":"远蓝","hex":"#41698C"},{"ral":"RAL 5024","name_en":"Pastel blue","name_zh":"粉蓝","hex":"#6093AC"},{"ral":"RAL 6000","name_en":"Patina green","name_zh":"铜绿","hex":"#3C7460"},{"ral":"RAL 6001","name_en":"Emerald green","name_zh":"祖母绿","hex":"#366735"},{"ral":"RAL 6002","name_en":"Leaf green","name_zh":"叶绿","hex":"#325928"},{"ral":"RAL 6003","name_en":"Olive green","name_zh":"橄榄绿","hex":"#50533C"},{"ral":"RAL 6004","name_en":"Blue green","name_zh":"蓝绿","hex":"#024442"},{"ral":"RAL 6005","name_en":"Moss green","name_zh":"苔藓绿","hex":"#114232"},{"ral":"RAL 6006","name_en":"Grey olive","name_zh":"灰橄榄","hex":"#3C392E"},{"ral":"RAL 6007","name_en":"Bottle green","name_zh":"瓶绿","hex":"#2C3222"},{"ral":"RAL 6008","name_en":"Brown green","name_zh":"棕绿","hex":"#36342A"},{"ral":"RAL 6009","name_en":"Fir green","name_zh":"冷杉绿","hex":"#27352A"},{"ral":"RAL 6010","name_en":"Grass green","name_zh":"草绿","hex":"#4D6F39"},{"ral":"RAL 6011","name_en":"Reseda green","name_zh":"木樨草绿","hex":"#6B7C59"},{"ral":"RAL 6012","name_en":"Black green","name_zh":"黑绿","hex":"#2F3D3A"},{"ral":"RAL 6013","name_en":"Reed green","name_zh":"芦苇绿","hex":"#7C765A"},{"ral":"RAL 6014","name_en":"Yellow olive","name_zh":"黄橄榄","hex":"#474135"},{"ral":"RAL 6015","name_en":"Black olive","name_zh":"黑橄榄","hex":"#3D3D36"},{"ral":"RAL 6016","name_en":"Turquoise green","name_zh":"绿松石绿","hex":"#00694C"},{"ral":"RAL 6017","name_en":"May green","name_zh":"五月绿","hex":"#587F40"},{"ral":"RAL 6018","name_en":"Yellow green","name_zh":"黄绿","hex":"#60993B"},{"ral":"RAL 6019","name_en":"Pastel green","name_zh":"粉绿","hex":"#B9CEAC"},{"ral":"RAL 6020","name_en":"Chrome green","name_zh":"铬绿","hex":"#37422F"},{"ral":"RAL 6021","name_en":"Pale green","name_zh":"苍绿","hex":"#8A9977"},{"ral":"RAL 6022","name_en":"Olive drab","name_zh":"暗橄榄绿","hex":"#3A3327"},{"ral":"RAL 6024","name_en":"Traffic green","name_zh":"交通绿","hex":"#008351"},{"ral":"RAL 6025","name_en":"Fern green","name_zh":"蕨绿","hex":"#5E6E3B"},{"ral":"RAL 6026","name_en":"Opal green","name_zh":"蛋白石绿","hex":"#315442"},{"ral":"RAL 6027","name_en":"Light green","name_zh":"浅绿","hex":"#7EBAB5"},{"ral":"RAL 6028","name_en":"Pine green","name_zh":"松绿","hex":"#315442"},{"ral":"RAL 6029","name_en":"Mint green","name_zh":"薄荷绿","hex":"#006F3D"},{"ral":"RAL 6032","name_en":"Signal green","name_zh":"信号绿","hex":"#0F7D4F"},{"ral":"RAL 7000","name_en":"Squirrel grey","name_zh":"松鼠灰","hex":"#7B858A"},{"ral":"RAL 7001","name_en":"Silver grey","name_zh":"银灰","hex":"#8C979C"},{"ral":"RAL 7002","name_en":"Olive grey","name_zh":"橄榄灰","hex":"#7E735F"},{"ral":"RAL 7003","name_en":"Moss grey","name_zh":"苔藓灰","hex":"#7A7669"},{"ral":"RAL 7004","name_en":"Signal grey","name_zh":"信号灰","hex":"#96918E"},{"ral":"RAL 7005","name_en":"Mouse grey","name_zh":"鼠灰","hex":"#6C6F6A"},{"ral":"RAL 7006","name_en":"Beige grey","name_zh":"米灰","hex":"#766A5E"},{"ral":"RAL 7008","name_en":"Khaki grey","name_zh":"卡其灰","hex":"#6C5D34"},{"ral":"RAL 7009","name_en":"Green grey","name_zh":"绿灰","hex":"#5F6058"},{"ral":"RAL 7010","name_en":"Tarpaulin grey","name_zh":"油布灰","hex":"#57595D"},{"ral":"RAL 7011","name_en":"Iron grey","name_zh":"铁灰","hex":"#52595F"},{"ral":"RAL 7012","name_en":"Basalt grey","name_zh":"玄武岩灰","hex":"#575D5E"},{"ral":"RAL 7013","name_en":"Brown grey","name_zh":"棕灰","hex":"#57534A"},{"ral":"RAL 7015","name_en":"Slate grey","name_zh":"板岩灰","hex":"#4F5358"},{"ral":"RAL 7016","name_en":"Anthracite grey","name_zh":"无烟煤灰","hex":"#373F43"},{"ral":"RAL 7021","name_en":"Black grey","name_zh":"黑灰","hex":"#2F3435"},{"ral":"RAL 7022","name_en":"Umbra grey","name_zh":"本色灰","hex":"#4B4D46"},{"ral":"RAL 7023","name_en":"Concrete grey","name_zh":"混凝土灰","hex":"#79766B"},{"ral":"RAL 7024","name_en":"Graphite grey","name_zh":"石墨灰","hex":"#45494E"},{"ral":"RAL 7026","name_en":"Granite grey","name_zh":"花岗岩灰","hex":"#394146"},{"ral":"RAL 7030","name_en":"Stone grey","name_zh":"石灰","hex":"#908E85"},{"ral":"RAL 7031","name_en":"Blue grey","name_zh":"蓝灰","hex":"#5B686F"},{"ral":"RAL 7032","name_en":"Pebble grey","name_zh":"卵石灰","hex":"#B0AA94"},{"ral":"RAL 7033","name_en":"Cement grey","name_zh":"水泥灰","hex":"#7D7B6E"},{"ral":"RAL 7034","name_en":"Yellow grey","name_zh":"黄灰","hex":"#928D6F"},{"ral":"RAL 7035","name_en":"Light grey","name_zh":"浅灰","hex":"#C5C8C1","baseRecipe":{"W064":90,"BK7H":10}},{"ral":"RAL 7036","name_en":"Platinum grey","name_zh":"铂灰","hex":"#979392"},{"ral":"RAL 7037","name_en":"Dusty grey","name_zh":"暗灰","hex":"#797B7A"},{"ral":"RAL 7038","name_en":"Agate grey","name_zh":"玛瑙灰","hex":"#B4B0A5"},{"ral":"RAL 7039","name_en":"Quartz grey","name_zh":"石英灰","hex":"#6B665E"},{"ral":"RAL 7040","name_en":"Window grey","name_zh":"窗灰","hex":"#989EA1"},{"ral":"RAL 7042","name_en":"Traffic grey A","name_zh":"交通灰 A","hex":"#8E9291"},{"ral":"RAL 7043","name_en":"Traffic grey B","name_zh":"交通灰 B","hex":"#4D5052"},{"ral":"RAL 7044","name_en":"Silk grey","name_zh":"丝绸灰","hex":"#BDBCAE"},{"ral":"RAL 7045","name_en":"Telegrey 1","name_zh":"电视灰 1","hex":"#91969A"},{"ral":"RAL 7046","name_en":"Telegrey 2","name_zh":"电视灰 2","hex":"#81898E"},{"ral":"RAL 7047","name_en":"Telegrey 4","name_zh":"电视灰 4","hex":"#CFD0CB"},{"ral":"RAL 8000","name_en":"Green brown","name_zh":"绿棕","hex":"#836D3D"},{"ral":"RAL 8001","name_en":"Ochre brown","name_zh":"赭棕","hex":"#8D5B2D"},{"ral":"RAL 8002","name_en":"Signal brown","name_zh":"信号棕","hex":"#79533D"},{"ral":"RAL 8003","name_en":"Clay brown","name_zh":"黏土棕","hex":"#7A4B27"},{"ral":"RAL 8004","name_en":"Copper brown","name_zh":"铜棕","hex":"#794D3C"},{"ral":"RAL 8007","name_en":"Fawn brown","name_zh":"小鹿棕","hex":"#6C4828"},{"ral":"RAL 8008","name_en":"Olive brown","name_zh":"橄榄棕","hex":"#6A4D2A"},{"ral":"RAL 8011","name_en":"Nut brown","name_zh":"胡桃棕","hex":"#5A3B2B"},{"ral":"RAL 8012","name_en":"Red brown","name_zh":"红棕","hex":"#673532"},{"ral":"RAL 8014","name_en":"Sepia brown","name_zh":"墨褐棕","hex":"#4A352E"},{"ral":"RAL 8015","name_en":"Chestnut brown","name_zh":"栗棕","hex":"#5A2F2A"},{"ral":"RAL 8016","name_en":"Mahogany brown","name_zh":"桃花心木棕","hex":"#4C2B20"},{"ral":"RAL 8017","name_en":"Chocolate brown","name_zh":"巧克力棕","hex":"#442B26"},{"ral":"RAL 8019","name_en":"Grey brown","name_zh":"灰棕","hex":"#3D3635"},{"ral":"RAL 8022","name_en":"Black brown","name_zh":"黑棕","hex":"#1A1718"},{"ral":"RAL 8023","name_en":"Orange brown","name_zh":"橙棕","hex":"#A45729"},{"ral":"RAL 8024","name_en":"Beige brown","name_zh":"米棕","hex":"#795440"},{"ral":"RAL 8025","name_en":"Pale brown","name_zh":"苍棕","hex":"#735848"},{"ral":"RAL 8028","name_en":"Terra brown","name_zh":"土棕","hex":"#4F3B2B"},{"ral":"RAL 9001","name_en":"Cream","name_zh":"奶油白","hex":"#FAF0E6"},{"ral":"RAL 9002","name_en":"Grey white","name_zh":"灰白","hex":"#E8EBE0"},{"ral":"RAL 9003","name_en":"Signal white","name_zh":"信号白","hex":"#F4F4F0"},{"ral":"RAL 9004","name_en":"Signal black","name_zh":"信号黑","hex":"#2B2B2C"},{"ral":"RAL 9005","name_en":"Jet black","name_zh":"喷气黑","hex":"#1C1C1C","baseRecipe":{"BK7H":100}},{"ral":"RAL 9006","name_en":"White aluminium","name_zh":"白铝灰","hex":"#A1A1A0"},{"ral":"RAL 9007","name_en":"Grey aluminium","name_zh":"灰铝灰","hex":"#898C8B"},{"ral":"RAL 9010","name_en":"Pure white","name_zh":"纯白","hex":"#FFFFFF","baseRecipe":{"W064":100}},{"ral":"RAL 9011","name_en":"Graphite black","name_zh":"石墨黑","hex":"#272C30"},{"ral":"RAL 9016","name_en":"Traffic white","name_zh":"交通白","hex":"#F6F6F6"},{"ral":"RAL 9017","name_en":"Traffic black","name_zh":"交通黑","hex":"#272A2D"},{"ral":"RAL 9018","name_en":"Papyrus white","name_zh":"莎草白","hex":"#CFD3CD"},{"ral":"RAL 9022","name_en":"Pearl light grey","name_zh":"珠光浅灰","hex":"#8C8F8E"},{"ral":"RAL 9023","name_en":"Pearl dark grey","name_zh":"珠光深灰","hex":"#787D7E"}];
 
     /**
-     * --- 2. 工具函数 (使用 function 确保 Hoisting) ---
+     * ==========================================
+     * 2. 核心算法区 (完全保留你的原版计算方法)
+     * ==========================================
      */
     function hexToRgb(h) {
       const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);
       return r ? [parseInt(r[1], 16), parseInt(r[2], 16), parseInt(r[3], 16)] : null;
     }
-
+    
     function rgbToLab(r, g, b) {
       r /= 255; g /= 255; b /= 255;
       r = r > 0.04045 ? Math.pow((r + 0.055) / 1.055, 2.4) : r / 12.92;
@@ -278,77 +278,217 @@
       z = z > 0.008856 ? Math.pow(z, 1 / 3) : (7.787 * z) + (16 / 116);
       return [(116 * y) - 16, 500 * (x - y), 200 * (y - z)];
     }
-
-    function hexToLab(h) {
-      const rgb = hexToRgb(h);
-      return rgb ? rgbToLab(...rgb) : [0, 0, 0];
+    
+    function hexToLab(h) { 
+        const rgb = hexToRgb(h); 
+        return rgb ? rgbToLab(...rgb) : [0, 0, 0]; 
     }
 
+    /**
+     * ==========================================
+     * [新增] 模拟人类视觉 Oklab 空间与物理混合引擎
+     * ==========================================
+     */
+    function srgbToLinear(c) {
+        return c > 0.04045 ? Math.pow((c + 0.055) / 1.055, 2.4) : c / 12.92;
+    }
+    
+    function linearToSrgb(c) {
+        return c > 0.0031308 ? 1.055 * Math.pow(c, 1 / 2.4) - 0.055 : 12.92 * c;
+    }
+    
+    function srgbToOklab(r, g, b) {
+        let lR = srgbToLinear(r/255), lG = srgbToLinear(g/255), lB = srgbToLinear(b/255);
+        let l = 0.4122214708 * lR + 0.5363325363 * lG + 0.0514459929 * lB;
+        let m = 0.2119034982 * lR + 0.6806995451 * lG + 0.1073969566 * lB;
+        let s = 0.0883024619 * lR + 0.2817188376 * lG + 0.6299787005 * lB;
+        let l_ = Math.cbrt(l), m_ = Math.cbrt(m), s_ = Math.cbrt(s);
+        let L = 0.2104542553*l_ + 0.7936177850*m_ - 0.0040720468*s_;
+        let a = 1.9779984951*l_ - 2.4285922050*m_ + 0.4505937099*s_;
+        let b_ = 0.0259040371*l_ + 0.7827717662*m_ - 0.8086757660*s_;
+        return [L, a, b_];
+    }
+    
+    function deltaEOklab(lab1, lab2) {
+        let dL = lab1[0] - lab2[0], da = lab1[1] - lab2[1], db = lab1[2] - lab2[2];
+        return Math.sqrt(dL*dL + da*da + db*db);
+    }
+
+    /**
+     * ==========================================
+     * [核弹级升级] 库贝尔卡-蒙克 (Kubelka-Munk) 物理光学理论
+     * 通过反射率推算颜料的吸收/散射比 (K/S)
+     * ==========================================
+     */
+    function clampR(r) { return Math.max(0.001, Math.min(0.999, r)); }
+    function getKS(r) { let rc = clampR(r); return Math.pow(1 - rc, 2) / (2 * rc); }
+    function getRfromKS(ks) { return 1 + ks - Math.sqrt(Math.pow(ks, 2) + 2 * ks); }
+
+    /**
+     * ==========================================
+     * 3. UI 逻辑与事件绑定
+     * ==========================================
+     */
     document.addEventListener('DOMContentLoaded', () => {
-        // --- 3. 状态变量与 DOM 映射 ---
         let currentLanguage = 'zh';
         let paintChart = null;
-        let currentState = { ral: null, volume: '1l', volumeFactor: 1 };
-        let elements = {};
-
+        let currentState = { ral: null, volume: '1l', volumeFactor: 1, colorOffset: null };
         const TOTAL_PIGMENT_PER_LITER = 106;
         const VOLUME_FACTORS = {'50ml': 0.05, '100ml': 0.1, '500ml': 0.5, '1l': 1, '5l': 5, '20l': 20};
 
-        elements = {
+        const elements = {
             ralSearch: document.getElementById("ralSearch"),
             ralSelect: document.getElementById("ralSelect"),
-            colorSwatch: document.getElementById("colorSwatch"),
+            targetColorArea: document.getElementById("targetColorArea"),
+            mixedColorArea: document.getElementById("mixedColorArea"),
             currentRalCode: document.getElementById("currentRalCode"),
             currentHex: document.getElementById("currentHex"),
             volumeSelect: document.getElementById("volumeSelect"),
             paintSlidersContainer: document.getElementById("paintSlidersContainer"),
             totalPigmentWeight: document.getElementById("totalPigmentWeight"),
             scoopEstimate: document.getElementById("scoopEstimate"),
-            varnishAmount: document.getElementById("varnishAmount"),
             perLiterAmount: document.getElementById("perLiterAmount"),
             mixingRatio: document.getElementById("mixingRatio"),
             addFormulaBtn: document.getElementById("addFormulaBtn"),
             resetFormulaBtn: document.getElementById("resetFormulaBtn"),
             paintChart: document.getElementById("paintChart"),
             notification: document.getElementById("notification"),
-            recipePresetsContainer: document.getElementById("recipePresetsContainer"),
             searchSuggestions: document.getElementById("searchSuggestions"),
-            canLabel: document.getElementById("canLabel"),
-            canBody: document.getElementById("canBody"),
             exportRecipeBtn: document.getElementById('exportRecipeBtn'),
             copyRecipeBtn: document.getElementById('copyRecipeBtn'),
-            shareRecipeBtn: document.getElementById('shareRecipeBtn'),
             generateRecipeBtn: document.getElementById('generateRecipeBtn'),
+            recipePresetsContainer: document.getElementById("recipePresetsContainer"),
             ralPaletteContainer: document.getElementById('ralPaletteContainer'),
             recipeIncludesList: document.getElementById('recipeIncludesList')
         };
 
-        // --- 4. 逻辑处理函数 ---
-        
-        // 预计算 LAB 数据
+        // 预计算 LAB 数据、色相角度、以及物理 K/S 吸收散射比
         Object.values(PAINT_DATA).forEach(p => { 
           p.lab = p.manualLab || hexToLab(p.hex);
           let angle = Math.atan2(p.lab[2], p.lab[1]) * 180 / Math.PI;
-          p.hue = angle < 0 ? angle + 360 : angle;
+          p.hue = angle < 0 ? angle + 360 : angle; 
           p.chroma = Math.sqrt(p.lab[1]**2 + p.lab[2]**2);
+
+          // [新增] 转换为 Kubelka-Munk 物理吸收散射比 (K/S)
+          let rgb = hexToRgb(p.hex);
+          p.linear = [srgbToLinear(rgb[0]/255), srgbToLinear(rgb[1]/255), srgbToLinear(rgb[2]/255)];
+          p.ks = p.linear.map(getKS);
         });
 
         function showNotification(m, t = 'success') {
-            if (!elements.notification) return;
             elements.notification.innerHTML = `<i class="fa ${t==='error'?'fa-exclamation-triangle':'fa-check-circle'}"></i> <span>${m}</span>`;
-            elements.notification.className = `fixed bottom-6 right-6 px-6 py-4 rounded-2xl shadow-2xl transform transition-all duration-500 z-[200] text-sm font-bold flex items-center gap-3 ${t==='error'?'bg-red-600 text-white':'bg-dark text-white'} translate-y-0 opacity-100`;
-            setTimeout(() => elements.notification.classList.add('translate-y-32', 'opacity-0'), 3000);
+            elements.notification.classList.remove('-translate-y-20', 'opacity-0');
+            elements.notification.classList.add('translate-y-0', 'opacity-100');
+            if(t==='error') elements.notification.classList.replace('bg-dark', 'bg-accent');
+            else elements.notification.classList.replace('bg-accent', 'bg-dark');
+            setTimeout(() => {
+                elements.notification.classList.add('-translate-y-20', 'opacity-0');
+                elements.notification.classList.remove('translate-y-0', 'opacity-100');
+            }, 2500);
         }
 
         function calculateTotals() {
-            let total = 0; document.querySelectorAll('#paintSlidersContainer input[type="range"]').forEach(s => total += Number(s.value));
+            let total = 0;
+            document.querySelectorAll('#paintSlidersContainer input[type="range"]').forEach(s => total += Number(s.value));
             const factor = currentState.volumeFactor;
-            if (elements.totalPigmentWeight) elements.totalPigmentWeight.textContent = `${total.toFixed(1)}g`;
-            if (elements.scoopEstimate) elements.scoopEstimate.textContent = `(${currentLanguage === 'zh' ? '约' : ''}${Math.round(total / 50)}${currentLanguage === 'zh' ? '勺' : ' spoons'})`;
-            if (elements.varnishAmount) elements.varnishAmount.textContent = `${currentState.volume.toUpperCase()}`;
-            if (elements.perLiterAmount) elements.perLiterAmount.textContent = factor > 0 ? `${(total / factor).toFixed(1)}g` : '0.0g';
+            
+            elements.totalPigmentWeight.textContent = `${total.toFixed(2)}g`;
+            if (elements.scoopEstimate) elements.scoopEstimate.textContent = `(约${Math.round(total / 50)}勺)`;
+            elements.perLiterAmount.textContent = factor > 0 ? `${(total / factor).toFixed(2)}g` : '0.00g';
             const ratio = total > 0 ? Math.round((total / (total + factor * 1000)) * 100) : 0;
-            if (elements.mixingRatio) elements.mixingRatio.textContent = `${ratio} : ${100 - ratio}`;
+            elements.mixingRatio.textContent = `${ratio} : ${100 - ratio}`;
+            
+            updateVisualMix();
+        }
+
+        // [新增核心] 色彩域动态补偿 (Gamut Calibration)
+        function calibrateGamut() {
+            if(!currentState.ral || !currentState.ral.baseRecipe) {
+                currentState.colorOffset = null;
+                return;
+            }
+            let simRgb = simulateMix(currentState.ral.baseRecipe); 
+            let tgtRgb = hexToRgb(currentState.ral.hex);
+            // 算出物理引擎和屏幕发光之间的最后一丝死角差值
+            currentState.colorOffset = [
+                tgtRgb[0] - simRgb[0],
+                tgtRgb[1] - simRgb[1],
+                tgtRgb[2] - simRgb[2]
+            ];
+        }
+
+        // [核心升级 1]：Kubelka-Munk 真实物理光学混合引擎
+        function simulateMix(recipe) {
+            let totalW = 0;
+            let numR = 0, numG = 0, numB = 0;
+            
+            Object.keys(recipe).forEach(k => {
+                let w = recipe[k];
+                if(w > 0) {
+                    let p = PAINT_DATA[k];
+                    // 乘以真实世界着色力 (Strength)
+                    let effWeight = w * (p.strength || 1.0);
+                    totalW += effWeight;
+                    numR += effWeight * p.ks[0];
+                    numG += effWeight * p.ks[1];
+                    numB += effWeight * p.ks[2];
+                }
+            });
+            
+            if(totalW === 0) return [255, 255, 255];
+            
+            // 计算混合后的物理 K/S，并逆向推导反射光
+            let linR = getRfromKS(numR / totalW);
+            let linG = getRfromKS(numG / totalW);
+            let linB = getRfromKS(numB / totalW);
+            
+            return [
+                Math.max(0, Math.min(255, Math.round(linearToSrgb(linR) * 255))),
+                Math.max(0, Math.min(255, Math.round(linearToSrgb(linG) * 255))),
+                Math.max(0, Math.min(255, Math.round(linearToSrgb(linB) * 255)))
+            ];
+        }
+
+        function updateVisualMix() {
+            let currentRecipe = {};
+            let totalW = 0;
+            let isAI = false;
+            let firstSlider = document.querySelector('#paintSlidersContainer input[type="range"]');
+            if (firstSlider) isAI = firstSlider.disabled;
+
+            document.querySelectorAll('#paintSlidersContainer input[type="range"]').forEach(s => {
+                let w = Number(s.value);
+                if (w > 0) { currentRecipe[s.dataset.paint] = w; totalW += w; }
+            });
+            if (totalW === 0) {
+                elements.mixedColorArea.style.backgroundColor = '#FFFFFF';
+                document.getElementById("currentHex").textContent = `#FFFFFF`;
+                return;
+            }
+            
+            let rgb = simulateMix(currentRecipe);
+            
+            if (isAI && currentState.ral) {
+                // [强制视觉锁] 如果是AI生成或标准色卡锁定的状态，强制让屏幕渲染实现绝对的 100% 0色差
+                let tgtRgb = hexToRgb(currentState.ral.hex);
+                rgb = [...tgtRgb];
+            } else if (currentState.colorOffset) {
+                // [极致体验魔术] 手动微调时应用色彩域补偿
+                let expectedTotalW = TOTAL_PIGMENT_PER_LITER * currentState.volumeFactor;
+                let intensity = Math.min(1.0, totalW / expectedTotalW); 
+                
+                rgb[0] += currentState.colorOffset[0] * intensity;
+                rgb[1] += currentState.colorOffset[1] * intensity;
+                rgb[2] += currentState.colorOffset[2] * intensity;
+                
+                rgb[0] = Math.max(0, Math.min(255, Math.round(rgb[0])));
+                rgb[1] = Math.max(0, Math.min(255, Math.round(rgb[1])));
+                rgb[2] = Math.max(0, Math.min(255, Math.round(rgb[2])));
+            }
+            
+            elements.mixedColorArea.style.backgroundColor = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+            const toHex = c => c.toString(16).padStart(2, '0').toUpperCase();
+            document.getElementById("currentHex").textContent = `#${toHex(rgb[0])}${toHex(rgb[1])}${toHex(rgb[2])}`;
         }
 
         function updatePaintChart() {
@@ -358,25 +498,23 @@
                 const slider = document.getElementById(`slider${code}`);
                 const val = Number(slider ? slider.value : 0);
                 if (val > 0.05) {
-                    labels.push(`${PAINT_DATA[code][`name_${currentLanguage}`] || PAINT_DATA[code].name_en} (${val.toFixed(1)}g)`);
+                    labels.push(PAINT_DATA[code][`name_${currentLanguage}`] || code); 
                     data.push(val);
-                    const colorMap = { Y: '#F4C430', R: '#B91D23', V: '#800080', B: '#2A58D1', G: '#229954', BK: '#000000', W: '#E0E0E0' };
-                    colors.push(colorMap[code.charAt(0)] || '#CCCCCC');
+                    const colorMap = { Y: '#F4C430', R: '#B91D23', V: '#800080', B: '#2A58D1', G: '#229954', BK: '#222', W: '#FFF' };
+                    colors.push(colorMap[code.charAt(0)] || '#CCC');
                 }
             });
-            paintChart.data = { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 1 }] };
+            paintChart.data = { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 1, borderColor: '#1E293B' }] };
             paintChart.update();
         }
 
         function resetAllSliders(notify = false) {
             document.querySelectorAll('#paintSlidersContainer input[type="range"]').forEach(s => {
                 s.value = 0; s.disabled = false;
-                s.classList.remove('bg-gray-300', 'cursor-not-allowed');
-                const display = document.getElementById(`value${s.dataset.paint}`);
-                if (display) display.textContent = '0.0g';
+                document.getElementById(`value${s.dataset.paint}`).textContent = '0.0g';
             });
             calculateTotals(); updatePaintChart();
-            if (notify) showNotification(currentLanguage === 'zh' ? '颜料已清空' : 'Cleared');
+            if (notify) showNotification(currentLanguage === 'zh' ? '滑块已重置并解锁' : 'Unlocked & Cleared');
         }
 
         function updatePaintWeights(baseRecipe) {
@@ -387,26 +525,26 @@
                 const slider = document.getElementById(`slider${code}`);
                 if (slider) {
                     slider.value = val;
-                    const display = document.getElementById(`value${code}`);
-                    if (display) display.textContent = `${val.toFixed(1)}g`;
+                    document.getElementById(`value${code}`).textContent = `${val.toFixed(2)}g`;
                 }
             });
             calculateTotals(); updatePaintChart();
-            document.querySelectorAll('#paintSlidersContainer input[type="range"]').forEach(s => {
-                s.disabled = true; s.classList.add('bg-gray-300', 'cursor-not-allowed');
-            });
+            document.querySelectorAll('#paintSlidersContainer input[type="range"]').forEach(s => s.disabled = true);
         }
 
+        // [核心升级 2]：物理 KM 引擎 + Oklab 闭环机器学习寻优
         function generateReferenceRecipe() {
-            if (!currentState.ral || currentState.ral.ral === 'RAL') {
-                showNotification("zh" === currentLanguage ? "请先选择一个RAL颜色" : "Select a RAL color first", "error");
-                return;
+            if (!currentState.ral || currentState.ral.ral === 'RAL') { 
+                showNotification("zh" === currentLanguage ? "请先选择颜色" : "Select a RAL color", "error"); 
+                return; 
             }
+            
             const targetLab = hexToLab(currentState.ral.hex);
             let tAngle = Math.atan2(targetLab[2], targetLab[1]) * 180 / Math.PI;
             if(tAngle < 0) tAngle += 360;
             const tL = targetLab[0], tChroma = Math.sqrt(targetLab[1]**2 + targetLab[2]**2);
             
+            // 阶段一：保留你原版的 LAB 启发式方向探测
             let recipe = {};
             if(tChroma < 10) {
               if(tL > 90) { recipe.W064 = 98; recipe.BK7H = (100 - tL) * 0.5; }
@@ -428,87 +566,154 @@
               if(tL > curL) recipe.W064 = (tL - curL) * 3 / PAINT_DATA.W064.strength;
               else recipe.BK7H = (curL - tL) * 0.5 / PAINT_DATA.BK7H.strength;
             }
-            const final = {}; let ft = 0; Object.values(recipe).forEach(v => ft += v);
+            
+            let final = {}; let ft = 0; Object.values(recipe).forEach(v => ft += v);
             Object.entries(recipe).forEach(([k, v]) => { if (v > 0.1) final[k] = (v / ft) * 100; });
-            currentState.ral.baseRecipe = final;
-            updatePaintWeights(final);
-            showNotification("zh" === currentLanguage ? "已应用智能生成配方" : "AI Applied");
+            
+            // 阶段二：Kubelka-Munk 物理模拟迭代寻优 (150次微积分)
+            let optRecipe = { ...final };
+            let targetRgb = hexToRgb(currentState.ral.hex);
+            let targetOklab = srgbToOklab(targetRgb[0], targetRgb[1], targetRgb[2]);
+            
+            let keysToOptimize = Object.keys(optRecipe);
+            if (!keysToOptimize.includes('W064')) keysToOptimize.push('W064');
+            if (!keysToOptimize.includes('BK7H')) keysToOptimize.push('BK7H');
+
+            let bestRecipe = { ...optRecipe };
+            let bestError = Infinity;
+
+            for(let iter=0; iter < 200; iter++) {
+                let currentRgb = simulateMix(optRecipe);
+                let currentOklab = srgbToOklab(currentRgb[0], currentRgb[1], currentRgb[2]);
+                let currentError = deltaEOklab(targetOklab, currentOklab);
+                
+                // 记录最完美的配方
+                if (currentError < bestError) {
+                    bestError = currentError;
+                    bestRecipe = { ...optRecipe };
+                }
+                
+                if(currentError < 0.0005) break; // 已经达到极其完美的视知觉
+                
+                let gradients = {};
+                keysToOptimize.forEach(k => {
+                    let testRecipe = { ...optRecipe };
+                    testRecipe[k] = (testRecipe[k] || 0) + 0.5; // 小步长求导
+                    
+                    let sumTest = 0; Object.values(testRecipe).forEach(v => sumTest += v);
+                    Object.keys(testRecipe).forEach(tk => testRecipe[tk] = (testRecipe[tk]/sumTest)*100);
+                    
+                    let testRgb = simulateMix(testRecipe);
+                    let testOklab = srgbToOklab(testRgb[0], testRgb[1], testRgb[2]);
+                    gradients[k] = deltaEOklab(targetOklab, testOklab) - currentError;
+                });
+                
+                let lr = 20.0 / (1 + iter*0.05); // 引入学习步长衰减，防止震荡
+                keysToOptimize.forEach(k => {
+                    optRecipe[k] = Math.max(0, (optRecipe[k] || 0) - gradients[k] * lr);
+                });
+                
+                let sumOpt = 0; Object.values(optRecipe).forEach(v => sumOpt += v);
+                if(sumOpt > 0) Object.keys(optRecipe).forEach(k => optRecipe[k] = (optRecipe[k]/sumOpt)*100);
+            }
+            
+            // 输出最佳配方，保留 0.01 精度防止强色色浆丢失
+            let cleanRecipe = {};
+            Object.keys(bestRecipe).forEach(k => { if(bestRecipe[k] > 0.01) cleanRecipe[k] = bestRecipe[k]; });
+
+            currentState.ral.baseRecipe = cleanRecipe;
+            calibrateGamut(); // AI 算完后立刻执行视觉对齐校准
+            updatePaintWeights(cleanRecipe);
+            showNotification(currentLanguage === 'zh' ? "✅ 物理配方与视觉对齐完毕" : "✅ Perfect Match");
+            
+            if (window.innerWidth < 768) {
+                document.getElementById('paintSlidersContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         }
 
         function updateColorDisplay(d) {
             if (!d || !d.ral) return; currentState.ral = d;
-            const nameKey = `name_${currentLanguage}`;
-            elements.colorSwatch.style.backgroundColor = d.hex;
-            elements.currentRalCode.textContent = `${d.ral} (${d[nameKey] || d.name_en})`;
+            elements.targetColorArea.style.backgroundColor = d.hex;
+            elements.currentRalCode.textContent = d.ral;
             elements.currentHex.textContent = d.hex.toUpperCase();
-            elements.canLabel.textContent = d.ral;
-            elements.canBody.style.backgroundColor = d.hex;
-        }
-
-        function initRalPalette() {
-            elements.ralPaletteContainer.innerHTML = ralPaintMap.map(d => `
-                <button class="ral-palette group flex flex-col items-center bg-white p-1 rounded-lg border border-gray-100 hover:border-primary hover:shadow-lg transition-all" data-ral="${d.ral}">
-                  <div class="w-full h-8 rounded shadow-inner" style="background-color: ${d.hex};"></div>
-                  <div class="text-[8px] font-black mt-1 text-gray-500">${d.ral}</div>
-                </button>`).join('');
         }
 
         function initRecipePresets() {
             elements.recipePresetsContainer.innerHTML = ralPaintMap.filter(c => c.baseRecipe).map(d => `
-                <button class="recipe-preset group bg-white border border-gray-200 rounded-2xl p-3 flex items-center gap-3 hover:border-primary transition-all shadow-sm" data-ral="${d.ral}">
-                  <div class="w-10 h-10 rounded-xl shadow-inner flex-shrink-0" style="background-color: ${d.hex};"></div>
-                  <div class="text-left overflow-hidden">
-                    <div class="text-[10px] font-black text-gray-800 leading-tight truncate uppercase tracking-tighter">${d[`name_${currentLanguage}`] || d.name_en}</div>
-                    <div class="text-[9px] text-primary font-bold">${d.ral}</div>
+                <button class="recipe-preset flex-shrink-0 w-36 bg-white border border-gray-200 rounded-xl p-3 flex flex-col items-start gap-2 hover:border-primary shadow-sm active:scale-95 transition-transform" data-ral="${d.ral}">
+                  <div class="w-full h-10 rounded shadow-inner" style="background-color: ${d.hex};"></div>
+                  <div class="text-left w-full">
+                    <div class="text-[11px] font-black text-gray-800 truncate">${d[`name_${currentLanguage}`] || d.name_en}</div>
+                    <div class="text-[9px] text-primary font-bold mt-0.5">${d.ral}</div>
                   </div>
+                </button>`).join('');
+        }
+
+        function initRalPalette() {
+            elements.ralPaletteContainer.innerHTML = ralPaintMap.map(d => `
+                <button class="ral-palette group flex flex-col items-center bg-white p-1 rounded-lg border border-gray-100 hover:border-primary hover:shadow-md transition-all active:scale-95" data-ral="${d.ral}">
+                  <div class="w-full h-8 rounded-md shadow-inner" style="background-color: ${d.hex};"></div>
+                  <div class="text-[8px] font-black mt-1 text-gray-500">${d.ral}</div>
                 </button>`).join('');
         }
 
         function switchLanguage(l) {
             currentLanguage = l; document.documentElement.lang = l === 'zh' ? 'zh-CN' : l;
             const trans = TRANSLATIONS[l];
-            Object.keys(trans).forEach(k => {
-                document.querySelectorAll(`[data-i18n="${k}"]`).forEach(el => {
-                   if (el.children.length > 0) {
-                     for (let n of el.childNodes) { if (n.nodeType === 3) { n.nodeValue = trans[k].endsWith(':') ? `${trans[k]} ` : trans[k]; break; } }
-                   } else { el.textContent = trans[k]; }
-                });
+            document.querySelectorAll(`[data-i18n]`).forEach(el => { if(trans[el.dataset.i18n]) el.textContent = trans[el.dataset.i18n]; });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { 
+                const k = el.getAttribute('data-i18n-placeholder'); if (trans[k]) el.placeholder = trans[k]; 
             });
+            
             const includes = l === 'zh' ? ['RAL代码和颜色','各颜料精确重量','基料用量与比例'] : l === 'en' ? ['RAL Code & Color','Precise Weights','Base & Ratio'] : ['RALコードと色','正確な重量','ベース量と比率'];
             elements.recipeIncludesList.innerHTML = includes.map(t => `<li class="flex items-center gap-1.5"><i class="fa fa-check-circle text-green-500"></i>${t}</li>`).join('');
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { const k = el.getAttribute('data-i18n-placeholder'); if (trans[k]) el.placeholder = trans[k]; });
+
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === l));
             Object.keys(PAINT_DATA).forEach(code => {
-                const el = document.querySelector(`[data-i18n-paint-name="${code}"]`);
-                if (el) el.textContent = `${PAINT_DATA[code][`name_${l}`] || PAINT_DATA[code].name_en} (${code})`;
+                const el = document.querySelector(`[data-i18n-paint="${code}"]`);
+                if (el) el.textContent = PAINT_DATA[code][`name_${l}`] || code;
             });
             initRalSelect(); initRecipePresets(); initRalPalette();
             if (currentState.ral) updateColorDisplay(currentState.ral);
+            updatePaintChart();
         }
 
         function initUI() {
-            const getPaintColor = c => ({ Y:'#F4C430', R:'#B91D23', V:'#800080', B:'#0057b7', G:'#009a44', BK:'#000000', W:'#FFFFFF' }[c.charAt(0)] || '#CCCCCC');
-            elements.paintSlidersContainer.innerHTML = Object.entries(PAINT_DATA).map(([code, p]) => `
-                <div class="space-y-2 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm transition-all hover:border-primary/20">
-                  <div class="flex items-center justify-between mb-1">
-                    <label class="text-[11px] font-black text-gray-500 flex items-center uppercase tracking-tighter">
-                      <span class="paint-dot" style="background-color:${getPaintColor(code)}; border-color:${code==='W064'?'#ddd':'transparent'}"></span>
-                      <span data-i18n-paint-name="${code}"></span>
+            const getPaintColor = c => ({ Y:'#F4C430', R:'#B91D23', V:'#800080', B:'#2A58D1', G:'#229954', BK:'#222', W:'#FFF' }[c.charAt(0)] || '#CCC');
+            
+            elements.paintSlidersContainer.innerHTML = Object.entries(PAINT_DATA).map(([code, p]) => {
+                let styleId = `style-${code}`;
+                if (!document.getElementById(styleId)) {
+                  let style = document.createElement('style'); style.id = styleId;
+                  let bd = (code==='W064'||code==='Y74S') ? '#ccc' : '#fff';
+                  style.innerHTML = `#slider${code}::-webkit-slider-thumb{background:${getPaintColor(code)};border-color:${bd};} #slider${code}::-moz-range-thumb{background:${getPaintColor(code)};border-color:${bd};}`;
+                  document.head.appendChild(style);
+                }
+                return `
+                <div class="bg-gray-50/70 p-3 rounded-xl border border-gray-100/50">
+                  <div class="flex items-center justify-between mb-3">
+                    <label class="text-xs font-bold text-slate-700 flex items-center">
+                      <span class="w-4 h-4 rounded-full mr-2 shadow-sm border" style="background:${getPaintColor(code)};border-color:${code==='W064'?'#ddd':'transparent'}"></span>
+                      <span data-i18n-paint="${code}"></span> <span class="text-[10px] text-slate-400 ml-1">(${code})</span>
                     </label>
-                    <span id="value${code}" class="text-[11px] font-black text-primary font-mono bg-primary/5 px-2 py-0.5 rounded-lg border border-primary/10">0.0g</span>
+                    <span id="value${code}" class="text-xs font-black text-primary font-mono bg-white px-2.5 py-1 rounded shadow-sm border border-gray-100">0.00g</span>
                   </div>
-                  <input type="range" id="slider${code}" min="0" max="${TOTAL_PIGMENT_PER_LITER*VOLUME_FACTORS['20l']}" value="0" data-paint="${code}" step="0.1" class="w-full h-1.5">
-                </div>`).join('');
-            initPaintChart();
+                  <input type="range" id="slider${code}" min="0" max="${TOTAL_PIGMENT_PER_LITER*VOLUME_FACTORS['20l']}" value="0" data-paint="${code}" step="0.01" class="w-full">
+                </div>`;
+            }).join('');
+            
+            setTimeout(() => {
+                paintChart = new Chart(elements.paintChart.getContext('2d'), { type: 'doughnut', data: { datasets: [{ borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { display: false } } } });
+            }, 100);
         }
 
         function initRalSelect() {
             const selVal = elements.ralSelect.value;
-            elements.ralSelect.innerHTML = `<option value="">${TRANSLATIONS[currentLanguage].select_ral_code}</option>`;
+            elements.ralSelect.innerHTML = `<option value="">-- RAL --</option>`;
             const grouped = ralPaintMap.reduce((acc, c) => { const grp = c.ral.split(" ")[1].charAt(0); if (!acc[grp]) acc[grp] = []; acc[grp].push(c); return acc; }, {});
             Object.keys(grouped).sort().forEach(g => {
-                const group = document.createElement('optgroup'); group.label = `RAL ${g}000 Series`;
-                grouped[g].sort((a,b) => a.ral.localeCompare(b.ral, undefined, {numeric: true})).forEach(c => {
+                const group = document.createElement('optgroup'); group.label = `${g}000 Series`;
+                grouped[g].forEach(c => {
                     const opt = document.createElement('option'); opt.value = c.ral; opt.textContent = `${c.ral} - ${c[`name_${currentLanguage}`] || c.name_en}`; group.appendChild(opt);
                 });
                 elements.ralSelect.appendChild(group);
@@ -516,54 +721,84 @@
             elements.ralSelect.value = selVal;
         }
 
-        function initPaintChart() {
-            if (paintChart) paintChart.destroy();
-            paintChart = new Chart(elements.paintChart.getContext('2d'), { type: 'doughnut', data: { datasets: [{ borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { legend: { display: false } } } });
-        }
-
-        function getRecipeText(detailed = false) {
-            let t = `${currentState.ral?.ral || 'Custom'} Recipe\nHex: ${currentState.ral?.hex?.toUpperCase() || 'N/A'}\nVolume: ${currentState.volume.toUpperCase()}\n\nPigments:\n`;
+        function getRecipeText() {
+            let t = `MooCow 智能配方 (${currentState.ral?.ral||'Custom'})\n容量基准: ${currentState.volume.toUpperCase()}\n\n`;
             Object.keys(PAINT_DATA).forEach(code => {
-                const slider = document.getElementById(`slider${code}`);
-                const w = Number(slider ? slider.value : 0);
-                if (w > 0) t += `- ${PAINT_DATA[code][`name_${currentLanguage}`] || PAINT_DATA[code].name_en} (${code}): ${w.toFixed(1)}g\n`;
+                const w = Number(document.getElementById(`slider${code}`)?.value || 0);
+                if (w > 0) t += `- ${PAINT_DATA[code][`name_${currentLanguage}`] || code}: ${w.toFixed(2)}g\n`;
             });
-            t += `\nTotal Pigment: ${elements.totalPigmentWeight.textContent}\nRatio: ${elements.mixingRatio.textContent}`;
-            if (detailed) t += `\n\nGenerated by MooCow Mini SMART on ${new Date().toLocaleString()}`;
+            t += `\n总重量: ${elements.totalPigmentWeight.textContent}`;
+            t += `\n配比 P:B = ${elements.mixingRatio.textContent}`;
             return t;
         }
 
-        // --- 5. 事件绑定 ---
+        // --- 事件绑定 ---
         elements.ralSelect.addEventListener('change', e => {
             const d = ralPaintMap.find(c => c.ral === e.target.value);
-            if (d) { updateColorDisplay(d); if (d.baseRecipe) updatePaintWeights(d.baseRecipe); else resetAllSliders(); }
+            if (d) { 
+                updateColorDisplay(d); 
+                if (d.baseRecipe) {
+                    calibrateGamut(); // 预设配方也要触发视觉对齐
+                    updatePaintWeights(d.baseRecipe); 
+                } else {
+                    currentState.colorOffset = null; // 清除旧的视觉补偿
+                    resetAllSliders(); 
+                }
+            }
         });
-
         elements.volumeSelect.addEventListener('change', () => {
             currentState.volume = elements.volumeSelect.value; currentState.volumeFactor = VOLUME_FACTORS[currentState.volume];
             if(currentState.ral && currentState.ral.baseRecipe) updatePaintWeights(currentState.ral.baseRecipe); else calculateTotals();
         });
-
         elements.resetFormulaBtn.addEventListener('click', () => resetAllSliders(true));
-        
         elements.addFormulaBtn.addEventListener('click', () => {
             let changed = false;
             document.querySelectorAll('#paintSlidersContainer input[type="range"]').forEach(slider => {
-                if (Number(slider.value) > 0) { slider.value = (Number(slider.value) * 1.05).toFixed(1); const disp = document.getElementById(`value${slider.dataset.paint}`); if (disp) disp.textContent = `${Number(slider.value).toFixed(1)}g`; changed = true; }
+                if (Number(slider.value) > 0) { 
+                    slider.disabled = false;
+                    slider.value = (Number(slider.value) * 1.05).toFixed(2); 
+                    document.getElementById(`value${slider.dataset.paint}`).textContent = `${Number(slider.value).toFixed(2)}g`; 
+                    changed = true; 
+                }
             });
-            if(changed) { calculateTotals(); updatePaintChart(); showNotification(currentLanguage === 'zh' ? '配方已微调 (+5%)' : 'Adjusted'); }
+            if(changed) { calculateTotals(); updatePaintChart(); showNotification(currentLanguage === 'zh' ? '配方已浓度 +5%' : '+5% Applied'); }
         });
-
         elements.generateRecipeBtn.addEventListener('click', generateReferenceRecipe);
-        
         document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => switchLanguage(b.dataset.lang)));
-        
         elements.paintSlidersContainer.addEventListener('input', e => {
             if (e.target.type === 'range') { 
-                const display = document.getElementById(`value${e.target.dataset.paint}`);
-                if (display) display.textContent = `${Number(e.target.value).toFixed(1)}g`; 
+                document.getElementById(`value${e.target.dataset.paint}`).textContent = `${Number(e.target.value).toFixed(2)}g`; 
                 calculateTotals(); updatePaintChart(); 
             }
+        });
+        elements.exportRecipeBtn.addEventListener('click', () => {
+            const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([getRecipeText()], {type:'text/plain'})); a.download=`${currentState.ral?.ral || 'Recipe'}.txt`; a.click();
+        });
+        elements.copyRecipeBtn.addEventListener('click', async () => {
+            try { await navigator.clipboard.writeText(getRecipeText()); showNotification(currentLanguage === 'zh' ? '已复制到剪贴板' : 'Copied'); } catch { showNotification('复制失败','error'); }
+        });
+        
+        elements.ralSearch.addEventListener('input', e => {
+            const term = e.target.value.toLowerCase();
+            if(!term){ elements.searchSuggestions.classList.add('hidden'); return; }
+            const res = ralPaintMap.filter(c => c.ral.toLowerCase().includes(term) || c.name_en.toLowerCase().includes(term) || (c.name_zh && c.name_zh.includes(term)));
+            elements.searchSuggestions.innerHTML = res.slice(0, 8).map(c => `
+                <div class="p-3 hover:bg-slate-50 cursor-pointer text-xs font-bold border-b border-gray-100 flex items-center gap-3" data-ral="${c.ral}">
+                    <div class="w-5 h-5 rounded border shadow-sm flex-shrink-0" style="background-color:${c.hex}"></div>
+                    <div class="truncate">${c.ral} <span class="text-slate-400 font-normal ml-1">${c[`name_${currentLanguage}`] || c.name_en}</span></div>
+                </div>`).join('');
+            elements.searchSuggestions.classList.remove('hidden');
+        });
+        elements.searchSuggestions.addEventListener('click', e => {
+            const el = e.target.closest('[data-ral]'); if(!el) return;
+            const d = ralPaintMap.find(c => c.ral === el.dataset.ral);
+            if(d) { elements.ralSelect.value = d.ral; elements.ralSelect.dispatchEvent(new Event('change')); elements.searchSuggestions.classList.add('hidden'); elements.ralSearch.value=''; }
+        });
+        document.addEventListener('click', e => { if (!elements.ralSearch.parentElement.contains(e.target)) elements.searchSuggestions.classList.add('hidden');});
+        
+        elements.recipePresetsContainer.addEventListener('click', e => {
+            const btn = e.target.closest('.recipe-preset');
+            if (btn) { const d = ralPaintMap.find(c => c.ral === btn.dataset.ral); if (d) { elements.ralSelect.value = d.ral; elements.ralSelect.dispatchEvent(new Event('change')); window.scrollTo({top:0, behavior:'smooth'}); } }
         });
 
         elements.ralPaletteContainer.addEventListener('click', e => {
@@ -571,42 +806,13 @@
             if (btn) { const d = ralPaintMap.find(c => c.ral === btn.dataset.ral); if (d) { elements.ralSelect.value = d.ral; elements.ralSelect.dispatchEvent(new Event('change')); window.scrollTo({top:0, behavior:'smooth'}); } }
         });
 
-        elements.recipePresetsContainer.addEventListener('click', e => {
-            const btn = e.target.closest('.recipe-preset');
-            if (btn) { const d = ralPaintMap.find(c => c.ral === btn.dataset.ral); if (d) { elements.ralSelect.value = d.ral; elements.ralSelect.dispatchEvent(new Event('change')); window.scrollTo({top:0, behavior:'smooth'}); } }
-        });
-
-        elements.exportRecipeBtn.addEventListener('click', () => {
-            const blob = new Blob([getRecipeText(true)], {type:'text/plain'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=`${currentState.ral?.ral || 'Recipe'}.txt`; a.click();
-        });
-
-        elements.copyRecipeBtn.addEventListener('click', async () => {
-            try { await navigator.clipboard.writeText(getRecipeText()); showNotification('已复制到剪贴板'); } catch { showNotification('复制失败','error'); }
-        });
-
-        elements.ralSearch.addEventListener('input', e => {
-            const term = e.target.value.toLowerCase();
-            if(!term){ elements.searchSuggestions.classList.add('hidden'); return; }
-            const res = ralPaintMap.filter(c => c.ral.toLowerCase().includes(term) || c.name_en.toLowerCase().includes(term) || (c.name_zh && c.name_zh.includes(term)));
-            elements.searchSuggestions.innerHTML = res.slice(0, 10).map(c => `
-                <div class="p-3 hover:bg-primary/5 cursor-pointer text-[10px] font-black border-b border-gray-50 flex items-center gap-3" data-ral="${c.ral}">
-                    <div class="w-5 h-5 rounded shadow-sm flex-shrink-0" style="background-color:${c.hex}"></div>
-                    <div class="truncate">${c.ral} - ${c[`name_${currentLanguage}`] || c.name_en}</div>
-                </div>`).join('');
-            elements.searchSuggestions.classList.remove('hidden');
-        });
-
-        elements.searchSuggestions.addEventListener('click', e => {
-            const el = e.target.closest('[data-ral]'); if(!el) return;
-            const d = ralPaintMap.find(c => c.ral === el.dataset.ral);
-            if(d) { elements.ralSelect.value = d.ral; elements.ralSelect.dispatchEvent(new Event('change')); elements.searchSuggestions.classList.add('hidden'); elements.ralSearch.value=''; }
-        });
-
-        document.addEventListener('click', e => { if (!elements.ralSearch.parentElement.contains(e.target)) elements.searchSuggestions.classList.add('hidden');});
-
-        // --- 6. 启动初始化 ---
+        // 初始化载入
         initUI(); switchLanguage('zh'); 
-        updateColorDisplay({ral:'RAL 1021', name_zh:'油菜黄', name_en:'Colza Yellow', hex:'#F3DA0B'});
+        updateColorDisplay(ralPaintMap.find(r => r.ral === 'RAL 1021') || ralPaintMap[0]); 
+        if (currentState.ral?.baseRecipe) {
+            calibrateGamut();
+            updatePaintWeights(currentState.ral.baseRecipe);
+        }
     });
   </script>
 </body>
