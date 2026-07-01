@@ -5,61 +5,114 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>MooCow Mini 调色工具 (Smart Match Ver.)</title>
   
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/spectral.js@3.0.0/spectral.min.js"></script>
   
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            primary: '#2A58D1', secondary: '#F4C430', accent: '#B91D23',
-            neutral: '#F1F5F9', dark: '#1E293B', panel: '#FFFFFF',
+            primary: '#256A5D', secondary: '#D6A13A', accent: '#C24B3D',
+            neutral: '#F4F6F2', dark: '#17211F', panel: '#FBFCF9',
           },
-          fontFamily: { sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'] },
-          boxShadow: { 'card': '0 4px 20px -2px rgba(0,0,0,0.05)' }
+          fontFamily: { sans: ['Outfit', 'system-ui', '-apple-system', 'sans-serif'], mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'] },
+          boxShadow: { 'card': '0 18px 45px -30px rgba(23,33,31,0.42)' }
         },
       }
     }
   </script>
   
   <style type="text/tailwindcss">
+    @layer base {
+      * { letter-spacing: 0 !important; }
+      html { scroll-behavior: smooth; }
+      body {
+        -webkit-tap-highlight-color: transparent;
+        overscroll-behavior-y: none;
+        min-height: 100dvh;
+        background:
+          linear-gradient(90deg, rgba(37,106,93,0.035) 1px, transparent 1px),
+          linear-gradient(180deg, rgba(37,106,93,0.035) 1px, transparent 1px),
+          #F4F6F2;
+        background-size: 28px 28px;
+      }
+      strong, .font-mono { font-variant-numeric: tabular-nums; }
+      button, input, select { font: inherit; }
+      button:focus-visible, input:focus-visible, select:focus-visible {
+        outline: 3px solid rgba(214,161,58,0.45);
+        outline-offset: 2px;
+      }
+    }
+
+    @layer components {
+      .app-header { @apply sticky top-0 z-50 bg-panel/90 text-dark border-b border-[#dce4dd] backdrop-blur-xl; box-shadow: 0 12px 35px -30px rgba(23,33,31,0.6); }
+      .app-shell { @apply max-w-7xl mx-auto px-4 md:px-6 py-5 md:py-7 grid gap-5 md:gap-6; grid-template-columns: minmax(0, 1.2fr) minmax(360px, 0.8fr); align-items: start; }
+      .app-shell > * { min-width: 0; }
+      .tool-card { @apply bg-panel border border-[#dfe7df] rounded-lg shadow-card overflow-hidden; }
+      .notice-card { @apply bg-panel/85 border border-[#dfe7df] rounded-lg p-4 flex items-start gap-3 text-xs; grid-column: 1 / -1; }
+      .target-card { grid-column: 1; }
+      .mix-card { grid-column: 2; grid-row: 2; }
+      .sliders-card { grid-column: 1; }
+      .export-grid { grid-column: 2; }
+      .presets-card { grid-column: 2; }
+      .presets-card { overflow: hidden; }
+      .palette-card { grid-column: 1 / -1; }
+      .field-control { @apply w-full px-3 py-3 bg-[#f5f7f4] border border-[#dce4dd] rounded-lg outline-none text-sm font-bold transition-all; }
+      .metric-slab { @apply bg-[#f4f6f2] border border-[#e2e8e2] rounded-lg p-3 flex flex-col justify-center; }
+      .primary-action { @apply w-full py-3.5 bg-dark text-white rounded-lg font-black text-sm hover:bg-[#22312d] active:scale-[0.99] transition-all shadow-card flex justify-center items-center gap-2; }
+      .soft-action { @apply px-3 py-2 rounded-lg text-[10px] font-bold transition flex items-center gap-1 active:scale-95; }
+    }
+
     @layer utilities {
       .slider-thumb { @apply appearance-none w-7 h-7 md:w-8 md:h-8 rounded-full cursor-pointer transition-transform duration-100 shadow-md border-[3px] border-white; }
       .lang-btn { @apply px-3 py-1.5 text-xs font-bold rounded transition-all duration-200 border border-transparent; }
     }
     
-    body { -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
-    
     input[type="range"] { 
-      @apply appearance-none w-full h-4 rounded-full bg-gray-200 outline-none shadow-inner;
+      @apply appearance-none w-full h-3 rounded-full bg-[#dfe6dd] outline-none shadow-inner;
       touch-action: none;
     }
     input[type="range"]::-webkit-slider-thumb { @apply slider-thumb; }
     input[type="range"]::-moz-range-thumb { @apply slider-thumb; }
     input[type="range"]:disabled { @apply opacity-50 cursor-not-allowed; }
     
-    .lang-btn.active { @apply bg-white text-primary shadow-sm; }
-    .lang-btn:not(.active) { @apply bg-black/10 text-white hover:bg-black/20; }
+    .lang-btn.active { @apply bg-primary text-white shadow-sm; }
+    .lang-btn:not(.active) { @apply bg-[#edf2ed] text-slate-600 hover:bg-[#e0e8e1]; }
     
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    @media (max-width: 1023px) {
+      .app-shell { display: flex; flex-direction: column; align-items: stretch; padding: 1rem; }
+    }
+
+    @media (max-width: 520px) {
+      .app-shell { padding: 0.75rem; gap: 1rem; }
+      .tool-card { border-radius: 8px; }
+      .notice-card { padding: 0.9rem; }
+      .slider-thumb { width: 1.65rem; height: 1.65rem; }
+    }
   </style>
 </head>
-<body class="bg-neutral font-sans text-slate-800 pb-12 selection:bg-primary selection:text-white">
+<body class="font-sans text-slate-800 pb-12 selection:bg-primary selection:text-white">
 
   <!-- App Header -->
-  <header class="bg-primary text-white sticky top-0 z-50 shadow-md">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+  <header class="app-header">
+    <div class="max-w-7xl mx-auto px-4 md:px-6 py-3 flex justify-between items-center">
       <div class="flex flex-col">
-        <h1 class="text-lg md:text-xl font-black tracking-tight flex items-center gap-1.5">
+        <h1 class="text-lg md:text-xl font-black flex items-center gap-2 text-dark">
           MooCow 
-          <span class="text-[9px] md:text-[10px] bg-accent px-1.5 py-0.5 rounded shadow-sm">SMART MIX</span>
+          <span class="text-[9px] md:text-[10px] bg-accent text-white px-1.5 py-0.5 rounded shadow-sm">SMART MIX</span>
         </h1>
-        <span class="text-[10px] text-blue-200 font-medium" data-i18n="subtitle">智能调色助手</span>
+        <span class="text-[10px] text-slate-500 font-bold" data-i18n="subtitle">智能调色助手</span>
       </div>
-      <div class="flex gap-1 bg-black/10 p-1 rounded-lg">
+      <div class="flex gap-1 bg-[#edf2ed] p-1 rounded-lg">
         <button class="lang-btn active" data-lang="zh">中</button>
         <button class="lang-btn" data-lang="en">EN</button>
         <button class="lang-btn" data-lang="ja">日</button>
@@ -67,10 +120,10 @@
     </div>
   </header>
 
-  <div class="max-w-4xl mx-auto p-4 space-y-5 mt-2">
+  <main class="app-shell">
 
     <!-- 提示区 -->
-    <div class="bg-blue-50 border-l-4 border-primary rounded-r-lg p-3 flex items-start gap-3 shadow-sm text-xs">
+    <div class="notice-card">
       <i class="fa fa-info-circle text-primary text-base mt-0.5"></i>
       <div>
         <strong class="text-slate-800 block mb-0.5" data-i18n="disclaimer_title">算法升级说明</strong>
@@ -79,17 +132,17 @@
     </div>
 
     <!-- 模块 1：色彩目标选择 -->
-    <section class="bg-panel rounded-2xl shadow-card overflow-hidden border border-gray-100">
-      <div class="w-full h-32 md:h-48 rounded-t-2xl overflow-hidden shadow-inner flex relative border-b border-gray-200">
+    <section class="tool-card target-card">
+      <div class="w-full h-36 md:h-64 overflow-hidden shadow-inner flex relative border-b border-[#dfe7df]">
         <!-- 目标色 -->
         <div id="targetColorArea" class="w-1/2 h-full bg-gray-200 transition-colors duration-500 relative group">
           <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-slate-800 px-2.5 py-1 rounded text-[11px] font-black shadow-sm" id="currentRalCode">RAL ----</div>
-          <div class="absolute bottom-3 left-3 bg-black/40 backdrop-blur text-white text-[10px] px-2 py-1 rounded">目标色 Target</div>
+          <div class="absolute bottom-3 left-3 bg-dark/55 backdrop-blur text-white text-[10px] px-2 py-1 rounded">目标色 Target</div>
         </div>
         <!-- 混合色 (实时预览) -->
         <div id="mixedColorArea" class="w-1/2 h-full bg-white transition-colors duration-100 relative border-l border-white/20">
-          <div class="absolute top-3 right-3 bg-black/40 backdrop-blur-sm text-white px-2.5 py-1 rounded text-[11px] font-mono font-bold tracking-wider shadow-sm" id="currentHex">#000000</div>
-          <div class="absolute bottom-3 right-3 bg-black/40 backdrop-blur text-white text-[10px] px-2 py-1 rounded">混合色 Mixed</div>
+          <div class="absolute top-3 right-3 bg-dark/55 backdrop-blur-sm text-white px-2.5 py-1 rounded text-[11px] font-mono font-bold shadow-sm" id="currentHex">#000000</div>
+          <div class="absolute bottom-3 right-3 bg-dark/55 backdrop-blur text-white text-[10px] px-2 py-1 rounded">混合色 Mixed</div>
         </div>
       </div>
       
@@ -99,27 +152,27 @@
             <label class="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase" data-i18n="ral_search_label">RAL搜索</label>
             <div class="relative">
               <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-              <input type="text" id="ralSearch" data-i18n-placeholder="ral_search_placeholder" class="w-full pl-9 pr-3 py-3 bg-slate-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/30 outline-none text-sm font-bold transition-all">
+              <input type="text" id="ralSearch" data-i18n-placeholder="ral_search_placeholder" class="field-control pl-9 focus:ring-2 focus:ring-primary/30">
             </div>
-            <div id="searchSuggestions" class="absolute w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-48 overflow-y-auto hidden"></div>
+            <div id="searchSuggestions" class="absolute w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl z-50 max-h-48 overflow-y-auto hidden"></div>
           </div>
           <div>
             <label class="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase" data-i18n="ral_select_label">快速选择</label>
-            <select id="ralSelect" class="w-full px-3 py-3 bg-slate-50 border border-gray-200 rounded-xl outline-none text-sm font-bold cursor-pointer transition-all focus:ring-2 focus:ring-primary/30"></select>
+            <select id="ralSelect" class="field-control cursor-pointer focus:ring-2 focus:ring-primary/30"></select>
           </div>
         </div>
       </div>
     </section>
 
     <!-- 模块 2：配方数据仪表盘 -->
-    <section class="bg-panel rounded-2xl shadow-card border border-gray-100 p-4 md:p-6 space-y-5">
-      <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-        <h2 class="text-sm font-black uppercase tracking-widest text-primary flex items-center gap-2">
+    <section class="tool-card mix-card p-4 md:p-5 space-y-5">
+      <div class="flex items-center justify-between border-b border-[#e2e8e2] pb-3">
+        <h2 class="text-sm font-black uppercase text-primary flex items-center gap-2">
           <i class="fa fa-flask"></i> <span data-i18n="paint_ratio">混合详情</span>
         </h2>
         <div class="flex items-center gap-2">
           <label class="text-[10px] font-bold text-slate-400 uppercase" data-i18n="volume_selection">基料容量:</label>
-          <select id="volumeSelect" class="bg-slate-100 text-xs font-black px-2 py-1.5 rounded border-none outline-none focus:ring-2 focus:ring-primary/30 text-slate-700">
+          <select id="volumeSelect" class="bg-[#edf2ed] text-xs font-black px-2 py-1.5 rounded border-none outline-none focus:ring-2 focus:ring-primary/30 text-slate-700">
             <option value="50ml">50 ML</option>
             <option value="100ml">100 ML</option>
             <option value="500ml">500 ML</option>
@@ -131,61 +184,88 @@
       </div>
 
       <div class="grid grid-cols-2 gap-4">
-        <div class="bg-slate-50 rounded-xl p-3 flex flex-col justify-center border border-gray-100">
+        <div class="metric-slab">
           <span class="text-[10px] font-bold text-slate-400 uppercase mb-1" data-i18n="total_pigment_weight">总颜料重量</span>
           <div class="flex items-end gap-1">
             <strong class="text-2xl font-black text-primary font-mono leading-none" id="totalPigmentWeight">0.0g</strong>
             <span id="scoopEstimate" class="text-[10px] text-primary/60 font-bold mb-0.5">(约0勺)</span>
           </div>
         </div>
-        <div class="bg-slate-50 rounded-xl p-3 flex flex-col justify-center border border-gray-100">
+        <div class="metric-slab">
           <span class="text-[10px] font-bold text-slate-400 uppercase mb-1" data-i18n="per_liter_usage">每升用量</span>
           <strong class="text-2xl font-black text-slate-700 font-mono leading-none" id="perLiterAmount">0.0g</strong>
         </div>
       </div>
       
-      <div class="bg-slate-50 rounded-xl p-3 flex justify-between items-center border border-gray-100">
+      <div class="metric-slab flex-row justify-between items-center">
         <span class="text-[11px] font-bold text-slate-500 uppercase" data-i18n="mixing_ratio">混合比例 P:B</span>
         <strong class="text-lg font-black text-accent font-mono leading-none" id="mixingRatio">0 : 100</strong>
       </div>
+
+      <div id="simulationReport" class="bg-dark text-white rounded-lg p-3 border border-[#273a35] space-y-3">
+        <div class="flex items-center justify-between gap-3">
+          <span class="text-[10px] font-black uppercase text-slate-300" data-i18n="simulation_title">黑底真实模拟</span>
+          <span id="hidingStatus" class="text-[10px] font-black px-2 py-1 rounded bg-slate-700">未计算</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <span class="block text-[9px] text-slate-400 font-bold" data-i18n="delta_e_label">两遍色差</span>
+            <strong id="deltaEValue" class="block text-lg font-black font-mono">--</strong>
+          </div>
+          <div>
+            <span class="block text-[9px] text-slate-400 font-bold" data-i18n="single_coat_label">一遍黑底</span>
+            <div class="flex items-center gap-1.5 mt-1">
+              <span id="singleCoatSwatch" class="w-5 h-5 rounded border border-white/20 bg-black"></span>
+              <strong id="singleCoatValue" class="text-xs font-mono">--</strong>
+            </div>
+          </div>
+          <div>
+            <span class="block text-[9px] text-slate-400 font-bold" data-i18n="double_coat_label">两遍黑底</span>
+            <div class="flex items-center gap-1.5 mt-1">
+              <span id="doubleCoatSwatch" class="w-5 h-5 rounded border border-white/20 bg-black"></span>
+              <strong id="doubleCoatValue" class="text-xs font-mono">--</strong>
+            </div>
+          </div>
+        </div>
+        <p id="simulationNote" class="text-[10px] leading-relaxed text-slate-300">默认按黑色基材和两遍施工判断；没有完整光谱曲线时，本结果为基于 Lab、批次强度和遮盖力的经验模拟。</p>
+      </div>
       
-      <button id="generateRecipeBtn" class="w-full py-3.5 bg-dark text-white rounded-xl font-black text-sm uppercase tracking-widest hover:bg-slate-800 active:scale-[0.98] transition-all shadow-md flex justify-center items-center gap-2">
+      <button id="generateRecipeBtn" class="primary-action">
         <i class="fa fa-magic text-secondary"></i> <span data-i18n="generate_recipe">AI 智能生成配方</span>
       </button>
     </section>
 
     <!-- 模块 3：颜料滑块区 -->
-    <section class="bg-panel rounded-2xl shadow-card border border-gray-100 p-4 md:p-6">
+    <section class="tool-card sliders-card p-4 md:p-5">
       <div class="flex items-center justify-between mb-5">
         <h2 class="text-sm font-black uppercase text-slate-800 flex items-center gap-2">
           <i class="fa fa-sliders text-primary"></i> <span data-i18n="paint_weight_adjustment">颜料重量调节</span>
         </h2>
         <div class="flex gap-2">
-          <button id="resetFormulaBtn" class="bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-slate-200 transition flex items-center gap-1 active:scale-95">
+          <button id="resetFormulaBtn" class="soft-action bg-[#edf2ed] text-slate-600 hover:bg-[#e0e8e1]">
             <i class="fa fa-unlock-alt"></i> <span data-i18n="reset_formula">清空颜料</span>
           </button>
-          <button id="addFormulaBtn" class="bg-secondary/20 text-yellow-700 px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-secondary/30 transition flex items-center gap-1 active:scale-95">
+          <button id="addFormulaBtn" class="soft-action bg-secondary/20 text-[#7a5612] hover:bg-secondary/30">
             <i class="fa fa-plus"></i> <span data-i18n="add_formula">微调 (+5%)</span>
           </button>
         </div>
       </div>
       
-      <div id="paintSlidersContainer" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+      <div id="paintSlidersContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
         <!-- JS 动态注入 -->
       </div>
     </section>
 
     <!-- 模块 4：可视化分析与导出 -->
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="bg-panel rounded-2xl shadow-card border border-gray-100 p-5 flex flex-col justify-center items-center h-56">
+    <section class="export-grid grid grid-cols-1 gap-4">
+      <div class="tool-card p-5 flex flex-col justify-center items-center h-56">
         <div class="w-full h-full relative max-w-[200px]">
           <canvas id="paintChart"></canvas>
         </div>
       </div>
 
-      <div class="bg-dark rounded-2xl shadow-card p-5 text-white flex flex-col justify-between relative overflow-hidden h-56">
-        <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
-        <h2 class="text-sm font-black uppercase tracking-widest relative z-10" data-i18n="package_preview_export">预览与导出</h2>
+      <div class="bg-dark rounded-lg shadow-card p-5 text-white flex flex-col justify-between relative overflow-hidden h-56 border border-[#273a35]">
+        <h2 class="text-sm font-black uppercase relative z-10" data-i18n="package_preview_export">预览与导出</h2>
         
         <div class="space-y-3 relative z-10">
           <div class="bg-white/5 p-3 rounded-lg border border-white/5 shadow-inner">
@@ -194,10 +274,10 @@
           </div>
           
           <div class="flex gap-2">
-            <button id="copyRecipeBtn" class="flex-1 py-3 bg-white/10 rounded-xl font-bold text-xs uppercase hover:bg-white/20 transition flex justify-center items-center gap-2 border border-white/10 active:scale-95">
+            <button id="copyRecipeBtn" class="flex-1 py-3 bg-white/10 rounded-lg font-bold text-xs uppercase hover:bg-white/20 transition flex justify-center items-center gap-2 border border-white/10 active:scale-95">
               <i class="fa fa-copy"></i><span data-i18n="copy_recipe">复制</span>
             </button>
-            <button id="exportRecipeBtn" class="flex-1 py-3 bg-primary rounded-xl font-bold text-xs uppercase hover:bg-blue-600 transition flex justify-center items-center gap-2 active:scale-95">
+            <button id="exportRecipeBtn" class="flex-1 py-3 bg-primary rounded-lg font-bold text-xs uppercase hover:bg-[#1f5b50] transition flex justify-center items-center gap-2 active:scale-95">
               <i class="fa fa-download"></i><span data-i18n="export_recipe">导出</span>
             </button>
           </div>
@@ -206,23 +286,23 @@
     </section>
 
     <!-- 模块 5：预设与色卡展示区 -->
-    <section class="pt-2">
-      <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 pl-1" data-i18n="recommended_recipes">推荐配方库 (点击加载)</h3>
+    <section class="presets-card pt-1">
+      <h3 class="text-xs font-black text-slate-500 uppercase mb-3 pl-1" data-i18n="recommended_recipes">推荐配方库 (点击加载)</h3>
       <div class="flex overflow-x-auto gap-3 pb-4 hide-scrollbar" id="recipePresetsContainer">
         <!-- 动态生成 -->
       </div>
     </section>
 
-    <section class="pb-6">
-      <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 pl-1" data-i18n="ral_palette">RAL 颜色全集</h3>
-      <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2 bg-panel p-3 rounded-2xl border border-gray-100 shadow-card max-h-[300px] overflow-y-auto" id="ralPaletteContainer">
+    <section class="palette-card pb-6">
+      <h3 class="text-xs font-black text-slate-500 uppercase mb-3 pl-1" data-i18n="ral_palette">RAL 颜色全集</h3>
+      <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2 bg-panel p-3 rounded-lg border border-[#dfe7df] shadow-card max-h-[300px] overflow-y-auto" id="ralPaletteContainer">
         <!-- 动态生成 -->
       </div>
     </section>
 
-  </div>
+  </main>
   
-  <div id="notification" class="fixed top-4 left-1/2 -translate-x-1/2 bg-dark text-white px-6 py-3 rounded-full shadow-2xl transform -translate-y-20 opacity-0 transition-all duration-300 z-[100] text-xs font-bold flex items-center gap-2 min-w-max"></div>
+  <div id="notification" class="fixed top-4 left-1/2 -translate-x-1/2 bg-dark text-white px-6 py-3 rounded-lg shadow-2xl transform -translate-y-20 opacity-0 transition-all duration-300 z-[100] text-xs font-bold flex items-center gap-2 min-w-max"></div>
 
   <script>
     /**
@@ -231,24 +311,26 @@
      * ==========================================
      */
     const PAINT_DATA = {
-      Y74S: { name_zh: "中黄", name_en: "Yellow 2GXD", hex: "#fedd00", strength: 1.0 },
-      Y83S: { name_zh: "金黄", name_en: "Yellow HR", hex: "#ffc700", strength: 1.0 },
-      R254D: { name_zh: "大红", name_en: "DPP Red GD", hex: "#d8001d", strength: 1.515 },
-      R101Y: { name_zh: "铁红黄相", name_en: "Oxide Red G", hex: "#c0392b", strength: 1.287 },
-      R101V: { name_zh: "铁红紫相", name_en: "Oxide Red BA", hex: "#a93226", strength: 1.304 },
-      R122S: { name_zh: "玫红", name_en: "Pink E", hex: "#e4007f", strength: 1.089 },
-      V23: { name_zh: "紫色", name_en: "Violet RL", hex: "#8e44ad", strength: 1.188 },
-      B150S: { name_zh: "宝蓝", name_en: "Blue A2R", hex: "#0057b7", strength: 1.4 },
-      G7: { name_zh: "绿色", name_en: "Green GG", hex: "#009a44", strength: 0.99 },
-      Y42S: { name_zh: "铁黄", name_en: "Oxide Yellow RA", hex: "#e8a317", strength: 1.01 },
-      BK7H: { name_zh: "黑色", name_en: "Black N", hex: "#1c1c1c", strength: 2.0, manualLab: [5, 0, 0] },
-      W064: { name_zh: "白色", name_en: "White TQ", hex: "#ffffff", strength: 0.099, manualLab: [98, 0, 0] }
+      Y83S: { name_zh: "金黄", name_en: "Yellow HR", name_ja: "ゴールデンイエロー", hex: "#ffc700", manualLab: [82.52, 17.29, 73.59], strength: 1.0, colorStrength: 1.00, hidingPower: 70, batchNo: "CNQ1340322", productName: "Colanyl Yellow HR 130-CN", viscosity: "0.6 Pas", qcDeltaE: 0.0, ci: "PY83", pigmentContent: 35, solidContent: 55, water: 30, glycol: 15, density: 1.14, referenceSource: "Colanyl Yellow HR 132 public analog", referenceConfidence: "medium" },
+      Y74S: { name_zh: "中黄", name_en: "Yellow 2GXD", name_ja: "ミディアムイエロー", hex: "#fedd00", manualLab: [87.77, 0.8, 72.81], strength: 1.0, colorStrength: 1.00, hidingPower: 70, batchNo: "CNQ1190325", productName: "Colanyl Yellow 2GXD 130-CN", viscosity: "0.5 Pas", qcDeltaE: 0.3, ci: "PY74", pigmentContent: 48, solidContent: 57, water: 18, glycol: 25, density: 1.17, referenceSource: "Colanyl 100 public data", referenceConfidence: "high" },
+      B150S: { name_zh: "宝蓝", name_en: "Blue A2R", name_ja: "ロイヤルブルー", hex: "#0057b7", manualLab: [48.64, -5.95, -40.42], strength: 1.4, colorStrength: 1.00, hidingPower: 68, batchNo: "CNQ1118121", productName: "Colanyl Blue A2R 131-CN", viscosity: "0.5 Pas", qcDeltaE: 0.4, ci: "PB15:1", pigmentContent: 40, solidContent: 51, water: 31, glycol: 18, density: 1.21, referenceSource: "Colanyl 100 public data", referenceConfidence: "high" },
+      B153S: { name_zh: "艳蓝", name_en: "Blue B2G", name_ja: "ブライトブルー", hex: "#0086c8", manualLab: [59.36, -16.97, -38.95], strength: 1.25, colorStrength: 1.00, hidingPower: 60, batchNo: "CNQ1250525", productName: "Colanyl Blue B2G 132-CN", viscosity: "0.3 Pas", qcDeltaE: 0.2, ci: "PB15:3", pigmentContent: 47, solidContent: 54, water: 26, glycol: 20, density: 1.23, referenceSource: "Colanyl Blue B2G 131 public analog", referenceConfidence: "medium" },
+      R254D: { name_zh: "大红", name_en: "DPP Red GD", name_ja: "ブライトレッド", hex: "#d8001d", manualLab: [57.18, 49.67, 13.26], strength: 1.515, colorStrength: 1.01, hidingPower: 65, aliases: ["R524D"], batchNo: "CNQ1471124", productName: "Colanyl DPP Red GD 131-CN", viscosity: "0.3 Pas", qcDeltaE: 0.2, ci: "PR254", referenceSource: "DPP Red GD family analog", referenceConfidence: "medium" },
+      R101Y: { name_zh: "铁红黄相", name_en: "Oxide Red G", name_ja: "アイアンレッド黄相", hex: "#c0392b", manualLab: [43.99, 32.75, 24.57], strength: 1.287, colorStrength: 0.99, hidingPower: 85, batchNo: "CNG2340320", productName: "Colanyl Oxide Red G 100-CN", viscosity: "117 KU", qcDeltaE: 0.3, ci: "PR101", pigmentContent: 65, solidContent: 71, water: 11, glycol: 18, density: 2.17, referenceSource: "Colanyl 100 public data", referenceConfidence: "high" },
+      R101V: { name_zh: "铁红紫相", name_en: "Oxide Red BA", name_ja: "アイアンレッド紫相", hex: "#a93226", manualLab: [40.09, 28.89, 18.77], strength: 1.304, colorStrength: 1.003, hidingPower: 85, batchNo: "CNG2940223", productName: "Ecosperse Oxide Red BA 100-CN", viscosity: "107.0 KU", qcDeltaE: 0.31, ci: "PR101", pigmentContent: 72, solidContent: 77, water: 8, glycol: 14, density: 2.34, referenceSource: "Colanyl Oxide Red B 132 public analog", referenceConfidence: "medium" },
+      Y42S: { name_zh: "铁黄", name_en: "Oxide Yellow RA", name_ja: "アイアンイエロー", hex: "#e8a317", manualLab: [80.38, 10.64, 36.87], strength: 1.01, colorStrength: 1.01, hidingPower: 80, batchNo: "CNG2280220", productName: "Ecosperse Oxide Yellow RA 100-CN", viscosity: "107 KU", qcDeltaE: 0.2, ci: "PY42", pigmentContent: 66, solidContent: 73, water: 9, glycol: 18, density: 1.98, referenceSource: "Colanyl Oxide Yellow R 132 public analog", referenceConfidence: "medium" },
+      "073": { name_zh: "橙", name_en: "Orange D2R", name_ja: "オレンジ", hex: "#ef7622", manualLab: [70.43, 45.73, 27.33], strength: 1.1, colorStrength: 1.00, hidingPower: 68, batchNo: "CNQ1461622", productName: "Colanyl Orange D2R 100-CN", viscosity: "63.1 KU", qcDeltaE: 0.2, ci: "PO13", referenceSource: "Colanyl Orange G 131 public analog", referenceConfidence: "low" },
+      W064: { name_zh: "白色", name_en: "White TQ", name_ja: "ホワイト", hex: "#ffffff", strength: 0.099, mixStrength: 1.0, manualLab: [95.23, -0.58, 0.04], colorStrength: 0.99, hidingPower: 95, batchNo: "CNQ1431113", productName: "Colanyl White TQ 100-CN", viscosity: "1.4 Pas", qcDeltaE: 0.2, ci: "PW6", pigmentContent: 70, solidContent: 77, water: 4, glycol: 19, density: 2.18, referenceSource: "Colanyl White R 130 public analog", referenceConfidence: "medium" },
+      V23: { name_zh: "紫色", name_en: "Violet RL", name_ja: "パープル", hex: "#8e44ad", manualLab: [37.82, 18.96, -33.68], strength: 1.188, colorStrength: 0.99, hidingPower: 62, batchNo: "CNQ1350313", productName: "Colanyl Violet RL 131-CN", viscosity: "0.1 Pas", qcDeltaE: 0.3, ci: "PV23", pigmentContent: 30, solidContent: 45, water: 37, glycol: 18, density: 1.14, referenceSource: "Colanyl Violet RL 132 public analog", referenceConfidence: "medium" },
+      G7: { name_zh: "绿色", name_en: "Green GG", name_ja: "グリーン", hex: "#009a44", manualLab: [62.16, -47.51, 1.35], strength: 0.99, colorStrength: 0.99, hidingPower: 65, batchNo: "CNQ1321013", productName: "Colanyl Green GG 131-CN", viscosity: "0.2 Pas", qcDeltaE: 0.2, ci: "PG7", pigmentContent: 50, solidContent: 59, water: 26, glycol: 15, density: 1.34, referenceSource: "Colanyl 100 public data", referenceConfidence: "high" },
+      R122S: { name_zh: "玫红", name_en: "Pink E", name_ja: "ローズレッド", hex: "#e4007f", manualLab: [55.54, 45.65, -16.47], strength: 1.089, colorStrength: 0.99, hidingPower: 62, batchNo: "CNQ1361125", productName: "Colanyl Pink E 100-CN", viscosity: "0.1 Pas", qcDeltaE: 0.2, ci: "PR122", pigmentContent: 20, solidContent: 36, water: 44, glycol: 20, density: 1.12, referenceSource: "Colanyl 100 public data", referenceConfidence: "high" },
+      BK7H: { name_zh: "黑色", name_en: "Black N", name_ja: "ブラック", hex: "#1c1c1c", strength: 2.0, manualLab: [34.26, -0.19, -2.47], colorStrength: 1.00, hidingPower: 98, batchNo: "CNQ1361225", productName: "Colanyl Black N 131-CN", viscosity: "0.6 Pas", qcDeltaE: 0.0, ci: "PBk7", pigmentContent: 42, solidContent: 49, water: 31, glycol: 20, density: 1.27, referenceSource: "Colanyl 100 public data", referenceConfidence: "high" }
     };
 
     const TRANSLATIONS = {
-      zh: { subtitle: "智能调色助手", disclaimer_title: "Oklab 视知觉闭环引擎", disclaimer_text: "新引入前沿 Oklab 人眼视觉模型。AI 会在后台进行100次“数值调漆”视觉迭代，强制模拟混合色与目标色达成 0 视差，所见即所得！", target_color_selection: "目标颜色选择", ral_search_label: "RAL代码搜索", ral_search_placeholder: "输入代码或颜色名", ral_select_label: "RAL快速选择", select_ral_code: "选择RAL代码", current_ral: "当前RAL:", color_value: "颜色值:", paint_weight_adjustment: "颜料重量调节", volume_selection: "基料容量:", volume_hint: "(切换容量自动换算重量)", paint_ratio: "混合详情", total_pigment_weight: "总颜料重量: ", varnish_usage: "基料用量: ", per_liter_usage: "每升用量: ", mixing_ratio: "混合比例: P:B = ", add_formula: "微调 (+5%)", reset_formula: "清空颜料", recommended_recipes: "推荐配方库 (点击加载)", package_preview_export: "预览与导出", export_recipe: "导出 TXT", copy_recipe: "复制配方", share_recipe: "快捷分享", recipe_includes_title: "配方包含", generate_recipe: "AI 智能视觉闭环匹配", ral_palette: "RAL 颜色全集" },
-      en: { subtitle: "Smart Mixing Assistant", disclaimer_title: "Oklab Visual Engine", disclaimer_text: "Using 'Oklab' human-eye matching. The AI performs 100 visual gradient iterations to force the mixed color to perfectly match the target.", target_color_selection: "Target Color", ral_search_label: "RAL Search", ral_search_placeholder: "Search code or name", ral_select_label: "Quick Selection", select_ral_code: "Select RAL Code", current_ral: "Current RAL:", color_value: "HEX Value:", paint_weight_adjustment: "Pigment Adjustment", volume_selection: "Base Volume:", volume_hint: "(Auto recalculate weights)", paint_ratio: "Mix Details", total_pigment_weight: "Total Pigment: ", varnish_usage: "Base Usage: ", per_liter_usage: "Per Liter: ", mixing_ratio: "Ratio: P:B = ", add_formula: "Fine-tune (+5%)", reset_formula: "Clear", recommended_recipes: "Recommended Recipes", package_preview_export: "Export & Preview", export_recipe: "Export TXT", copy_recipe: "Copy Recipe", share_recipe: "Share", recipe_includes_title: "Recipe Content", generate_recipe: "AI Visual Perfect Match", ral_palette: "RAL Palette" },
-      ja: { subtitle: "スマート調色システム", disclaimer_title: "Oklab 視覚エンジン", disclaimer_text: "人間の目に最も近いOklab空間を採用。AIが100回の視覚的シミュレーションを行い、目標色と混合色を完全に一致させます。", target_color_selection: "ターゲット色", ral_search_label: "RAL検索", ral_search_placeholder: "コードまたは色名", ral_select_label: "クイック選択", select_ral_code: "RALコードを選択", current_ral: "現在のRAL:", color_value: "カラー值:", paint_weight_adjustment: "顔料重量调整", volume_selection: "ベース容量:", volume_hint: "(容量変更で重量を再计算)", paint_ratio: "混合详细", total_pigment_weight: "総顔料重量: ", varnish_usage: "ベース材: ", per_liter_usage: "1L当たり: ", mixing_ratio: "混合比: P:B = ", add_formula: "微调整 (+5%)", reset_formula: "クリア", recommended_recipes: "推奨配合", package_preview_export: "保存とプレビュー", export_recipe: "TXT保存", copy_recipe: "コピー", share_recipe: "共有", recipe_includes_title: "内容", generate_recipe: "AI 視覚的完全一致生成", ral_palette: "RALパレット" }
+      zh: { subtitle: "智能调色助手", disclaimer_title: "黑底遮盖模拟引擎", disclaimer_text: "已载入14个科莱恩色浆Lab参考值、批次强度、公开颜料索引和近似光谱数据。默认按黑色基材、清漆体系和两遍施工评估；无法覆盖或模型分歧大的颜色会提示风险。", target_color_selection: "目标颜色选择", ral_search_label: "RAL代码搜索", ral_search_placeholder: "输入代码或颜色名", ral_select_label: "RAL快速选择", select_ral_code: "选择RAL代码", current_ral: "当前RAL:", color_value: "颜色值:", paint_weight_adjustment: "颜料重量调节", volume_selection: "基料容量:", volume_hint: "(切换容量自动换算重量)", paint_ratio: "混合详情", total_pigment_weight: "总颜料重量: ", varnish_usage: "基料用量: ", per_liter_usage: "每升用量: ", mixing_ratio: "混合比例: P:B = ", add_formula: "微调 (+5%)", reset_formula: "清空颜料", recommended_recipes: "推荐配方库 (点击加载)", package_preview_export: "预览与导出", export_recipe: "导出 TXT", copy_recipe: "复制配方", share_recipe: "快捷分享", recipe_includes_title: "配方包含", generate_recipe: "生成真实模拟配方", ral_palette: "RAL 颜色全集", simulation_title: "黑底真实模拟", delta_e_label: "两遍色差", single_coat_label: "一遍黑底", double_coat_label: "两遍黑底" },
+      en: { subtitle: "Smart Mixing Assistant", disclaimer_title: "Black-Substrate Hiding Engine", disclaimer_text: "Loaded 14 Clariant colorant Lab references, batch strengths, public pigment-index metadata, and approximate spectra. The model assumes clear base, black substrate, and two coats; unreachable or high-disagreement colors are flagged.", target_color_selection: "Target Color", ral_search_label: "RAL Search", ral_search_placeholder: "Search code or name", ral_select_label: "Quick Selection", select_ral_code: "Select RAL Code", current_ral: "Current RAL:", color_value: "HEX Value:", paint_weight_adjustment: "Pigment Adjustment", volume_selection: "Base Volume:", volume_hint: "(Auto recalculate weights)", paint_ratio: "Mix Details", total_pigment_weight: "Total Pigment: ", varnish_usage: "Base Usage: ", per_liter_usage: "Per Liter: ", mixing_ratio: "Ratio: P:B = ", add_formula: "Fine-tune (+5%)", reset_formula: "Clear", recommended_recipes: "Recommended Recipes", package_preview_export: "Export & Preview", export_recipe: "Export TXT", copy_recipe: "Copy Recipe", share_recipe: "Share", recipe_includes_title: "Recipe Content", generate_recipe: "Generate Real Simulation", ral_palette: "RAL Palette", simulation_title: "Black-Substrate Simulation", delta_e_label: "Two-coat dE", single_coat_label: "One coat", double_coat_label: "Two coats" },
+      ja: { subtitle: "スマート調色システム", disclaimer_title: "黒下地隠蔽シミュレーション", disclaimer_text: "14色の科莱恩色浆Lab参考値、ロット強度、公開顔料番号、近似光谱を使用。透明ベース、黒下地、二層塗装を基準に評価し、到達困難またはモデル差が大きい色はリスクとして表示します。", target_color_selection: "ターゲット色", ral_search_label: "RAL検索", ral_search_placeholder: "コードまたは色名", ral_select_label: "クイック選択", select_ral_code: "RALコードを選択", current_ral: "現在のRAL:", color_value: "カラー值:", paint_weight_adjustment: "顔料重量调整", volume_selection: "ベース容量:", volume_hint: "(容量変更で重量を再计算)", paint_ratio: "混合详细", total_pigment_weight: "総顔料重量: ", varnish_usage: "ベース材: ", per_liter_usage: "1L当たり: ", mixing_ratio: "混合比: P:B = ", add_formula: "微调整 (+5%)", reset_formula: "クリア", recommended_recipes: "推奨配合", package_preview_export: "保存とプレビュー", export_recipe: "TXT保存", copy_recipe: "コピー", share_recipe: "共有", recipe_includes_title: "内容", generate_recipe: "実測近似配合を生成", ral_palette: "RALパレット", simulation_title: "黒下地シミュレーション", delta_e_label: "二層色差", single_coat_label: "一層黒下地", double_coat_label: "二層黒下地" }
     };
 
     // 原版完整 150+ RAL 数据库 (已校准纯白/纯黑的屏幕视觉偏差)
@@ -282,6 +364,79 @@
     function hexToLab(h) { 
         const rgb = hexToRgb(h); 
         return rgb ? rgbToLab(...rgb) : [0, 0, 0]; 
+    }
+
+    function labToRgb(L, a, b) {
+      let y = (L + 16) / 116;
+      let x = a / 500 + y;
+      let z = y - b / 200;
+      const pivot = v => {
+        const v3 = v * v * v;
+        return v3 > 0.008856 ? v3 : (v - 16 / 116) / 7.787;
+      };
+      x = 95.047 * pivot(x);
+      y = 100.0 * pivot(y);
+      z = 108.883 * pivot(z);
+      x /= 100; y /= 100; z /= 100;
+      let r = x * 3.2406 + y * -1.5372 + z * -0.4986;
+      let g = x * -0.9689 + y * 1.8758 + z * 0.0415;
+      let bl = x * 0.0557 + y * -0.2040 + z * 1.0570;
+      const compand = v => {
+        const c = v > 0.0031308 ? 1.055 * Math.pow(v, 1 / 2.4) - 0.055 : 12.92 * v;
+        return Math.max(0, Math.min(255, Math.round(c * 255)));
+      };
+      return [compand(r), compand(g), compand(bl)];
+    }
+
+    function rgbToHex(rgb) {
+      return `#${rgb.map(c => Math.max(0, Math.min(255, Math.round(c))).toString(16).padStart(2, '0').toUpperCase()).join('')}`;
+    }
+
+    function deltaE76(lab1, lab2) {
+      const dL = lab1[0] - lab2[0], da = lab1[1] - lab2[1], db = lab1[2] - lab2[2];
+      return Math.sqrt(dL*dL + da*da + db*db);
+    }
+
+    function deltaE2000(lab1, lab2) {
+      const [L1, a1, b1] = lab1, [L2, a2, b2] = lab2;
+      const deg2rad = Math.PI / 180, rad2deg = 180 / Math.PI;
+      const C1 = Math.sqrt(a1*a1 + b1*b1), C2 = Math.sqrt(a2*a2 + b2*b2);
+      const avgC = (C1 + C2) / 2;
+      const G = 0.5 * (1 - Math.sqrt(Math.pow(avgC, 7) / (Math.pow(avgC, 7) + Math.pow(25, 7))));
+      const a1p = (1 + G) * a1, a2p = (1 + G) * a2;
+      const C1p = Math.sqrt(a1p*a1p + b1*b1), C2p = Math.sqrt(a2p*a2p + b2*b2);
+      const h = (bb, aa) => {
+        if (bb === 0 && aa === 0) return 0;
+        const v = Math.atan2(bb, aa) * rad2deg;
+        return v >= 0 ? v : v + 360;
+      };
+      const h1p = h(b1, a1p), h2p = h(b2, a2p);
+      const dLp = L2 - L1, dCp = C2p - C1p;
+      let dhp = 0;
+      if (C1p * C2p !== 0) {
+        const diff = h2p - h1p;
+        if (Math.abs(diff) <= 180) dhp = diff;
+        else dhp = diff > 180 ? diff - 360 : diff + 360;
+      }
+      const dHp = 2 * Math.sqrt(C1p * C2p) * Math.sin((dhp / 2) * deg2rad);
+      const avgLp = (L1 + L2) / 2, avgCp = (C1p + C2p) / 2;
+      let avghp = h1p + h2p;
+      if (C1p * C2p === 0) avghp = h1p + h2p;
+      else if (Math.abs(h1p - h2p) <= 180) avghp = (h1p + h2p) / 2;
+      else avghp = (h1p + h2p + (h1p + h2p < 360 ? 360 : -360)) / 2;
+      const T = 1 - 0.17 * Math.cos((avghp - 30) * deg2rad) + 0.24 * Math.cos(2 * avghp * deg2rad) + 0.32 * Math.cos((3 * avghp + 6) * deg2rad) - 0.20 * Math.cos((4 * avghp - 63) * deg2rad);
+      const deltaTheta = 30 * Math.exp(-Math.pow((avghp - 275) / 25, 2));
+      const Rc = 2 * Math.sqrt(Math.pow(avgCp, 7) / (Math.pow(avgCp, 7) + Math.pow(25, 7)));
+      const Sl = 1 + (0.015 * Math.pow(avgLp - 50, 2)) / Math.sqrt(20 + Math.pow(avgLp - 50, 2));
+      const Sc = 1 + 0.045 * avgCp;
+      const Sh = 1 + 0.015 * avgCp * T;
+      const Rt = -Math.sin(2 * deltaTheta * deg2rad) * Rc;
+      return Math.sqrt(
+        Math.pow(dLp / Sl, 2) +
+        Math.pow(dCp / Sc, 2) +
+        Math.pow(dHp / Sh, 2) +
+        Rt * (dCp / Sc) * (dHp / Sh)
+      );
     }
 
     /**
@@ -324,6 +479,117 @@
     function getKS(r) { let rc = clampR(r); return Math.pow(1 - rc, 2) / (2 * rc); }
     function getRfromKS(ks) { return 1 + ks - Math.sqrt(Math.pow(ks, 2) + 2 * ks); }
 
+    const SPECTRAL_WAVELENGTHS = [400, 430, 460, 490, 520, 550, 580, 610, 640, 670, 700];
+    const D65_APPROX = [82.8, 91.5, 117.8, 109.3, 104.0, 104.7, 96.3, 90.0, 85.0, 81.0, 76.0];
+    const CIE_1931_10DEG_APPROX = {
+      x: [0.0143, 0.2839, 0.2908, 0.0320, 0.0633, 0.4334, 1.0622, 1.0026, 0.4479, 0.0874, 0.0114],
+      y: [0.0004, 0.0116, 0.0600, 0.2080, 0.7100, 0.9950, 0.8700, 0.5030, 0.1750, 0.0320, 0.0041],
+      z: [0.0679, 1.3856, 1.6692, 0.4652, 0.0782, 0.0087, 0.0017, 0.0003, 0.0000, 0.0000, 0.0000]
+    };
+    const REFERENCE_TRUST = { high: 0.82, medium: 0.62, low: 0.42 };
+    const REFERENCE_SPECTRA = Object.freeze({
+      PY74:  [0.06, 0.08, 0.12, 0.35, 0.72, 0.87, 0.90, 0.88, 0.84, 0.82, 0.80],
+      PY83:  [0.04, 0.05, 0.07, 0.18, 0.52, 0.82, 0.90, 0.88, 0.83, 0.77, 0.70],
+      "PB15:1": [0.12, 0.20, 0.34, 0.25, 0.08, 0.035, 0.025, 0.022, 0.025, 0.030, 0.040],
+      "PB15:3": [0.10, 0.22, 0.38, 0.34, 0.14, 0.050, 0.025, 0.022, 0.025, 0.030, 0.040],
+      PG7:   [0.04, 0.06, 0.08, 0.22, 0.42, 0.32, 0.08, 0.035, 0.025, 0.025, 0.030],
+      PR254: [0.04, 0.04, 0.05, 0.06, 0.07, 0.12, 0.34, 0.62, 0.74, 0.72, 0.66],
+      PR101: [0.08, 0.07, 0.07, 0.08, 0.10, 0.16, 0.28, 0.38, 0.45, 0.49, 0.50],
+      PY42:  [0.10, 0.11, 0.13, 0.18, 0.30, 0.45, 0.56, 0.58, 0.55, 0.50, 0.45],
+      PO13:  [0.05, 0.05, 0.06, 0.08, 0.14, 0.30, 0.62, 0.78, 0.76, 0.70, 0.62],
+      PR122: [0.16, 0.22, 0.26, 0.18, 0.08, 0.06, 0.11, 0.30, 0.56, 0.64, 0.60],
+      PV23:  [0.18, 0.24, 0.30, 0.18, 0.07, 0.04, 0.05, 0.10, 0.18, 0.26, 0.32],
+      PBk7:  [0.020, 0.021, 0.021, 0.022, 0.023, 0.024, 0.025, 0.026, 0.027, 0.028, 0.030],
+      PW6:   [0.92, 0.93, 0.94, 0.95, 0.96, 0.96, 0.95, 0.95, 0.94, 0.94, 0.93]
+    });
+
+    function normalizeCurve(curve) {
+      if (!Array.isArray(curve)) return null;
+      return SPECTRAL_WAVELENGTHS.map((_, i) => clampR(Number(curve[i] ?? curve[curve.length - 1] ?? 0.5)));
+    }
+
+    function xyzToRgb(X, Y, Z) {
+      X /= 100; Y /= 100; Z /= 100;
+      const r = X * 3.2406 + Y * -1.5372 + Z * -0.4986;
+      const g = X * -0.9689 + Y * 1.8758 + Z * 0.0415;
+      const b = X * 0.0557 + Y * -0.2040 + Z * 1.0570;
+      const compand = v => Math.max(0, Math.min(255, Math.round(linearToSrgb(Math.max(0, v)) * 255)));
+      return [compand(r), compand(g), compand(b)];
+    }
+
+    function spectrumToRgb(curve) {
+      const normalized = normalizeCurve(curve);
+      if (!normalized) return null;
+      let X = 0, Y = 0, Z = 0, whiteX = 0, whiteY = 0, whiteZ = 0;
+      normalized.forEach((r, i) => {
+        const illum = D65_APPROX[i];
+        const cx = CIE_1931_10DEG_APPROX.x[i];
+        const cy = CIE_1931_10DEG_APPROX.y[i];
+        const cz = CIE_1931_10DEG_APPROX.z[i];
+        X += r * illum * cx; Y += r * illum * cy; Z += r * illum * cz;
+        whiteX += illum * cx; whiteY += illum * cy; whiteZ += illum * cz;
+      });
+      return xyzToRgb((X / whiteX) * 95.047, (Y / whiteY) * 100, (Z / whiteZ) * 108.883);
+    }
+
+    function getReferenceTrust(pigment) {
+      return REFERENCE_TRUST[pigment.referenceConfidence] || 0.5;
+    }
+
+    function getPigmentLoadFactor(pigment) {
+      const pigmentFactor = Math.sqrt(Math.max(0.20, (pigment.pigmentContent || 42) / 42));
+      const solidFactor = Math.sqrt(Math.max(0.35, (pigment.solidContent || 55) / 55));
+      const densityFactor = Math.sqrt(Math.max(0.45, (pigment.density || 1.25) / 1.25));
+      return pigmentFactor * solidFactor * densityFactor;
+    }
+
+    function simulateMixKsRgb(entries) {
+      let totalW = 0;
+      let numR = 0, numG = 0, numB = 0;
+      entries.forEach(({ weight, pigment }) => {
+        const effWeight = weight * (pigment.effectiveStrength || 1.0) * getPigmentLoadFactor(pigment);
+        totalW += effWeight;
+        numR += effWeight * pigment.ks[0];
+        numG += effWeight * pigment.ks[1];
+        numB += effWeight * pigment.ks[2];
+      });
+      if (totalW === 0) return [255, 255, 255];
+      return [
+        Math.max(0, Math.min(255, Math.round(linearToSrgb(getRfromKS(numR / totalW)) * 255))),
+        Math.max(0, Math.min(255, Math.round(linearToSrgb(getRfromKS(numG / totalW)) * 255))),
+        Math.max(0, Math.min(255, Math.round(linearToSrgb(getRfromKS(numB / totalW)) * 255)))
+      ];
+    }
+
+    function simulateMixReferenceSpectra(entries) {
+      if (!entries.length) return null;
+      const ks = SPECTRAL_WAVELENGTHS.map(() => 0);
+      let totalW = 0;
+      entries.forEach(({ weight, pigment }) => {
+        const curve = normalizeCurve(pigment.referenceSpectrum || REFERENCE_SPECTRA[pigment.ci]);
+        if (!curve) return;
+        const effWeight = weight * (pigment.effectiveStrength || 1.0) * getPigmentLoadFactor(pigment);
+        totalW += effWeight;
+        curve.forEach((r, i) => { ks[i] += effWeight * getKS(r); });
+      });
+      if (totalW === 0) return null;
+      return spectrumToRgb(ks.map(v => getRfromKS(v / totalW)));
+    }
+
+    function estimateReferenceTrust(entries) {
+      if (!entries.length) return 0;
+      return entries.reduce((sum, { pigment, fraction }) => sum + fraction * getReferenceTrust(pigment), 0);
+    }
+
+    function blendRgbModels(primaryRgb, secondaryRgb, primaryWeight) {
+      const w = Math.max(0, Math.min(1, primaryWeight));
+      return primaryRgb.map((c, i) => {
+        const a = srgbToLinear(c / 255);
+        const b = srgbToLinear(secondaryRgb[i] / 255);
+        return Math.max(0, Math.min(255, Math.round(linearToSrgb(a * w + b * (1 - w)) * 255)));
+      });
+    }
+
     /**
      * ==========================================
      * 3. UI 逻辑与事件绑定
@@ -332,9 +598,13 @@
     document.addEventListener('DOMContentLoaded', () => {
         let currentLanguage = 'zh';
         let paintChart = null;
-        let currentState = { ral: null, volume: '1l', volumeFactor: 1, colorOffset: null };
+        let currentState = { ral: null, volume: '1l', volumeFactor: 1, colorOffset: null, lastEvaluation: null };
         const TOTAL_PIGMENT_PER_LITER = 106;
         const VOLUME_FACTORS = {'50ml': 0.05, '100ml': 0.1, '500ml': 0.5, '1l': 1, '5l': 5, '20l': 20};
+        const BLACK_SUBSTRATE_RGB = [0, 0, 0];
+        const WHITE_SUBSTRATE_RGB = [255, 255, 255];
+        const TWO_COAT_PASS_DE = 3.0;
+        const TWO_COAT_WARNING_DE = 6.0;
 
         const elements = {
             ralSearch: document.getElementById("ralSearch"),
@@ -359,18 +629,31 @@
             generateRecipeBtn: document.getElementById('generateRecipeBtn'),
             recipePresetsContainer: document.getElementById("recipePresetsContainer"),
             ralPaletteContainer: document.getElementById('ralPaletteContainer'),
-            recipeIncludesList: document.getElementById('recipeIncludesList')
+            recipeIncludesList: document.getElementById('recipeIncludesList'),
+            hidingStatus: document.getElementById('hidingStatus'),
+            deltaEValue: document.getElementById('deltaEValue'),
+            singleCoatValue: document.getElementById('singleCoatValue'),
+            doubleCoatValue: document.getElementById('doubleCoatValue'),
+            singleCoatSwatch: document.getElementById('singleCoatSwatch'),
+            doubleCoatSwatch: document.getElementById('doubleCoatSwatch'),
+            simulationNote: document.getElementById('simulationNote')
         };
 
-        // 预计算 LAB 数据、色相角度、以及物理 K/S 吸收散射比
+        // 预计算 LAB、色相角度、批次强度，以及由 Lab 估算的 K/S 吸收散射比。
         Object.values(PAINT_DATA).forEach(p => { 
           p.lab = p.manualLab || hexToLab(p.hex);
+          p.physicsRgb = hexToRgb(p.hex) || labToRgb(p.lab[0], p.lab[1], p.lab[2]);
+          p.hex = p.hex || rgbToHex(p.physicsRgb);
+          p.effectiveStrength = (p.mixStrength || p.strength || 1.0) * (p.colorStrength || 1.0);
+          p.referenceSpectrum = normalizeCurve(REFERENCE_SPECTRA[p.ci]);
+          p.spectralRgb = p.referenceSpectrum ? spectrumToRgb(p.referenceSpectrum) : p.physicsRgb;
+          p.referenceWeight = getReferenceTrust(p);
           let angle = Math.atan2(p.lab[2], p.lab[1]) * 180 / Math.PI;
           p.hue = angle < 0 ? angle + 360 : angle; 
           p.chroma = Math.sqrt(p.lab[1]**2 + p.lab[2]**2);
 
-          // [新增] 转换为 Kubelka-Munk 物理吸收散射比 (K/S)
-          let rgb = hexToRgb(p.hex);
+          // 这不是完整光谱曲线，是用色浆色块反推的三通道 K/S 近似；Lab用于色相与批次记录。
+          let rgb = p.physicsRgb;
           p.linear = [srgbToLinear(rgb[0]/255), srgbToLinear(rgb[1]/255), srgbToLinear(rgb[2]/255)];
           p.ks = p.linear.map(getKS);
         });
@@ -401,94 +684,223 @@
             updateVisualMix();
         }
 
-        // [新增核心] 色彩域动态补偿 (Gamut Calibration)
+        // 保留函数名兼容旧流程；真实模拟模式不再做视觉补偿。
         function calibrateGamut() {
-            if(!currentState.ral || !currentState.ral.baseRecipe) {
-                currentState.colorOffset = null;
-                return;
-            }
-            let simRgb = simulateMix(currentState.ral.baseRecipe); 
-            let tgtRgb = hexToRgb(currentState.ral.hex);
-            // 算出物理引擎和屏幕发光之间的最后一丝死角差值
-            currentState.colorOffset = [
-                tgtRgb[0] - simRgb[0],
-                tgtRgb[1] - simRgb[1],
-                tgtRgb[2] - simRgb[2]
-            ];
+            currentState.colorOffset = null;
         }
 
-        // [核心升级 1]：Kubelka-Munk 真实物理光学混合引擎
-        function simulateMix(recipe) {
-            let totalW = 0;
-            let numR = 0, numG = 0, numB = 0;
-            
-            Object.keys(recipe).forEach(k => {
-                let w = recipe[k];
-                if(w > 0) {
-                    let p = PAINT_DATA[k];
-                    // 乘以真实世界着色力 (Strength)
-                    let effWeight = w * (p.strength || 1.0);
-                    totalW += effWeight;
-                    numR += effWeight * p.ks[0];
-                    numG += effWeight * p.ks[1];
-                    numB += effWeight * p.ks[2];
-                }
+        function resolvePaintCode(code) {
+            if (PAINT_DATA[code]) return code;
+            return Object.keys(PAINT_DATA).find(k => (PAINT_DATA[k].aliases || []).includes(code)) || code;
+        }
+
+        function getRecipeEntries(recipe, options = {}) {
+            const sum = Object.values(recipe).reduce((acc, v) => acc + Math.max(0, Number(v) || 0), 0);
+            if (sum <= 0) return [];
+            const factor = options.volumeFactor || currentState.volumeFactor || 1;
+            return Object.entries(recipe).map(([rawCode, rawWeight]) => {
+                const code = resolvePaintCode(rawCode);
+                const weight = Math.max(0, Number(rawWeight) || 0);
+                const pigment = PAINT_DATA[code];
+                if (!pigment || weight <= 0) return null;
+                const fraction = weight / sum;
+                const gramsPerLiter = options.totalGramsPerLiter
+                    ? fraction * options.totalGramsPerLiter
+                    : weight / factor;
+                return { code, pigment, weight, fraction, gramsPerLiter };
+            }).filter(Boolean);
+        }
+
+        function getSpectralColor(pigment) {
+            if (!window.spectral?.Color) return null;
+            if (!pigment._spectralColor) {
+                pigment._spectralColor = new window.spectral.Color(pigment.hex);
+                pigment._spectralColor.tintingStrength = Math.sqrt(Math.max(0.05, pigment.effectiveStrength || 1));
+            }
+            return pigment._spectralColor;
+        }
+
+        function simulateMixSpectral(entries) {
+            if (!window.spectral?.mix || !entries.length) return null;
+            try {
+                const args = entries.map(({ pigment, weight }) => {
+                    const color = getSpectralColor(pigment);
+                    if (!color) return null;
+                    return [color, Math.sqrt(Math.max(0.0001, weight))];
+                }).filter(Boolean);
+                if (!args.length) return null;
+                const mixed = window.spectral.mix(...args);
+                return hexToRgb(mixed.toString({ method: 'map' }));
+            } catch {
+                return null;
+            }
+        }
+
+        // 混合模型采用三层合成：Lab反推K/S、公开颜料号近似光谱、浏览器spectral.js辅助。
+        function simulateMix(recipe, options = {}) {
+            const entries = getRecipeEntries(recipe, options);
+            if (!entries.length) return [255, 255, 255];
+            const kmRgb = simulateMixKsRgb(entries);
+            const referenceRgb = simulateMixReferenceSpectra(entries);
+            const spectralRgb = simulateMixSpectral(entries);
+            let output = kmRgb;
+            if (referenceRgb) {
+                const trust = Math.max(0.35, Math.min(0.76, estimateReferenceTrust(entries)));
+                output = blendRgbModels(referenceRgb, output, trust);
+            }
+            if (spectralRgb) output = blendRgbModels(spectralRgb, output, 0.18);
+            return output;
+        }
+
+        function calculateHidingAlpha(recipe, coats = 2, options = {}) {
+            const entries = getRecipeEntries(recipe, options);
+            if (!entries.length) return 0;
+            let opticalLoad = 0;
+            entries.forEach(({ pigment, gramsPerLiter, fraction }) => {
+                const load = Math.max(0, gramsPerLiter);
+                const hiding = (pigment.hidingPower || 60) / 100;
+                const tint = Math.sqrt(Math.max(0.05, pigment.colorStrength || 1));
+                const ciScatterBoost = { PW6: 1.55, PBk7: 1.35, PR101: 1.25, PY42: 1.18, PG7: 1.06 }[pigment.ci] || 1.0;
+                const whiteBoost = pigment === PAINT_DATA.W064 ? 1.28 : 1.0;
+                const blackBoost = pigment === PAINT_DATA.BK7H ? 1.15 : 1.0;
+                opticalLoad += load * hiding * tint * getPigmentLoadFactor(pigment) * ciScatterBoost * whiteBoost * blackBoost * (0.65 + 0.35 * fraction);
             });
-            
-            if(totalW === 0) return [255, 255, 255];
-            
-            // 计算混合后的物理 K/S，并逆向推导反射光
-            let linR = getRfromKS(numR / totalW);
-            let linG = getRfromKS(numG / totalW);
-            let linB = getRfromKS(numB / totalW);
-            
-            return [
-                Math.max(0, Math.min(255, Math.round(linearToSrgb(linR) * 255))),
-                Math.max(0, Math.min(255, Math.round(linearToSrgb(linG) * 255))),
-                Math.max(0, Math.min(255, Math.round(linearToSrgb(linB) * 255)))
-            ];
+            const opticalDepth = opticalLoad / 52;
+            return Math.max(0, Math.min(0.995, 1 - Math.exp(-opticalDepth * coats)));
+        }
+
+        function blendLinear(topRgb, substrateRgb, alpha) {
+            return topRgb.map((c, i) => {
+                const top = srgbToLinear(c / 255);
+                const bottom = srgbToLinear(substrateRgb[i] / 255);
+                return Math.max(0, Math.min(255, Math.round(linearToSrgb(top * alpha + bottom * (1 - alpha)) * 255)));
+            });
+        }
+
+        function simulateOverSubstrate(recipe, substrateRgb = BLACK_SUBSTRATE_RGB, coats = 2, options = {}) {
+            const topRgb = simulateMix(recipe, options);
+            const alpha = calculateHidingAlpha(recipe, coats, options);
+            return { rgb: blendLinear(topRgb, substrateRgb, alpha), alpha, topRgb };
+        }
+
+        function evaluateRecipe(recipe, targetHex, options = {}) {
+            const entries = getRecipeEntries(recipe, options);
+            const targetRgb = hexToRgb(targetHex || '#FFFFFF') || [255, 255, 255];
+            const targetLab = rgbToLab(...targetRgb);
+            const kmRgb = simulateMixKsRgb(entries);
+            const referenceRgb = simulateMixReferenceSpectra(entries);
+            const referenceTrust = estimateReferenceTrust(entries);
+            const topRgb = simulateMix(recipe, options);
+            const topLab = rgbToLab(...topRgb);
+            const single = simulateOverSubstrate(recipe, BLACK_SUBSTRATE_RGB, 1, options);
+            const double = simulateOverSubstrate(recipe, BLACK_SUBSTRATE_RGB, 2, options);
+            const doubleWhite = simulateOverSubstrate(recipe, WHITE_SUBSTRATE_RGB, 2, options);
+            const singleLab = rgbToLab(...single.rgb);
+            const doubleLab = rgbToLab(...double.rgb);
+            const doubleWhiteLab = rgbToLab(...doubleWhite.rgb);
+            const dE = deltaE2000(targetLab, doubleLab);
+            const singleDE = deltaE2000(targetLab, singleLab);
+            const topDE = deltaE2000(targetLab, topLab);
+            const substrateShift = deltaE2000(doubleLab, doubleWhiteLab);
+            const modelSpread = referenceRgb ? deltaE2000(rgbToLab(...referenceRgb), rgbToLab(...kmRgb)) : 0;
+            const colorClose = dE <= TWO_COAT_PASS_DE && double.alpha >= 0.96 && substrateShift <= 3.0;
+            const colorUsable = dE <= TWO_COAT_WARNING_DE && double.alpha >= 0.92 && substrateShift <= 7.0;
+            let grade = 'fail';
+            if (colorClose) {
+                if (singleDE <= TWO_COAT_PASS_DE && single.alpha >= 0.96 && substrateShift <= 2.0 && modelSpread <= 8.0) {
+                    grade = 'excellent';
+                } else {
+                    grade = modelSpread <= 12.0 ? 'pass' : 'warning';
+                }
+            } else if (colorUsable) {
+                grade = 'warning';
+            }
+            return { targetRgb, targetLab, topRgb, topLab, kmRgb, referenceRgb, single, double, doubleWhite, dE, singleDE, topDE, substrateShift, modelSpread, referenceTrust, grade };
         }
 
         function updateVisualMix() {
             let currentRecipe = {};
             let totalW = 0;
-            let isAI = false;
-            let firstSlider = document.querySelector('#paintSlidersContainer input[type="range"]');
-            if (firstSlider) isAI = firstSlider.disabled;
 
             document.querySelectorAll('#paintSlidersContainer input[type="range"]').forEach(s => {
                 let w = Number(s.value);
                 if (w > 0) { currentRecipe[s.dataset.paint] = w; totalW += w; }
             });
             if (totalW === 0) {
-                elements.mixedColorArea.style.backgroundColor = '#FFFFFF';
-                document.getElementById("currentHex").textContent = `#FFFFFF`;
+                elements.mixedColorArea.style.backgroundColor = '#000000';
+                document.getElementById("currentHex").textContent = `#000000`;
+                updateSimulationPanel(null);
                 return;
             }
             
-            let rgb = simulateMix(currentRecipe);
-            
-            if (isAI && currentState.ral) {
-                // [强制视觉锁] 如果是AI生成或标准色卡锁定的状态，强制让屏幕渲染实现绝对的 100% 0色差
-                let tgtRgb = hexToRgb(currentState.ral.hex);
-                rgb = [...tgtRgb];
-            } else if (currentState.colorOffset) {
-                // [极致体验魔术] 手动微调时应用色彩域补偿
-                let expectedTotalW = TOTAL_PIGMENT_PER_LITER * currentState.volumeFactor;
-                let intensity = Math.min(1.0, totalW / expectedTotalW); 
-                
-                rgb[0] += currentState.colorOffset[0] * intensity;
-                rgb[1] += currentState.colorOffset[1] * intensity;
-                rgb[2] += currentState.colorOffset[2] * intensity;
-                
-                rgb[0] = Math.max(0, Math.min(255, Math.round(rgb[0])));
-                rgb[1] = Math.max(0, Math.min(255, Math.round(rgb[1])));
-                rgb[2] = Math.max(0, Math.min(255, Math.round(rgb[2])));
-            }
+            const evaluation = currentState.ral
+                ? evaluateRecipe(currentRecipe, currentState.ral.hex, { volumeFactor: currentState.volumeFactor })
+                : null;
+            const rgb = evaluation ? evaluation.double.rgb : simulateOverSubstrate(currentRecipe, BLACK_SUBSTRATE_RGB, 2, { volumeFactor: currentState.volumeFactor }).rgb;
             
             elements.mixedColorArea.style.backgroundColor = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
-            const toHex = c => c.toString(16).padStart(2, '0').toUpperCase();
-            document.getElementById("currentHex").textContent = `#${toHex(rgb[0])}${toHex(rgb[1])}${toHex(rgb[2])}`;
+            document.getElementById("currentHex").textContent = rgbToHex(rgb);
+            updateSimulationPanel(evaluation);
+        }
+
+        function updateSimulationPanel(evaluation) {
+            currentState.lastEvaluation = evaluation;
+            if (!evaluation) {
+                elements.hidingStatus.textContent = currentLanguage === 'zh' ? '未计算' : currentLanguage === 'ja' ? '未計算' : 'Not calculated';
+                elements.hidingStatus.className = 'text-[10px] font-black px-2 py-1 rounded bg-slate-700';
+                elements.deltaEValue.textContent = '--';
+                elements.singleCoatValue.textContent = '--';
+                elements.doubleCoatValue.textContent = '--';
+                elements.singleCoatSwatch.style.backgroundColor = '#000000';
+                elements.doubleCoatSwatch.style.backgroundColor = '#000000';
+                elements.simulationNote.textContent = currentLanguage === 'zh'
+                    ? '默认按黑色基材和两遍施工判断；本版会融合公开颜料号近似光谱、Lab批次值和遮盖力数据。'
+                    : currentLanguage === 'ja'
+                      ? '黒下地と二層塗装を基準に評価します。公開顔料番号の近似光谱、Labロット値、隠蔽力を併用します。'
+                      : 'Assumes black substrate and two coats. This version blends public pigment-index spectral approximations with Lab, batch strength, and hiding data.';
+                return;
+            }
+
+            const statusMap = {
+                excellent: {
+                    zh: '一遍可盖',
+                    en: 'One coat OK',
+                    ja: '一層可',
+                    cls: 'text-[10px] font-black px-2 py-1 rounded bg-green-500 text-white'
+                },
+                pass: {
+                    zh: '两遍通过',
+                    en: 'Two coats OK',
+                    ja: '二層可',
+                    cls: 'text-[10px] font-black px-2 py-1 rounded bg-primary text-white'
+                },
+                warning: {
+                    zh: '接近可用',
+                    en: 'Borderline',
+                    ja: '境界',
+                    cls: 'text-[10px] font-black px-2 py-1 rounded bg-yellow-500 text-slate-900'
+                },
+                fail: {
+                    zh: '风险较高',
+                    en: 'High risk',
+                    ja: '高リスク',
+                    cls: 'text-[10px] font-black px-2 py-1 rounded bg-accent text-white'
+                }
+            };
+            const info = statusMap[evaluation.grade] || statusMap.fail;
+            elements.hidingStatus.textContent = info[currentLanguage] || info.en;
+            elements.hidingStatus.className = info.cls;
+            elements.deltaEValue.textContent = evaluation.dE.toFixed(2);
+            elements.singleCoatValue.textContent = `dE ${evaluation.singleDE.toFixed(1)}`;
+            elements.doubleCoatValue.textContent = `dE ${evaluation.dE.toFixed(1)}`;
+            elements.singleCoatSwatch.style.backgroundColor = rgbToHex(evaluation.single.rgb);
+            elements.doubleCoatSwatch.style.backgroundColor = rgbToHex(evaluation.double.rgb);
+            const confidencePct = Math.round((evaluation.referenceTrust || 0) * 100);
+            const spreadRisk = evaluation.modelSpread >= 13;
+            const noteZh = `黑底两遍dE2000=${evaluation.dE.toFixed(2)}，一遍dE2000=${evaluation.singleDE.toFixed(2)}，基材影响dE=${evaluation.substrateShift.toFixed(2)}，模型分歧dE=${evaluation.modelSpread.toFixed(2)}，参考可信度=${confidencePct}%。${spreadRisk ? '模型分歧偏大，必须刮样确认。' : ''}${evaluation.grade === 'fail' ? '建议加白浆/底漆/膜厚或重新打样。' : '仍需用实际刮样校准。'}`;
+            const noteEn = `Black two-coat dE2000=${evaluation.dE.toFixed(2)}, one-coat dE2000=${evaluation.singleDE.toFixed(2)}, substrate shift dE=${evaluation.substrateShift.toFixed(2)}, model spread dE=${evaluation.modelSpread.toFixed(2)}, reference confidence=${confidencePct}%. ${spreadRisk ? 'Model disagreement is high; confirm with a physical drawdown. ' : ''}${evaluation.grade === 'fail' ? 'Use white hiding paste, primer, more film thickness, or re-sample.' : 'Still calibrate with a physical drawdown.'}`;
+            const noteJa = `黒下地二層dE2000=${evaluation.dE.toFixed(2)}、一層dE2000=${evaluation.singleDE.toFixed(2)}、下地影響dE=${evaluation.substrateShift.toFixed(2)}、モデル差dE=${evaluation.modelSpread.toFixed(2)}、参考信頼度=${confidencePct}%。${spreadRisk ? 'モデル差が大きいため、必ず実塗装で確認してください。' : ''}${evaluation.grade === 'fail' ? '白色隠蔽材、下塗り、膜厚、再試験が必要です。' : '実塗装サンプルで校正してください。'}`;
+            elements.simulationNote.textContent = currentLanguage === 'zh' ? noteZh : currentLanguage === 'ja' ? noteJa : noteEn;
         }
 
         function updatePaintChart() {
@@ -500,8 +912,7 @@
                 if (val > 0.05) {
                     labels.push(PAINT_DATA[code][`name_${currentLanguage}`] || code); 
                     data.push(val);
-                    const colorMap = { Y: '#F4C430', R: '#B91D23', V: '#800080', B: '#2A58D1', G: '#229954', BK: '#222', W: '#FFF' };
-                    colors.push(colorMap[code.charAt(0)] || '#CCC');
+                    colors.push(PAINT_DATA[code].hex || '#CCCCCC');
                 }
             });
             paintChart.data = { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 1, borderColor: '#1E293B' }] };
@@ -532,7 +943,130 @@
             document.querySelectorAll('#paintSlidersContainer input[type="range"]').forEach(s => s.disabled = true);
         }
 
-        // [核心升级 2]：物理 KM 引擎 + Oklab 闭环机器学习寻优
+        function normalizeRecipe(recipe) {
+            const merged = {};
+            Object.entries(recipe || {}).forEach(([rawCode, rawValue]) => {
+                const code = resolvePaintCode(rawCode);
+                const value = Math.max(0, Number(rawValue) || 0);
+                if (!PAINT_DATA[code] || value <= 0) return;
+                merged[code] = (merged[code] || 0) + value;
+            });
+            const sum = Object.values(merged).reduce((a, b) => a + b, 0);
+            if (sum <= 0) return {};
+            Object.keys(merged).forEach(code => merged[code] = merged[code] / sum * 100);
+            return merged;
+        }
+
+        function cleanRecipe(recipe, minPercent = 0.08) {
+            const normalized = normalizeRecipe(recipe);
+            Object.keys(normalized).forEach(code => {
+                if (normalized[code] < minPercent) delete normalized[code];
+            });
+            return normalizeRecipe(normalized);
+        }
+
+        function circularHueDistance(a, b) {
+            const diff = Math.abs(a - b) % 360;
+            return Math.min(diff, 360 - diff);
+        }
+
+        function objectiveForRecipe(recipe, targetHex) {
+            const normalized = normalizeRecipe(recipe);
+            if (!Object.keys(normalized).length) return Infinity;
+            const evaluation = evaluateRecipe(normalized, targetHex, { totalGramsPerLiter: TOTAL_PIGMENT_PER_LITER });
+            const activeCount = Object.values(normalized).filter(v => v > 0.25).length;
+            const tinyCount = Object.values(normalized).filter(v => v > 0.05 && v <= 0.8).length;
+            const hidingPenalty = Math.max(0, 0.965 - evaluation.double.alpha) * 18;
+            const substratePenalty = Math.max(0, evaluation.substrateShift - 2.0) * 0.65;
+            const complexityPenalty = Math.max(0, activeCount - 5) * 0.45 + Math.max(0, tinyCount - 1) * 0.12;
+            const topColorPenalty = Math.max(0, evaluation.topDE - 4.5) * 0.32;
+            const modelPenalty = Math.max(0, evaluation.modelSpread - 5.5) * 0.26;
+            const confidencePenalty = Math.max(0, 0.58 - evaluation.referenceTrust) * 1.4;
+            return evaluation.dE + hidingPenalty + substratePenalty + complexityPenalty + topColorPenalty + modelPenalty + confidencePenalty;
+        }
+
+        function addLightnessSupport(recipe, targetL, chroma) {
+            const out = { ...recipe };
+            const currentSum = Object.values(out).reduce((a, b) => a + b, 0);
+            let white = Math.max(0, (targetL - 45) * 1.05);
+            let black = Math.max(0, (42 - targetL) * 0.65);
+            if (targetL > 78) white += 18;
+            if (targetL < 25) black += 12;
+            if (chroma < 12) {
+                white += Math.max(0, targetL - 35) * 0.55;
+                black += Math.max(0, 55 - targetL) * 0.22;
+            }
+            const support = Math.min(86, white + black);
+            const chromaScale = currentSum > 0 ? Math.max(12, 100 - support) / currentSum : 1;
+            Object.keys(out).forEach(code => out[code] *= chromaScale);
+            if (white > 0) out.W064 = (out.W064 || 0) + white;
+            if (black > 0) out.BK7H = (out.BK7H || 0) + black;
+            return normalizeRecipe(out);
+        }
+
+        function buildSeedRecipes(targetLab, existingRecipe) {
+            const [targetL, targetA, targetB] = targetLab;
+            const targetHue = Math.atan2(targetB, targetA) * 180 / Math.PI;
+            const hue = targetHue < 0 ? targetHue + 360 : targetHue;
+            const chroma = Math.sqrt(targetA*targetA + targetB*targetB);
+            const chromatic = Object.entries(PAINT_DATA)
+                .filter(([code, p]) => code !== 'W064' && code !== 'BK7H')
+                .map(([code, p]) => ({ code, score: circularHueDistance(hue, p.hue), pigment: p }))
+                .sort((a, b) => a.score - b.score);
+            const seeds = [];
+            if (existingRecipe) seeds.push(normalizeRecipe(existingRecipe));
+            seeds.push(addLightnessSupport({}, targetL, chroma));
+            chromatic.slice(0, 6).forEach(({ code }) => {
+                seeds.push(addLightnessSupport({ [code]: 100 }, targetL, chroma));
+            });
+            for (let i = 0; i < Math.min(5, chromatic.length - 1); i++) {
+                const first = chromatic[i];
+                const second = chromatic[i + 1];
+                seeds.push(addLightnessSupport({ [first.code]: 65, [second.code]: 35 }, targetL, chroma));
+                seeds.push(addLightnessSupport({ [first.code]: 35, [second.code]: 65 }, targetL, chroma));
+            }
+            if (chroma < 14) {
+                seeds.push(normalizeRecipe({ W064: Math.max(1, targetL), BK7H: Math.max(1, 100 - targetL) }));
+                seeds.push(normalizeRecipe({ W064: targetL * 0.9, BK7H: (100 - targetL) * 0.6, Y42S: 4, B150S: 2 }));
+            }
+            seeds.push(normalizeRecipe({ W064: 78, Y74S: 16, Y83S: 6 }));
+            seeds.push(normalizeRecipe({ R254D: 45, "073": 30, Y83S: 15, W064: 10 }));
+            seeds.push(normalizeRecipe({ B150S: 45, B153S: 30, W064: 20, BK7H: 5 }));
+            seeds.push(normalizeRecipe({ G7: 48, Y74S: 28, W064: 20, BK7H: 4 }));
+            return seeds.filter(r => Object.keys(r).length);
+        }
+
+        function refineRecipe(seedRecipe, targetHex) {
+            const codes = Object.keys(PAINT_DATA);
+            let best = normalizeRecipe(seedRecipe);
+            let bestScore = objectiveForRecipe(best, targetHex);
+            let step = 14;
+            while (step >= 0.08) {
+                let improved = false;
+                for (const from of codes) {
+                    if ((best[from] || 0) <= 0.01) continue;
+                    for (const to of codes) {
+                        if (from === to) continue;
+                        const shift = Math.min(step, best[from] || 0);
+                        if (shift <= 0) continue;
+                        const candidate = { ...best };
+                        candidate[from] = (candidate[from] || 0) - shift;
+                        candidate[to] = (candidate[to] || 0) + shift;
+                        const normalized = normalizeRecipe(candidate);
+                        const score = objectiveForRecipe(normalized, targetHex);
+                        if (score + 0.0001 < bestScore) {
+                            best = normalized;
+                            bestScore = score;
+                            improved = true;
+                        }
+                    }
+                }
+                if (!improved) step *= 0.58;
+            }
+            return { recipe: cleanRecipe(best), score: bestScore };
+        }
+
+        // 基于14个色浆、批次强度、黑底两遍遮盖的真实边界搜索。
         function generateReferenceRecipe() {
             if (!currentState.ral || currentState.ral.ral === 'RAL') { 
                 showNotification("zh" === currentLanguage ? "请先选择颜色" : "Select a RAL color", "error"); 
@@ -540,108 +1074,47 @@
             }
             
             const targetLab = hexToLab(currentState.ral.hex);
-            let tAngle = Math.atan2(targetLab[2], targetLab[1]) * 180 / Math.PI;
-            if(tAngle < 0) tAngle += 360;
-            const tL = targetLab[0], tChroma = Math.sqrt(targetLab[1]**2 + targetLab[2]**2);
-            
-            // 阶段一：保留你原版的 LAB 启发式方向探测
-            let recipe = {};
-            if(tChroma < 10) {
-              if(tL > 90) { recipe.W064 = 98; recipe.BK7H = (100 - tL) * 0.5; }
-              else { recipe.W064 = (tL / 100) * 80; recipe.BK7H = ((100 - tL) / 100) * 40 / PAINT_DATA.BK7H.strength; }
-            } else {
-              const chromatic = Object.entries(PAINT_DATA).filter(([code, p]) => code !== 'W064' && code !== 'BK7H' && p.chroma > 20).map(([code, p]) => ({code, hue: p.hue, data: p}));
-              chromatic.sort((a, b) => a.hue - b.hue);
-              let p1 = null, p2 = null;
-              for(let i=0; i<chromatic.length; i++){
-                let cur = chromatic[i], next = chromatic[(i + 1) % chromatic.length];
-                let h1 = cur.hue, h2 = next.hue; if (h2 < h1) h2 += 360;
-                let th = tAngle; if (th < h1 && (h1 - th > 180)) th += 360;
-                if(th >= h1 && th <= h2) { p1 = cur; p2 = next; break; }
-              }
-              if(!p1) { p1 = chromatic[0]; p2 = chromatic[1]; }
-              let ratio = (tAngle - p1.hue) / (p2.hue - p1.hue); if(isNaN(ratio)) ratio = 0.5;
-              recipe[p1.code] = 50 * (1 - ratio); recipe[p2.code] = 50 * ratio;
-              let curL = (p1.data.lab[0] * (1-ratio)) + (p2.data.lab[0] * ratio);
-              if(tL > curL) recipe.W064 = (tL - curL) * 3 / PAINT_DATA.W064.strength;
-              else recipe.BK7H = (curL - tL) * 0.5 / PAINT_DATA.BK7H.strength;
-            }
-            
-            let final = {}; let ft = 0; Object.values(recipe).forEach(v => ft += v);
-            Object.entries(recipe).forEach(([k, v]) => { if (v > 0.1) final[k] = (v / ft) * 100; });
-            
-            // 阶段二：Kubelka-Munk 物理模拟迭代寻优 (150次微积分)
-            let optRecipe = { ...final };
-            let targetRgb = hexToRgb(currentState.ral.hex);
-            let targetOklab = srgbToOklab(targetRgb[0], targetRgb[1], targetRgb[2]);
-            
-            let keysToOptimize = Object.keys(optRecipe);
-            if (!keysToOptimize.includes('W064')) keysToOptimize.push('W064');
-            if (!keysToOptimize.includes('BK7H')) keysToOptimize.push('BK7H');
+            const seeds = buildSeedRecipes(targetLab, currentState.ral.baseRecipe);
+            let best = { recipe: {}, score: Infinity };
+            seeds.forEach(seed => {
+                const result = refineRecipe(seed, currentState.ral.hex);
+                if (result.score < best.score) best = result;
+            });
 
-            let bestRecipe = { ...optRecipe };
-            let bestError = Infinity;
-
-            for(let iter=0; iter < 200; iter++) {
-                let currentRgb = simulateMix(optRecipe);
-                let currentOklab = srgbToOklab(currentRgb[0], currentRgb[1], currentRgb[2]);
-                let currentError = deltaEOklab(targetOklab, currentOklab);
-                
-                // 记录最完美的配方
-                if (currentError < bestError) {
-                    bestError = currentError;
-                    bestRecipe = { ...optRecipe };
-                }
-                
-                if(currentError < 0.0005) break; // 已经达到极其完美的视知觉
-                
-                let gradients = {};
-                keysToOptimize.forEach(k => {
-                    let testRecipe = { ...optRecipe };
-                    testRecipe[k] = (testRecipe[k] || 0) + 0.5; // 小步长求导
-                    
-                    let sumTest = 0; Object.values(testRecipe).forEach(v => sumTest += v);
-                    Object.keys(testRecipe).forEach(tk => testRecipe[tk] = (testRecipe[tk]/sumTest)*100);
-                    
-                    let testRgb = simulateMix(testRecipe);
-                    let testOklab = srgbToOklab(testRgb[0], testRgb[1], testRgb[2]);
-                    gradients[k] = deltaEOklab(targetOklab, testOklab) - currentError;
-                });
-                
-                let lr = 20.0 / (1 + iter*0.05); // 引入学习步长衰减，防止震荡
-                keysToOptimize.forEach(k => {
-                    optRecipe[k] = Math.max(0, (optRecipe[k] || 0) - gradients[k] * lr);
-                });
-                
-                let sumOpt = 0; Object.values(optRecipe).forEach(v => sumOpt += v);
-                if(sumOpt > 0) Object.keys(optRecipe).forEach(k => optRecipe[k] = (optRecipe[k]/sumOpt)*100);
-            }
-            
-            // 输出最佳配方，保留 0.01 精度防止强色色浆丢失
-            let cleanRecipe = {};
-            Object.keys(bestRecipe).forEach(k => { if(bestRecipe[k] > 0.01) cleanRecipe[k] = bestRecipe[k]; });
-
+            const cleanRecipe = cleanRecipeForDisplay(best.recipe);
             currentState.ral.baseRecipe = cleanRecipe;
-            calibrateGamut(); // AI 算完后立刻执行视觉对齐校准
+            calibrateGamut();
             updatePaintWeights(cleanRecipe);
-            showNotification(currentLanguage === 'zh' ? "✅ 物理配方与视觉对齐完毕" : "✅ Perfect Match");
+            const evaluation = evaluateRecipe(cleanRecipe, currentState.ral.hex, { totalGramsPerLiter: TOTAL_PIGMENT_PER_LITER });
+            const msg = currentLanguage === 'zh'
+                ? `真实模拟完成：两遍dE ${evaluation.dE.toFixed(2)}`
+                : currentLanguage === 'ja'
+                  ? `実測近似完了: 二層dE ${evaluation.dE.toFixed(2)}`
+                  : `Simulation done: two-coat dE ${evaluation.dE.toFixed(2)}`;
+            showNotification(msg, evaluation.grade === 'fail' ? 'error' : 'success');
             
             if (window.innerWidth < 768) {
                 document.getElementById('paintSlidersContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
 
+        function cleanRecipeForDisplay(recipe) {
+            const cleaned = cleanRecipe(recipe, 0.05);
+            Object.keys(cleaned).forEach(code => cleaned[code] = Math.round(cleaned[code] * 100) / 100);
+            return normalizeRecipe(cleaned);
+        }
+
         function updateColorDisplay(d) {
             if (!d || !d.ral) return; currentState.ral = d;
             elements.targetColorArea.style.backgroundColor = d.hex;
             elements.currentRalCode.textContent = d.ral;
-            elements.currentHex.textContent = d.hex.toUpperCase();
+            updateVisualMix();
         }
 
         function initRecipePresets() {
             elements.recipePresetsContainer.innerHTML = ralPaintMap.filter(c => c.baseRecipe).map(d => `
-                <button class="recipe-preset flex-shrink-0 w-36 bg-white border border-gray-200 rounded-xl p-3 flex flex-col items-start gap-2 hover:border-primary shadow-sm active:scale-95 transition-transform" data-ral="${d.ral}">
-                  <div class="w-full h-10 rounded shadow-inner" style="background-color: ${d.hex};"></div>
+                <button class="recipe-preset flex-shrink-0 w-36 bg-panel border border-[#dfe7df] rounded-lg p-3 flex flex-col items-start gap-2 hover:border-primary hover:-translate-y-0.5 shadow-card active:scale-95 transition-all" data-ral="${d.ral}">
+                  <div class="w-full h-10 rounded-md shadow-inner" style="background-color: ${d.hex};"></div>
                   <div class="text-left w-full">
                     <div class="text-[11px] font-black text-gray-800 truncate">${d[`name_${currentLanguage}`] || d.name_en}</div>
                     <div class="text-[9px] text-primary font-bold mt-0.5">${d.ral}</div>
@@ -651,7 +1124,7 @@
 
         function initRalPalette() {
             elements.ralPaletteContainer.innerHTML = ralPaintMap.map(d => `
-                <button class="ral-palette group flex flex-col items-center bg-white p-1 rounded-lg border border-gray-100 hover:border-primary hover:shadow-md transition-all active:scale-95" data-ral="${d.ral}">
+                <button class="ral-palette group flex flex-col items-center bg-[#f8faf7] p-1 rounded-lg border border-[#e2e8e2] hover:border-primary hover:shadow-md transition-all active:scale-95" data-ral="${d.ral}">
                   <div class="w-full h-8 rounded-md shadow-inner" style="background-color: ${d.hex};"></div>
                   <div class="text-[8px] font-black mt-1 text-gray-500">${d.ral}</div>
                 </button>`).join('');
@@ -665,7 +1138,7 @@
                 const k = el.getAttribute('data-i18n-placeholder'); if (trans[k]) el.placeholder = trans[k]; 
             });
             
-            const includes = l === 'zh' ? ['RAL代码和颜色','各颜料精确重量','基料用量与比例'] : l === 'en' ? ['RAL Code & Color','Precise Weights','Base & Ratio'] : ['RALコードと色','正確な重量','ベース量と比率'];
+            const includes = l === 'zh' ? ['RAL代码和颜色','14色浆精确重量','黑底一遍/两遍评估'] : l === 'en' ? ['RAL Code & Color','14 colorant weights','Black-substrate hiding'] : ['RALコードと色','14色浆重量','黒下地隠蔽評価'];
             elements.recipeIncludesList.innerHTML = includes.map(t => `<li class="flex items-center gap-1.5"><i class="fa fa-check-circle text-green-500"></i>${t}</li>`).join('');
 
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === l));
@@ -676,13 +1149,20 @@
             initRalSelect(); initRecipePresets(); initRalPalette();
             if (currentState.ral) updateColorDisplay(currentState.ral);
             updatePaintChart();
+            if (currentState.lastEvaluation) updateSimulationPanel(currentState.lastEvaluation);
         }
 
         function initUI() {
-            const getPaintColor = c => ({ Y:'#F4C430', R:'#B91D23', V:'#800080', B:'#2A58D1', G:'#229954', BK:'#222', W:'#FFF' }[c.charAt(0)] || '#CCC');
+            const getPaintColor = c => PAINT_DATA[c]?.hex || '#CCC';
             
             elements.paintSlidersContainer.innerHTML = Object.entries(PAINT_DATA).map(([code, p]) => {
                 let styleId = `style-${code}`;
+                const sourceInfo = [
+                  p.ci ? `CI ${p.ci}` : null,
+                  p.pigmentContent ? `${p.pigmentContent}% pigment` : null,
+                  p.density ? `${p.density} g/cm3` : null,
+                  p.referenceConfidence ? `ref ${p.referenceConfidence}` : null
+                ].filter(Boolean).join(' / ');
                 if (!document.getElementById(styleId)) {
                   let style = document.createElement('style'); style.id = styleId;
                   let bd = (code==='W064'||code==='Y74S') ? '#ccc' : '#fff';
@@ -690,15 +1170,16 @@
                   document.head.appendChild(style);
                 }
                 return `
-                <div class="bg-gray-50/70 p-3 rounded-xl border border-gray-100/50">
+                <div class="bg-[#f8faf7] p-3 rounded-lg border border-[#e2e8e2] transition-colors hover:border-primary/45">
                   <div class="flex items-center justify-between mb-3">
                     <label class="text-xs font-bold text-slate-700 flex items-center">
                       <span class="w-4 h-4 rounded-full mr-2 shadow-sm border" style="background:${getPaintColor(code)};border-color:${code==='W064'?'#ddd':'transparent'}"></span>
                       <span data-i18n-paint="${code}"></span> <span class="text-[10px] text-slate-400 ml-1">(${code})</span>
                     </label>
-                    <span id="value${code}" class="text-xs font-black text-primary font-mono bg-white px-2.5 py-1 rounded shadow-sm border border-gray-100">0.00g</span>
+                    <span id="value${code}" class="text-xs font-black text-primary font-mono bg-white px-2.5 py-1 rounded-md shadow-sm border border-[#e2e8e2]">0.00g</span>
                   </div>
                   <input type="range" id="slider${code}" min="0" max="${TOTAL_PIGMENT_PER_LITER*VOLUME_FACTORS['20l']}" value="0" data-paint="${code}" step="0.01" class="w-full">
+                  ${sourceInfo ? `<div class="mt-2 text-[9px] font-bold text-slate-400 truncate" title="${sourceInfo}">${sourceInfo}</div>` : ''}
                 </div>`;
             }).join('');
             
@@ -725,10 +1206,29 @@
             let t = `MooCow 智能配方 (${currentState.ral?.ral||'Custom'})\n容量基准: ${currentState.volume.toUpperCase()}\n\n`;
             Object.keys(PAINT_DATA).forEach(code => {
                 const w = Number(document.getElementById(`slider${code}`)?.value || 0);
-                if (w > 0) t += `- ${PAINT_DATA[code][`name_${currentLanguage}`] || code}: ${w.toFixed(2)}g\n`;
+                if (w > 0) {
+                    const p = PAINT_DATA[code];
+                    t += `- ${p[`name_${currentLanguage}`] || p.name_zh || code} (${code}): ${w.toFixed(2)}g`;
+                    if (p.batchNo) t += ` | 批次 ${p.batchNo}`;
+                    if (p.ci) t += ` | CI ${p.ci}`;
+                    if (p.pigmentContent) t += ` | 颜料 ${p.pigmentContent}%`;
+                    if (p.referenceConfidence) t += ` | 光谱参考 ${p.referenceConfidence}`;
+                    if (p.aliases?.length) t += ` | 供应商别名 ${p.aliases.join('/')}`;
+                    t += `\n`;
+                }
             });
             t += `\n总重量: ${elements.totalPigmentWeight.textContent}`;
             t += `\n配比 P:B = ${elements.mixingRatio.textContent}`;
+            if (currentState.lastEvaluation) {
+                const e = currentState.lastEvaluation;
+                t += `\n黑底一遍 dE2000: ${e.singleDE.toFixed(2)}`;
+                t += `\n黑底两遍 dE2000: ${e.dE.toFixed(2)}`;
+                t += `\n两遍遮盖率估算: ${(e.double.alpha * 100).toFixed(1)}%`;
+                t += `\n基材影响 dE2000: ${e.substrateShift.toFixed(2)}`;
+                t += `\n模型分歧 dE2000: ${e.modelSpread.toFixed(2)}`;
+                t += `\n参考可信度: ${Math.round((e.referenceTrust || 0) * 100)}%`;
+                t += `\n状态: ${elements.hidingStatus.textContent}`;
+            }
             return t;
         }
 

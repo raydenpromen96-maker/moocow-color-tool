@@ -1,10 +1,24 @@
 # MooCow Mini 调色工具 / Color Mixing Tool / 調色ツール
 
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://raydenpromen96-maker.github.io/moocow-color-tool/)
-[![Version](https://img.shields.io/badge/Version-2.0.0-blue)](https://github.com/raydenpromen96-maker/moocow-color-tool)
+[![Version](https://img.shields.io/badge/Version-3.0.0-blue)](https://github.com/raydenpromen96-maker/moocow-color-tool)
 [![Languages](https://img.shields.io/badge/Languages-中文%20%7C%20English%20%7C%20日本語-orange)](https://github.com/raydenpromen96-maker/moocow-color-tool)
 
 ## 🌟 功能特性 / Features / 機能
+
+## 最新更新 / Latest Update / 最新更新
+
+### v3.0.0 (2026-07-01) - 黑底遮盖与专业工作台界面
+
+本版本把原来的视觉配色工具升级成更接近真实调色流程的本地调色工作台：
+
+- **黑底遮盖模拟**：默认按黑色基材、清漆体系和一遍/两遍施工评估，显示遮盖风险。
+- **近似光谱混色**：在原有 Lab / Kubelka-Munk 近似模型基础上，加入公开颜料索引和近似光谱参考。
+- **模型分歧提示**：显示 `模型分歧 dE` 与 `参考可信度`，避免把不可靠的屏幕结果误判成可直接生产。
+- **更真实的风险分级**：真正高色差保持“风险较高”；低色差但模型分歧大的颜色标为“接近可用”，并提示必须刮样确认。
+- **配方搜索优化**：减少无意义的小剂量色浆和过复杂配方，优先推荐更接近真实调色习惯的少色浆方案。
+- **桌面 UI 重做**：改为左右两栏工作台，左侧选色与色浆调节，右侧显示配方、黑底模拟、图表和导出。
+- **手机 UI 优化**：修复横向溢出，提升移动端首屏、输入框、按钮和滑块的可用性。
 
 ### 🌐 多语言支持 / Multi-language Support / 多言語対応
 - **中文（简体）** - 默认语言，完整的中文界面
@@ -14,17 +28,18 @@
 - 自动保存用户语言偏好设置
 
 ### 🎨 专业调色功能 / Professional Color Mixing / プロフェッショナル調色機能
-- **215种RAL色码** - 完整的RAL色卡支持
-- **14种基础颜料** - 基于最新LAB色彩空间数据
+- **191种RAL色码** - 覆盖常用 RAL 色卡
+- **14种基础色浆** - 基于科莱恩色浆 Lab、批次强度、颜料索引和近似光谱参考
 - **精确重量计算** - 支持500ML、1L、5L、20L多种容量
 - **实时预览** - 颜色混合效果即时显示
-- **智能配方** - 自动生成最优颜料配比
+- **智能配方** - 自动生成颜料配比，并显示黑底遮盖、模型分歧和参考可信度
 
 ### 📊 数据可视化 / Data Visualization / データ可視化
 - 颜料比例饼图显示
 - 实时重量计算和比例分析
 - 混合比例智能提示
-- 配色建议系统
+- 黑底一遍/两遍模拟
+- dE2000 色差、基材影响、模型分歧和参考可信度提示
 
 ### 💾 导出功能 / Export Features / エクスポート機能
 - **配方导出** - 详细的颜料重量清单
@@ -62,7 +77,8 @@
 - **HTML5** - 现代化语义标记
 - **Tailwind CSS** - 响应式设计框架
 - **Chart.js** - 数据可视化图表
-- **Vanilla JavaScript** - 原生JS，无依赖
+- **spectral.js** - 浏览器端辅助光谱混色参考
+- **Vanilla JavaScript** - 原生 JS 业务逻辑，轻量静态页面
 - **Font Awesome** - 图标库
 - **GitHub Pages** - 静态网站托管
 
@@ -74,6 +90,15 @@
 - 快速加载和流畅操作
 
 ## 🔄 版本历史 / Version History / バージョン履歴
+
+### v3.0.0 (2026-07-01) - 黑底遮盖与专业工作台界面
+- ✨ 加入黑底一遍/两遍遮盖模拟和 dE2000 风险评估
+- ✨ 加入公开颜料索引、颜料含量、密度、参考可信度和近似光谱数据
+- ✨ 加入模型分歧 dE 与参考可信度提示，避免屏幕结果被误认为实测结果
+- 🔧 优化配方搜索，减少过复杂和小剂量堆叠配方
+- 🎨 重做桌面 UI 为左右两栏调色工作台
+- 📱 优化手机端布局，修复横向溢出并提升滑块操作体验
+- ✅ 批量回归测试 191 个 RAL 色：风险项集中在红色、深紫红、荧光黄等真实色域薄弱区域
 
 ### v2.0.0 (2024-10-11) - 多语言版本
 - ✨ 新增中英日三语言切换功能
