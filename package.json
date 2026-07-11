@@ -1,0 +1,9 @@
+{
+  "name": "moocow-color-tool",
+  "version": "4.2.0",
+  "private": true,
+  "main": "src/color-core.js",
+  "scripts": {
+    "test": "node --test"
+  }
+}
