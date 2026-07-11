@@ -5,14 +5,13 @@ const test = require('node:test');
 
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 
-test('page loads local ColorCore, recipe search, and family spectra in dependency order', () => {
+test('page loads local ColorCore and recipe search without external spectral runtime data', () => {
   const colorCore = html.indexOf('<script src="./src/color-core.js"></script>');
   const recipeSearch = html.indexOf('<script src="./src/recipe-search.js"></script>');
-  const familySpectra = html.indexOf('<script src="./src/family-spectra.js"></script>');
 
   assert.ok(colorCore >= 0);
   assert.ok(recipeSearch > colorCore);
-  assert.ok(familySpectra > recipeSearch);
+  assert.doesNotMatch(html, /family-spectra\.js|MooCowFamilySpectra|familySpectralProfile|familySpectralCoverage/);
   assert.doesNotMatch(html, /spectral\.js|window\.spectral|simulateMixSpectral/);
 });
 
@@ -23,11 +22,12 @@ test('standard spectral integration uses D65 and CIE 1931 2-degree samples', () 
   assert.doesNotMatch(html, /CIE_1931_10DEG_APPROX|1\.0622/);
 });
 
-test('family spectra remain shadow diagnostics and cannot affect candidate score', () => {
-  assert.match(html, /MooCowFamilySpectra\.summarizeCoverage/);
-  assert.match(html, /shadow only, not ranked/);
+test('incompatible epoxy evidence is absent and the waterborne data gap is explicit', () => {
+  assert.doesNotMatch(html, /MultipigmentPhantoms|pigment-in-epoxy|mu_a|mu_s'|MIT实测家族/);
+  assert.match(html, /当前未内置获得明确商业再分发授权的水性丙烯酸实测光谱曲线/);
+  assert.match(html, /No measured waterborne-acrylic spectral curves with explicit commercial redistribution permission are bundled/);
   const scoreFunction = html.match(/function candidateMetricScore\(evaluation, activeCount\) \{[\s\S]*?\n\s*\}/)?.[0] || '';
-  assert.doesNotMatch(scoreFunction, /familySpectral|MooCowFamilySpectra/);
+  assert.doesNotMatch(scoreFunction, /familySpectral|MooCowFamilySpectra|waterborne/);
   assert.match(html, /"073": \{[^\n]*ci: null,[^\n]*C\.I\. identity unverified/);
 });
 
@@ -102,6 +102,8 @@ test('candidate wording and exported output retain the uncalibrated model caveat
   assert.match(html, /policyDetail: '106g\/L total; 0\.5g\/L grid; >=1\.0g\/L active; max4; unverified equipment policy and physical accuracy\.'/);
   assert.match(html, /Selected model candidate/);
   assert.match(html, /physical drawdown/);
+  assert.match(html, /spectralBoundary: 'Spectral-data boundary: no measured waterborne-acrylic curves/);
+  assert.match(html, /t \+= `\$\{labels\.policy\}: \$\{labels\.policyDetail\}\\n\$\{labels\.spectralBoundary\}/);
 });
 
 test('substrate comparison exposes black and white two-coat metrics', () => {

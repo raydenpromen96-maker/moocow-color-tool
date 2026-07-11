@@ -13,7 +13,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <script src="./src/color-core.js"></script>
   <script src="./src/recipe-search.js"></script>
-  <script src="./src/family-spectra.js"></script>
   
   <script>
     tailwind.config = {
@@ -593,7 +592,6 @@
           p.displayConflictDE = modelColor.displayConflictDE;
           p.effectiveStrength = (p.mixStrength || p.strength || 1.0) * (p.colorStrength || 1.0);
           p.referenceSpectrum = normalizeCurve(REFERENCE_SPECTRA[p.ci]);
-          p.familySpectralProfile = window.MooCowFamilySpectra?.PROFILES[p.ci] || null;
           p.spectralRgb = p.referenceSpectrum ? spectrumToRgb(p.referenceSpectrum) : p.physicsRgb;
           p.referenceWeight = getReferenceTrust(p);
           let angle = Math.atan2(p.lab[2], p.lab[1]) * 180 / Math.PI;
@@ -726,9 +724,6 @@
             const topDE = deltaE2000(targetLab, topLab);
             const substrateShift = deltaE2000(doubleLab, doubleWhiteLab);
             const modelSpread = referenceRgb ? deltaE2000(rgbToLab(...referenceRgb), rgbToLab(...kmRgb)) : 0;
-            const familySpectralCoverage = window.MooCowFamilySpectra
-              ? window.MooCowFamilySpectra.summarizeCoverage(entries.map(({ pigment, fraction }) => ({ ci: pigment.ci, fraction })))
-              : null;
             const colorClose = dE <= TWO_COAT_PASS_DE && double.alpha >= 0.96 && substrateShift <= 3.0;
             const colorUsable = dE <= TWO_COAT_WARNING_DE && double.alpha >= 0.92 && substrateShift <= 7.0;
             let grade = 'fail';
@@ -741,7 +736,7 @@
             } else if (colorUsable) {
                 grade = 'warning';
             }
-            return { targetRgb, targetLab, topRgb, topLab, kmRgb, referenceRgb, single, double, doubleWhite, dE, singleDE, whiteDE, topDE, substrateShift, modelSpread, referenceTrust, familySpectralCoverage, grade };
+            return { targetRgb, targetLab, topRgb, topLab, kmRgb, referenceRgb, single, double, doubleWhite, dE, singleDE, whiteDE, topDE, substrateShift, modelSpread, referenceTrust, grade };
         }
 
         function updateVisualMix() {
@@ -826,13 +821,10 @@
             elements.doubleCoatSwatch.style.backgroundColor = rgbToHex(evaluation.double.rgb);
             elements.whiteTwoCoatSwatch.style.backgroundColor = rgbToHex(evaluation.doubleWhite.rgb);
             const confidencePct = Math.round((evaluation.referenceTrust || 0) * 100);
-            const familyCoverage = evaluation.familySpectralCoverage;
-            const exactPct = Math.round((familyCoverage?.exactFraction || 0) * 100);
-            const familyGap = familyCoverage?.missingCi?.length ? familyCoverage.missingCi.join('/') : 'none';
             const spreadRisk = evaluation.modelSpread >= 13;
-            const noteZh = `黑底一遍dE2000=${evaluation.singleDE.toFixed(2)}，黑底两遍dE2000=${evaluation.dE.toFixed(2)}，白底两遍dE2000=${evaluation.whiteDE.toFixed(2)}，黑白基材差异dE=${evaluation.substrateShift.toFixed(2)}，模型分歧dE=${evaluation.modelSpread.toFixed(2)}，参考可信度=${confidencePct}%。MIT实测家族光学曲线覆盖=${exactPct}%，缺口=${familyGap}；曲线为环氧体系mu_a/mu_s'形状证据，仅影子验证，不参与候选排序。${spreadRisk ? '模型分歧偏大，必须刮样确认。' : ''}${evaluation.grade === 'fail' ? '建议加白浆/底漆/膜厚或重新打样。' : '仍需用实际刮样校准。'}`;
-            const noteEn = `Black one-coat dE2000=${evaluation.singleDE.toFixed(2)}, black two-coat dE2000=${evaluation.dE.toFixed(2)}, white two-coat dE2000=${evaluation.whiteDE.toFixed(2)}, black-white substrate shift dE=${evaluation.substrateShift.toFixed(2)}, model spread dE=${evaluation.modelSpread.toFixed(2)}, reference confidence=${confidencePct}%. MIT measured-family optical-curve coverage=${exactPct}%, gaps=${familyGap}; the epoxy-system mu_a/mu_s' curves are shadow shape evidence only and do not rank candidates. ${spreadRisk ? 'Model disagreement is high; confirm with a physical drawdown. ' : ''}${evaluation.grade === 'fail' ? 'Use white hiding paste, primer, more film thickness, or re-sample.' : 'Still calibrate with a physical drawdown.'}`;
-            const noteJa = `黒下地一層dE2000=${evaluation.singleDE.toFixed(2)}、黒下地二層dE2000=${evaluation.dE.toFixed(2)}、白下地二層dE2000=${evaluation.whiteDE.toFixed(2)}、黒白下地差dE=${evaluation.substrateShift.toFixed(2)}、モデル差dE=${evaluation.modelSpread.toFixed(2)}、参考信頼度=${confidencePct}%。MIT実測ファミリー光学曲線=${exactPct}%、不足=${familyGap}。エポキシ系mu_a/mu_s'曲線はシャドー形状証拠のみで候補順位には不使用です。${spreadRisk ? 'モデル差が大きいため、必ず実塗装で確認してください。' : ''}${evaluation.grade === 'fail' ? '白色隠蔽材、下塗り、膜厚、再試験が必要です。' : '実塗装サンプルで校正してください。'}`;
+            const noteZh = `黑底一遍dE2000=${evaluation.singleDE.toFixed(2)}，黑底两遍dE2000=${evaluation.dE.toFixed(2)}，白底两遍dE2000=${evaluation.whiteDE.toFixed(2)}，黑白基材差异dE=${evaluation.substrateShift.toFixed(2)}，模型分歧dE=${evaluation.modelSpread.toFixed(2)}，参考可信度=${confidencePct}%。当前未内置获得明确商业再分发授权的水性丙烯酸实测光谱曲线；系统不再使用环氧曲线，也不以相似C.I.替代。${spreadRisk ? '模型分歧偏大，必须刮样确认。' : ''}${evaluation.grade === 'fail' ? '建议加白浆/底漆/膜厚或重新打样。' : '仍需用实际刮样校准。'}`;
+            const noteEn = `Black one-coat dE2000=${evaluation.singleDE.toFixed(2)}, black two-coat dE2000=${evaluation.dE.toFixed(2)}, white two-coat dE2000=${evaluation.whiteDE.toFixed(2)}, black-white substrate shift dE=${evaluation.substrateShift.toFixed(2)}, model spread dE=${evaluation.modelSpread.toFixed(2)}, reference confidence=${confidencePct}%. No measured waterborne-acrylic spectral curves with explicit commercial redistribution permission are bundled. Epoxy curves and similar-C.I. substitutions are not used. ${spreadRisk ? 'Model disagreement is high; confirm with a physical drawdown. ' : ''}${evaluation.grade === 'fail' ? 'Use white hiding paste, primer, more film thickness, or re-sample.' : 'Still calibrate with a physical drawdown.'}`;
+            const noteJa = `黒下地一層dE2000=${evaluation.singleDE.toFixed(2)}、黒下地二層dE2000=${evaluation.dE.toFixed(2)}、白下地二層dE2000=${evaluation.whiteDE.toFixed(2)}、黒白下地差dE=${evaluation.substrateShift.toFixed(2)}、モデル差dE=${evaluation.modelSpread.toFixed(2)}、参考信頼度=${confidencePct}%。商用再配布の明示許可を得た水性アクリル実測スペクトルは現在組み込まれていません。エポキシ曲線や類似C.I.による代用も使用しません。${spreadRisk ? 'モデル差が大きいため、必ず実塗装で確認してください。' : ''}${evaluation.grade === 'fail' ? '白色隠蔽材、下塗り、膜厚、再試験が必要です。' : '実塗装サンプルで校正してください。'}`;
             elements.simulationNote.textContent = currentLanguage === 'zh' ? noteZh : currentLanguage === 'ja' ? noteJa : noteEn;
         }
 
@@ -1342,12 +1334,12 @@
                     substrate: '黑白基材差异 dE2000',
                     spread: '模型分歧 dE2000',
                     confidence: '模型参考可信度',
-                    familyEvidence: 'MIT家族光学曲线影子覆盖',
                     status: '模型状态',
                     candidate: '已选模型候选',
                     manualCandidate: '手动配方',
                     policy: '临时未校准政策',
                     policyDetail: '总量106g/L；0.5g/L 网格；活性色浆>=1.0g/L；最多4种；未验证设备政策或物理准确度。',
+                    spectralBoundary: '光谱数据边界：当前未内置已获明确商业再分发授权的水性丙烯酸实测曲线；不使用环氧曲线或相似C.I.替代。',
                     warning: '重要：以上均为屏幕模型估算，不是实测结果或生产验收结论。投产前必须制作实体刮样，并由仪器和人工复核。'
                 },
                 en: {
@@ -1360,12 +1352,12 @@
                     substrate: 'Black-white substrate shift dE2000',
                     spread: 'Model disagreement dE2000',
                     confidence: 'Model reference confidence',
-                    familyEvidence: 'MIT family optical-curve shadow coverage',
                     status: 'Model status',
                     candidate: 'Selected model candidate',
                     manualCandidate: 'Manual recipe',
                     policy: 'Temporary uncalibrated policy',
                     policyDetail: '106g/L total; 0.5g/L grid; >=1.0g/L active; max4; unverified equipment policy and physical accuracy.',
+                    spectralBoundary: 'Spectral-data boundary: no measured waterborne-acrylic curves with explicit commercial redistribution permission are bundled; epoxy curves and similar-C.I. substitutions are not used.',
                     warning: 'IMPORTANT: All figures are screen-model estimates, not measurements or production acceptance. Make a physical drawdown and verify it instrumentally and visually before production.'
                 },
                 ja: {
@@ -1378,12 +1370,12 @@
                     substrate: '黒白下地差 dE2000',
                     spread: 'モデル差 dE2000',
                     confidence: 'モデル参考信頼度',
-                    familyEvidence: 'MITファミリー光学曲線シャドーカバレッジ',
                     status: 'モデル状態',
                     candidate: '選択したモデル候補',
                     manualCandidate: '手動配合',
                     policy: '仮の未校正方針',
                     policyDetail: '総量106g/L；0.5g/L グリッド；活性色浆>=1.0g/L；最大4種；装置方針または物理精度は未検証。',
+                    spectralBoundary: 'スペクトルデータ境界：商用再配布の明示許可を得た水性アクリル実測曲線は未搭載です。エポキシ曲線や類似C.I.代用は使用しません。',
                     warning: '重要：上記は画面上のモデル推定であり、実測値や生産合格判定ではありません。生産前に必ず実物の塗り板を作成し、測色計と目視で確認してください。'
                 }
             };
@@ -1391,7 +1383,7 @@
             const selectedCandidate = currentState.generatedCandidates.find(candidate => candidate.id === currentState.selectedCandidateId);
             let t = `${labels.title} (${currentState.ral?.ral||'Custom'})\n${labels.volume}: ${currentState.volume.toUpperCase()}\n\n`;
             t += `${labels.candidate}: ${selectedCandidate ? getCandidateName(selectedCandidate) : labels.manualCandidate}\n`;
-            t += `${labels.policy}: ${labels.policyDetail}\n\n`;
+            t += `${labels.policy}: ${labels.policyDetail}\n${labels.spectralBoundary}\n\n`;
             Object.keys(PAINT_DATA).forEach(code => {
                 const w = Number(document.getElementById(`slider${code}`)?.value || 0);
                 if (w > 0) {
@@ -1416,11 +1408,6 @@
                 t += `\n${labels.substrate}: ${e.substrateShift.toFixed(2)}`;
                 t += `\n${labels.spread}: ${e.modelSpread.toFixed(2)}`;
                 t += `\n${labels.confidence}: ${Math.round((e.referenceTrust || 0) * 100)}%`;
-                if (e.familySpectralCoverage) {
-                    const f = e.familySpectralCoverage;
-                    const gaps = f.missingCi.length ? f.missingCi.join('/') : 'none';
-                    t += `\n${labels.familyEvidence}: exact ${Math.round(f.exactFraction * 100)}% | gaps ${gaps} | shadow only, not ranked`;
-                }
                 t += `\n${labels.status}: ${elements.hidingStatus.textContent}`;
             }
             t += `\n\n${labels.warning}`;

@@ -1,17 +1,18 @@
 # MooCow Mini 调色工具 / Color Mixing Tool / 調色ツール
 
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://raydenpromen96-maker.github.io/moocow-color-tool/)
-[![Version](https://img.shields.io/badge/Version-4.2.0-blue)](https://github.com/raydenpromen96-maker/moocow-color-tool)
+[![Version](https://img.shields.io/badge/Version-4.2.1-blue)](https://github.com/raydenpromen96-maker/moocow-color-tool)
 [![Languages](https://img.shields.io/badge/Languages-中文%20%7C%20English%20%7C%20日本語-orange)](https://github.com/raydenpromen96-maker/moocow-color-tool)
 
 ## 🌟 功能特性 / Features / 機能
 
 ## 最新更新 / Latest Update / 最新更新
 
-### v4.2.0 (2026-07-12) - 家族光谱证据层 / Family Spectral Evidence
+### v4.2.1 (2026-07-12) - 水性丙烯酸曲线修正 / Waterborne Acrylic Correction
 
-- **MIT 实测光学曲线**：加入 `MultipigmentPhantoms` 中 6 个精确 C.I. 家族的吸收 `mu_a` 与约化散射 `mu_s'` 曲线，保留来源文件哈希、单位和环氧基体条件。
-- **影子验证**：页面和 TXT 报告实测家族覆盖与缺口，但该层不参与候选排序，避免把第三方环氧体系误当当前 CN 批次或 K/S/反射率。
+- **体系纠正**：移除 `MultipigmentPhantoms` 颜料-环氧 `mu_a / mu_s'` 数组，不再把环氧体系显示为本工具的家族曲线证据。
+- **授权优先**：GOLDEN 与 RIT 水性丙烯酸资料只保留为研究候选；在取得明确商业再分发许可前，不把其数值数组打包进公开项目。
+- **严格边界**：当前不内置任何外部实测家族曲线，不以相似 C.I. 补缺，也不把第三方资料冒充当前科莱恩/Heubach CN 批次。
 - **标准色度修正**：30 nm 光谱积分改用 D65 与 CIE 1931 2° 采样值，并修正旧版 580 nm x-bar 录入错误。
 - **Orange D2R 边界**：取消未经证实的 PO13 映射；供应商确认 C.I. 身份前不再套用橙色家族曲线。
 - **来源可追溯**：测量体系、数据包和授权边界记录在 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
@@ -83,7 +84,7 @@
 ### 颜料系统 / Pigment System / 顔料システム
 当前模型使用的14种色浆 `manualLab` 参考值；这些值用于屏幕模型，不代表完整实测反射光谱：
 
-家族光学曲线来自 `MultipigmentPhantoms` 的颜料-环氧试样，不是当前科莱恩/Heubach CN 批次的实测曲线，也不是涂膜反射率或 K/S。当前只作影子形状诊断，来源和使用边界见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
+当前公开版本不内置外部实测家族曲线。旧的颜料-环氧光学数组已移除；GOLDEN/RIT 水性丙烯酸资料在获得明确商业再分发许可前只作研究候选。现有 `REFERENCE_SPECTRA` 仍是屏幕模型近似，不是实测反射率或生产级 K/S。来源和边界见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
 
 | 代码 | 中文名称 | English Name | 日本語名 | L | A | B |
 |------|----------|--------------|----------|---|---|---|
@@ -108,7 +109,6 @@
 - **Chart.js** - 数据可视化图表
 - **ColorCore** - 本地确定性颜色转换、CIEDE2000 与 K/S 数学核心，无运行时依赖
 - **RecipeSearch** - 本地确定性剂量网格、最多4色约束与多候选选择模块
-- **FamilySpectra** - 带来源哈希、C.I. 匹配和 fail-closed 覆盖诊断的 MIT `mu_a` / `mu_s'` 影子证据层
 - **Vanilla JavaScript** - 原生 JS 业务逻辑，轻量静态页面
 - **Font Awesome** - 图标库
 - **GitHub Pages** - 静态网站托管
@@ -122,11 +122,11 @@
 
 ## 🔄 版本历史 / Version History / バージョン履歴
 
-### v4.2.0 (2026-07-12) - 家族光谱证据层
-- ✨ 接入 MIT 授权的 `MultipigmentPhantoms` 精确 C.I. 光学曲线，固定来源哈希、单位和测量条件
-- 🔒 光学曲线保持影子诊断，不参与候选排序；未覆盖 C.I. 按缺口处理，不自动套用相似颜料
-- 🔧 修正 D65 / CIE 1931 2° 采样与 580 nm x-bar 数据，取消 Orange D2R 未证实的 PO13 映射
-- ✅ 41 项自动测试、桌面与手机浏览器回归、TXT 导出和影子数据隔离验证通过
+### v4.2.1 (2026-07-12) - 水性丙烯酸曲线修正
+- 🔧 移除误接入的环氧体系 `mu_a / mu_s'` 数据
+- 🔒 GOLDEN/RIT 水性丙烯酸数据在授权明确前不打包进公开项目
+- 🧪 页面与 TXT 明确显示当前无已授权的水性丙烯酸实测曲线，不冒充当前 CN 批次
+- ✅ 未覆盖或 C.I. 未确认的色浆继续 fail closed，不套用相似颜料曲线
 
 ### v3.0.0 (2026-07-01) - 黑底遮盖与专业工作台界面
 - ✨ 加入黑底一遍/两遍遮盖模拟和 dE2000 风险评估

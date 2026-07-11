@@ -2,6 +2,28 @@
 
 All notable changes to MooCow Mini Color Mixing Tool are documented here.
 
+## [4.2.1] - 2026-07-12
+
+### Fixed
+
+- Removed all `MultipigmentPhantoms` pigment-in-epoxy `mu_a` and `mu_s'`
+  arrays from the runtime, UI wording, TXT export, tests, and active notices.
+- Removed the runtime family-coverage percentage instead of replacing the
+  epoxy arrays with data whose commercial redistribution rights are unclear.
+- Added an explicit UI and TXT boundary: no licensed measured waterborne-
+  acrylic spectra are bundled, and neither epoxy curves nor similar-C.I.
+  substitutions are used.
+
+### Boundaries
+
+- GOLDEN and RIT waterborne-acrylic datasets remain research-only candidates
+  until explicit commercial redistribution and derivative-use permission is
+  obtained.
+- The existing screen-model reference curves are not measurements of the
+  current Clariant/Heubach CN batches.
+
+[4.2.1]: https://github.com/raydenpromen96-maker/moocow-color-tool/releases/tag/v4.2.1
+
 ## [4.2.0] - 2026-07-12
 
 ### Added
