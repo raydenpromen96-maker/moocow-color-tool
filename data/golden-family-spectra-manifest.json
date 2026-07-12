@@ -1,0 +1,87 @@
+{
+  "schema": "moocow_golden_family_spectra_manifest_v1",
+  "source": {
+    "page": "https://www.realtimerendering.com/golden.html",
+    "workbook": "Reflectance Data for Golden HB 10 mil Drawdowns over White.xlsx",
+    "zipSha256": "AF3F8B0C327DD4DCFF52BAC83A5ED7E9C80D82D2E56164518DDF1C9AA57D3835",
+    "workbookSha256": "584A38368C4AF637A1253B6465B9F71493E38C65340092A0CFE9F73B3ED227CF",
+    "headerRow": 2,
+    "reflectanceColumns": [7, 10, 13, 16, 19, 22, 25, 28, 31, 34, 37],
+    "kOverSColumns": [39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 69],
+    "wavelengths": [400, 430, 460, 490, 520, 550, 580, 610, 640, 670, 700]
+  },
+  "profiles": {
+    "PB15:3": {
+      "productNumber": 1255,
+      "spreadsheetRow": 47,
+      "productName": "Phthalo Blue GS",
+      "reflectance": [0.0744, 0.0834, 0.1069, 0.0581, 0.0396, 0.0379, 0.0385, 0.0425, 0.0475, 0.048, 0.0491],
+      "kOverS": [5.7576, 5.0369, 3.7307, 7.6349, 11.6461, 12.2116, 12.0063, 10.786, 9.5501, 9.4407, 9.2078],
+      "profileSha256": "E56360BC9AE2B2919DFD01687F599F83AC307677210B44B81C7E1BE23B98B72C"
+    },
+    "PBk7": {
+      "productNumber": 1040,
+      "spreadsheetRow": 19,
+      "productName": "Carbon Black",
+      "reflectance": [0.0464, 0.046, 0.0461, 0.0462, 0.0462, 0.0462, 0.0463, 0.0466, 0.0472, 0.0476, 0.0479],
+      "kOverS": [9.7991, 9.8926, 9.869, 9.8456, 9.8456, 9.8456, 9.8223, 9.7529, 9.6168, 9.528, 9.4624],
+      "profileSha256": "91907C9F3894F1D73A6EA93E9B6BEA3D4F686D4F3416C2271033B585BC2C696F"
+    },
+    "PG7": {
+      "productNumber": 1270,
+      "spreadsheetRow": 49,
+      "productName": "Phthalo Green BS",
+      "reflectance": [0.0511, 0.0527, 0.0596, 0.0881, 0.0595, 0.0406, 0.0383, 0.0405, 0.0449, 0.0497, 0.0501],
+      "kOverS": [8.8103, 8.514, 7.4191, 4.7194, 7.4331, 11.3356, 12.074, 11.3659, 10.1583, 9.0852, 9.0051],
+      "profileSha256": "C3010344A2F8E7955EEB7377E546B914820D2F1B80E71706A1934E05BD43EB71"
+    },
+    "PR101": {
+      "productNumber": 1360,
+      "spreadsheetRow": 65,
+      "productName": "Red Oxide",
+      "reflectance": [0.0476, 0.048, 0.048, 0.0489, 0.0507, 0.0586, 0.1323, 0.2508, 0.2882, 0.3217, 0.3728],
+      "kOverS": [9.528, 9.4407, 9.4407, 9.2494, 8.8873, 7.5617, 2.8454, 1.119, 0.879, 0.7151, 0.5276],
+      "profileSha256": "BC66A80589DC074610428C998B719DE0671D1A840EAD6A8BB55C3973ACBBB6F9"
+    },
+    "PR122": {
+      "productNumber": 1305,
+      "spreadsheetRow": 58,
+      "productName": "Quin Magenta",
+      "reflectance": [0.0811, 0.0685, 0.0523, 0.0455, 0.0433, 0.0452, 0.051, 0.0936, 0.332, 0.5258, 0.6066],
+      "kOverS": [5.2058, 6.3335, 8.5864, 10.0118, 10.569, 10.0845, 8.8294, 4.3887, 0.672, 0.2138, 0.1276],
+      "profileSha256": "1A1378344774E092151ADC3D0FD38CADA186342EA5C1FB2002F2E3BBAB4CB12C"
+    },
+    "PR254": {
+      "productNumber": 1277,
+      "spreadsheetRow": 53,
+      "productName": "Pyrrole Red",
+      "reflectance": [0.0414, 0.0405, 0.0415, 0.0415, 0.0416, 0.0427, 0.0492, 0.452, 0.7572, 0.8384, 0.8786],
+      "kOverS": [11.098, 11.3659, 11.0689, 11.0689, 11.04, 10.731, 9.1872, 0.3322, 0.0389, 0.0156, 0.0084],
+      "profileSha256": "843B1524E6040E1D5E95A090693808AB483B0A1E8FE067D305CC17CABDB702A1"
+    },
+    "PV23": {
+      "productNumber": 1150,
+      "spreadsheetRow": 30,
+      "productName": "Dioxazine Purple",
+      "reflectance": [0.046, 0.0441, 0.0424, 0.042, 0.042, 0.0439, 0.0478, 0.0462, 0.0495, 0.0692, 0.1269],
+      "kOverS": [9.8926, 10.3599, 10.8137, 10.9258, 10.9258, 10.4115, 9.4842, 9.8456, 9.1258, 6.26, 3.0036],
+      "profileSha256": "81F4D04C117077B91298D84E0F46AC24A69E7AF00E4FFDABBCA3D84AD9BAF5BD"
+    },
+    "PY42": {
+      "productNumber": 1410,
+      "spreadsheetRow": 80,
+      "productName": "Yellow Oxide",
+      "reflectance": [0.0597, 0.0723, 0.0952, 0.1078, 0.1671, 0.3321, 0.4677, 0.4505, 0.4241, 0.424, 0.4498],
+      "kOverS": [7.4051, 5.9518, 4.2997, 3.6921, 2.0758, 0.6716, 0.3029, 0.3351, 0.391, 0.3912, 0.3365],
+      "profileSha256": "B16800E4A3D9BAF1202B2E9B8E84844F9539A64D6DDCC30F69A3FFF0E923BFEA"
+    },
+    "PY83": {
+      "productNumber": 1147,
+      "spreadsheetRow": 29,
+      "productName": "Diarylide Yellow",
+      "reflectance": [0.0631, 0.0583, 0.0544, 0.0507, 0.0853, 0.5531, 0.8378, 0.875, 0.8925, 0.907, 0.9102],
+      "kOverS": [6.9555, 7.6055, 8.2184, 8.8873, 4.9043, 0.1805, 0.0157, 0.0089, 0.0065, 0.0048, 0.0044],
+      "profileSha256": "F0156DA71C7729CF7DACAE8FD44DF1D0BB990099C51F25992428D78AE2DFC478"
+    }
+  }
+}

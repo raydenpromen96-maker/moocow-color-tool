@@ -2,6 +2,31 @@
 
 All notable changes to MooCow Mini Color Mixing Tool are documented here.
 
+## [4.3.0] - 2026-07-12
+
+### Added
+
+- Added attributed GOLDEN Heavy Body water-based acrylic reflectance and
+  single-constant K/S references for nine exact C.I. families: `PY83`,
+  `PB15:3`, `PG7`, `PR254`, `PR101`, `PY42`, `PR122`, `PBk7`, and `PV23`.
+- Added source ZIP/workbook hashes, measurement conditions, product links,
+  sharing-permission wording, data limitations, a complete extraction manifest,
+  per-profile digests, and a source-workbook verifier.
+- Restored weighted exact-C.I. family coverage in the UI and TXT export.
+
+### Boundaries
+
+- The white Leneta card affects transparent colors and the approximately
+  6 mil dry films are not all truly opaque.
+- The data are side references only: they do not affect candidate scoring or
+  ranking and do not represent current Clariant/Heubach CN batches.
+- `PY74`, `PB15:1`, `PW6`, and unverified Orange D2R remain explicit gaps;
+  no similar-C.I. substitution is performed.
+- The public host states that Golden allowed sharing, but publishes no named
+  data licence; attribution and this limitation are retained in the project.
+
+[4.3.0]: https://github.com/raydenpromen96-maker/moocow-color-tool/releases/tag/v4.3.0
+
 ## [4.2.1] - 2026-07-12
 
 ### Fixed

@@ -1,68 +1,70 @@
 # Third-party data notices
 
-## Runtime spectral-data status
+## GOLDEN water-based acrylic spectral data
 
-This public release does not bundle third-party measured pigment-family
-spectral arrays. The application's existing `REFERENCE_SPECTRA` values are
-screen-model approximations, not measured reflectance factors or production
-Kubelka-Munk coefficients.
+`src/family-spectra.js` contains 30 nm samples selected from the spreadsheet
+**Reflectance Data for Golden HB 10 mil Drawdowns over White**, supplied by
+Golden Artist Colors, Inc. and shared by Andrew Glassner and Eric Haines.
+
+- Data page and sharing statement: https://www.realtimerendering.com/golden.html
+- Provider: Golden Artist Colors, Inc.
+- Source ZIP SHA-256: `AF3F8B0C327DD4DCFF52BAC83A5ED7E9C80D82D2E56164518DDF1C9AA57D3835`
+- Extracted XLSX SHA-256: `584A38368C4AF637A1253B6465B9F71493E38C65340092A0CFE9F73B3ED227CF`
+- Source grid: 400-700 nm at 10 nm intervals
+- Bundled grid: 400-700 nm at 30 nm intervals
+- Bundled values: reflectance fraction and dimensionless single-constant K/S
+
+The reproducible row/column mapping, every bundled sample, and every full-profile
+SHA-256 are recorded in `data/golden-family-spectra-manifest.json`. Given a
+lawfully obtained copy of the source workbook, verify the complete extraction
+with:
+
+```text
+python scripts/verify-golden-family-spectra.py "path/to/Reflectance Data for Golden HB 10 mil Drawdowns over White.xlsx"
+```
+
+The data page states that Golden supplied spectral data for its acrylic paints
+and allowed the hosts to share the data with others. It does not publish a
+named data licence or an explicit commercial redistribution grant. These
+numeric data remain attributed to their provider, are not relicensed under the
+project's MIT code licence, and are not claimed as measurements made by
+MooCow. Users who need broader rights should obtain permission from Golden or
+the data rightsholder.
+
+### Measurement conditions and limits
+
+The source samples are water-based Golden Heavy Body acrylic paints drawn down
+at 10 mil wet thickness and measured at approximately 6 mil dry thickness over
+a white Leneta card. The source reports D65 illumination, a 10-degree observer,
+and 10 nm measurements from 400 to 700 nm.
+
+Golden warns that the films are not all truly opaque and that the white backing
+affects transparent colors. The supplied K/S values are single-constant values
+derived from measured reflectance over white, not a fully calibrated
+two-constant K and S characterization over black and white.
+
+The application uses only exact C.I. matches and treats these values as a
+waterborne-acrylic family reference. They do not represent the current
+Clariant/Heubach CN batches, do not prove hiding over black, and do not affect
+candidate scoring or ranking. Unsupported or unverified C.I. identities fail
+closed and never inherit a visually similar curve.
 
 ## Removed epoxy dataset
 
-The v4.2.0 release briefly bundled 30 nm samples from
-`MultipigmentPhantoms`. Those pigment-in-epoxy absorption (`mu_a`) and reduced
-scattering (`mu_s'`) arrays were removed in v4.2.1 because their matrix is not
-compatible with the waterborne acrylic clear-base system used by MooCow.
+The v4.2.0 release briefly bundled samples from `MultipigmentPhantoms`. Those
+pigment-in-epoxy `mu_a` and `mu_s'` arrays were removed in v4.2.1 because the
+matrix is incompatible with this application's waterborne acrylic reference
+layer. The current project retains no runtime numeric data from that source.
 
-- Historical source: https://github.com/AlecWalter/MultipigmentPhantoms
-- Runtime data bundled in v4.2.1: no
-- Eligible as waterborne acrylic evidence: no
+Historical source: https://github.com/AlecWalter/MultipigmentPhantoms
 
-## Waterborne acrylic research candidates
+## Research-only external references
 
-### GOLDEN Paint Spectra
+The RIT/IS&T paper remains an external method reference; no values from its
+separate dataset are redistributed here:
+https://doi.org/10.2352/issn.2168-3204.2022.19.1.10
 
-The strongest accessible technical near-match is a spreadsheet of GOLDEN
-Heavy Body water-based acrylic drawdowns:
-
-- Data page: https://www.realtimerendering.com/golden.html
-- Contents: reflectance and single-constant K/S, 400-700 nm at 10 nm
-- Conditions: 10 mil wet / approximately 6 mil dry over white Leneta card,
-  D65, 10-degree observer
-- Important limitation: the white backing affects transparent colors and the
-  films are not all truly opaque
-
-The page says Golden allowed the hosts to share the data with others, but it
-does not publish a named licence or an explicit commercial redistribution and
-derivative-use grant. The public MooCow project therefore does not copy or
-transform its numeric arrays. Written permission is required before ingestion.
-
-### RIT / IS&T artist acrylic dataset
-
-The RIT/IS&T work is a useful measurement and two-constant Kubelka-Munk method
-reference, but its downloadable numeric dataset has no explicit commercial
-redistribution licence in the materials reviewed for this release. No values
-from it are bundled.
-
-- Paper: https://doi.org/10.2352/issn.2168-3204.2022.19.1.10
-- Runtime data bundled in v4.2.1: no
-
-### Colanyl Green GG 131-TH / PG7
-
-This paper is retained as a product-family research reference. It publishes a
-plotted curve rather than a raw numeric table, so no values are digitized or
-bundled:
-
+The Colanyl Green GG 131-TH / PG7 paper is also referenced externally, but no
+values are digitized because it publishes a plotted curve rather than a raw
+numeric table:
 https://www.scienceasia.org/2020.46S.n1/scias46S_110.pdf
-
-## Admission gate for future data
-
-A measured family dataset may enter runtime only when all of these are known:
-
-1. explicit commercial redistribution and derivative-use permission;
-2. waterborne acrylic binder/matrix and exact C.I. identity;
-3. pigment concentration, substrate, wet/dry thickness, and opacity state;
-4. instrument geometry, illuminant, observer, wavelength grid, and specular
-   condition; and
-5. separation from candidate ranking until local drawdown validation proves
-   that the source transfers to the current CN batches.
