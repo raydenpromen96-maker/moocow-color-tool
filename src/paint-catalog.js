@@ -1,0 +1,53 @@
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  if (root) root.MooCowPaintCatalog = api;
+}(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+
+  function deepFreeze(value) {
+    if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
+    Object.values(value).forEach(deepFreeze);
+    return Object.freeze(value);
+  }
+
+  const PAINT_DATA = deepFreeze({
+    "Y83S":{"name_zh":"\u91d1\u9ec4","name_en":"Yellow HR","name_ja":"\u30b4\u30fc\u30eb\u30c7\u30f3\u30a4\u30a8\u30ed\u30fc","hex":"#ffc700","manualLab":[82.52,17.29,73.59],"strength":1,"colorStrength":1,"hidingPower":70,"batchNo":"CNQ1340322","productName":"Colanyl Yellow HR 130-CN","viscosity":"0.6 Pas","qcDeltaE":0,"ci":"PY83","pigmentContent":35,"solidContent":55,"water":30,"glycol":15,"density":1.14,"referenceSource":"Colanyl Yellow HR 132 public analog","referenceConfidence":"medium"},
+    "Y74S":{"name_zh":"\u4e2d\u9ec4","name_en":"Yellow 2GXD","name_ja":"\u30df\u30c7\u30a3\u30a2\u30e0\u30a4\u30a8\u30ed\u30fc","hex":"#fedd00","manualLab":[87.77,0.8,72.81],"strength":1,"colorStrength":1,"hidingPower":70,"batchNo":"CNQ1190325","productName":"Colanyl Yellow 2GXD 130-CN","viscosity":"0.5 Pas","qcDeltaE":0.3,"ci":"PY74","pigmentContent":48,"solidContent":57,"water":18,"glycol":25,"density":1.17,"referenceSource":"Colanyl 100 public data","referenceConfidence":"high"},
+    "B150S":{"name_zh":"\u5b9d\u84dd","name_en":"Blue A2R","name_ja":"\u30ed\u30a4\u30e4\u30eb\u30d6\u30eb\u30fc","hex":"#0057b7","manualLab":[48.64,-5.95,-40.42],"strength":1.4,"colorStrength":1,"hidingPower":68,"batchNo":"CNQ1118121","productName":"Colanyl Blue A2R 131-CN","viscosity":"0.5 Pas","qcDeltaE":0.4,"ci":"PB15:1","pigmentContent":40,"solidContent":51,"water":31,"glycol":18,"density":1.21,"referenceSource":"Colanyl 100 public data","referenceConfidence":"high"},
+    "B153S":{"name_zh":"\u8273\u84dd","name_en":"Blue B2G","name_ja":"\u30d6\u30e9\u30a4\u30c8\u30d6\u30eb\u30fc","hex":"#0086c8","manualLab":[59.36,-16.97,-38.95],"strength":1.25,"colorStrength":1,"hidingPower":60,"batchNo":"CNQ1250525","productName":"Colanyl Blue B2G 132-CN","viscosity":"0.3 Pas","qcDeltaE":0.2,"ci":"PB15:3","pigmentContent":47,"solidContent":54,"water":26,"glycol":20,"density":1.23,"referenceSource":"Colanyl Blue B2G 131 public analog","referenceConfidence":"medium"},
+    "R254D":{"name_zh":"\u5927\u7ea2","name_en":"DPP Red GD","name_ja":"\u30d6\u30e9\u30a4\u30c8\u30ec\u30c3\u30c9","hex":"#d8001d","manualLab":[57.18,49.67,13.26],"strength":1.515,"colorStrength":1.01,"hidingPower":65,"aliases":["R524D"],"batchNo":"CNQ1471124","productName":"Colanyl DPP Red GD 131-CN","viscosity":"0.3 Pas","qcDeltaE":0.2,"ci":"PR254","referenceSource":"DPP Red GD family analog","referenceConfidence":"medium"},
+    "R101Y":{"name_zh":"\u94c1\u7ea2\u9ec4\u76f8","name_en":"Oxide Red G","name_ja":"\u30a2\u30a4\u30a2\u30f3\u30ec\u30c3\u30c9\u9ec4\u76f8","hex":"#c0392b","manualLab":[43.99,32.75,24.57],"strength":1.287,"colorStrength":0.99,"hidingPower":85,"batchNo":"CNG2340320","productName":"Colanyl Oxide Red G 100-CN","viscosity":"117 KU","qcDeltaE":0.3,"ci":"PR101","pigmentContent":65,"solidContent":71,"water":11,"glycol":18,"density":2.17,"referenceSource":"Colanyl 100 public data","referenceConfidence":"high"},
+    "R101V":{"name_zh":"\u94c1\u7ea2\u7d2b\u76f8","name_en":"Oxide Red BA","name_ja":"\u30a2\u30a4\u30a2\u30f3\u30ec\u30c3\u30c9\u7d2b\u76f8","hex":"#a93226","manualLab":[40.09,28.89,18.77],"strength":1.304,"colorStrength":1.003,"hidingPower":85,"batchNo":"CNG2940223","productName":"Ecosperse Oxide Red BA 100-CN","viscosity":"107.0 KU","qcDeltaE":0.31,"ci":"PR101","pigmentContent":72,"solidContent":77,"water":8,"glycol":14,"density":2.34,"referenceSource":"Colanyl Oxide Red B 132 public analog","referenceConfidence":"medium"},
+    "Y42S":{"name_zh":"\u94c1\u9ec4","name_en":"Oxide Yellow RA","name_ja":"\u30a2\u30a4\u30a2\u30f3\u30a4\u30a8\u30ed\u30fc","hex":"#e8a317","manualLab":[80.38,10.64,36.87],"strength":1.01,"colorStrength":1.01,"hidingPower":80,"batchNo":"CNG2280220","productName":"Ecosperse Oxide Yellow RA 100-CN","viscosity":"107 KU","qcDeltaE":0.2,"ci":"PY42","pigmentContent":66,"solidContent":73,"water":9,"glycol":18,"density":1.98,"referenceSource":"Colanyl Oxide Yellow R 132 public analog","referenceConfidence":"medium"},
+    "073":{"name_zh":"\u6a59","name_en":"Orange D2R","name_ja":"\u30aa\u30ec\u30f3\u30b8","hex":"#ef7622","manualLab":[70.43,45.73,27.33],"strength":1.1,"colorStrength":1,"hidingPower":68,"batchNo":"CNQ1461622","productName":"Colanyl Orange D2R 100-CN","viscosity":"63.1 KU","qcDeltaE":0.2,"ci":null,"referenceSource":"Orange D2R 100-CN; C.I. identity unverified","referenceConfidence":"low"},
+    "W064":{"name_zh":"\u767d\u8272","name_en":"White TQ","name_ja":"\u30db\u30ef\u30a4\u30c8","hex":"#ffffff","strength":0.099,"mixStrength":1,"manualLab":[95.23,-0.58,0.04],"colorStrength":0.99,"hidingPower":95,"batchNo":"CNQ1431113","productName":"Colanyl White TQ 100-CN","viscosity":"1.4 Pas","qcDeltaE":0.2,"ci":"PW6","pigmentContent":70,"solidContent":77,"water":4,"glycol":19,"density":2.18,"referenceSource":"Colanyl White R 130 public analog","referenceConfidence":"medium"},
+    "V23":{"name_zh":"\u7d2b\u8272","name_en":"Violet RL","name_ja":"\u30d1\u30fc\u30d7\u30eb","hex":"#8e44ad","manualLab":[37.82,18.96,-33.68],"strength":1.188,"colorStrength":0.99,"hidingPower":62,"batchNo":"CNQ1350313","productName":"Colanyl Violet RL 131-CN","viscosity":"0.1 Pas","qcDeltaE":0.3,"ci":"PV23","pigmentContent":30,"solidContent":45,"water":37,"glycol":18,"density":1.14,"referenceSource":"Colanyl Violet RL 132 public analog","referenceConfidence":"medium"},
+    "G7":{"name_zh":"\u7eff\u8272","name_en":"Green GG","name_ja":"\u30b0\u30ea\u30fc\u30f3","hex":"#009a44","manualLab":[62.16,-47.51,1.35],"strength":0.99,"colorStrength":0.99,"hidingPower":65,"batchNo":"CNQ1321013","productName":"Colanyl Green GG 131-CN","viscosity":"0.2 Pas","qcDeltaE":0.2,"ci":"PG7","pigmentContent":50,"solidContent":59,"water":26,"glycol":15,"density":1.34,"referenceSource":"Colanyl 100 public data","referenceConfidence":"high"},
+    "R122S":{"name_zh":"\u73ab\u7ea2","name_en":"Pink E","name_ja":"\u30ed\u30fc\u30ba\u30ec\u30c3\u30c9","hex":"#e4007f","manualLab":[55.54,45.65,-16.47],"strength":1.089,"colorStrength":0.99,"hidingPower":62,"batchNo":"CNQ1361125","productName":"Colanyl Pink E 100-CN","viscosity":"0.1 Pas","qcDeltaE":0.2,"ci":"PR122","pigmentContent":20,"solidContent":36,"water":44,"glycol":20,"density":1.12,"referenceSource":"Colanyl 100 public data","referenceConfidence":"high"},
+    "BK7H":{"name_zh":"\u9ed1\u8272","name_en":"Black N","name_ja":"\u30d6\u30e9\u30c3\u30af","hex":"#1c1c1c","strength":2,"manualLab":[34.26,-0.19,-2.47],"colorStrength":1,"hidingPower":98,"batchNo":"CNQ1361225","productName":"Colanyl Black N 131-CN","viscosity":"0.6 Pas","qcDeltaE":0,"ci":"PBk7","pigmentContent":42,"solidContent":49,"water":31,"glycol":20,"density":1.27,"referenceSource":"Colanyl 100 public data","referenceConfidence":"high"}
+  });
+
+  const RAL_BASE_RECIPES = deepFreeze({
+    'RAL 1021': { Y74S: 85, W064: 15 },
+    'RAL 3020': { R254D: 95, BK7H: 5 },
+    'RAL 5005': { B150S: 80, W064: 20 },
+    'RAL 7035': { W064: 90, BK7H: 10 },
+    'RAL 9005': { BK7H: 100 },
+    'RAL 9010': { W064: 100 }
+  });
+
+  function buildTargets(qtcCatalogue) {
+    if (!qtcCatalogue || qtcCatalogue.count !== 216 || !Array.isArray(qtcCatalogue.colors)) {
+      throw new Error('QTC RAL Classic target catalogue is missing or incomplete');
+    }
+    return Object.freeze(qtcCatalogue.colors.map(color => deepFreeze({
+      ...color,
+      rgb: [...color.rgb],
+      targetLab: [...color.targetLab],
+      ...(RAL_BASE_RECIPES[color.ral] ? { baseRecipe: { ...RAL_BASE_RECIPES[color.ral] } } : {})
+    })));
+  }
+
+  return Object.freeze({ PAINT_DATA, RAL_BASE_RECIPES, buildTargets });
+}));

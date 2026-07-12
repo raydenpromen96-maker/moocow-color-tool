@@ -1,9 +1,11 @@
 {
   "name": "moocow-color-tool",
-  "version": "4.3.0",
+  "version": "4.5.0",
   "private": true,
   "main": "src/color-core.js",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "sync:qtc-ral": "node scripts/sync-qtc-ral-classic.mjs",
+    "test:ral216": "node scripts/ral-216-regression.mjs"
   }
 }

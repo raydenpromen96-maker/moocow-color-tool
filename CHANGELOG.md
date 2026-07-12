@@ -2,6 +2,69 @@
 
 All notable changes to MooCow Mini Color Mixing Tool are documented here.
 
+## [4.5.0] - 2026-07-12
+
+### Changed
+
+- Recommendations now prioritize candidates with at least 96% simulated
+  two-coat hiding and no more than 3.0 dE black/white substrate shift before
+  comparing the existing model score. The candidate set and four-colorant
+  production limit remain unchanged.
+- Candidate cards now show simulated two-coat hiding and black/white substrate
+  shift, so a deceptively low black-substrate dE is not presented without its
+  stability context.
+- The prepared runtime colorant catalog is deeply frozen after initialization
+  to prevent accidental model mutation.
+
+### Verification
+
+- Added a browser-UMD bootstrap parity test that parses the real inline entry
+  script and compares browser candidate output with the CommonJS runtime.
+- Full 216-target regression: 197 stable recommendations, up from 109; grade
+  distribution changed from 8/24/88/96 to 8/31/104/73
+  (excellent/pass/warning/fail).
+- The mean screen-model dE increases from 3.937 to 4.723 because unstable
+  black-substrate matches are no longer preferred. This is a recommendation
+  safety improvement, not evidence of physical drawdown accuracy.
+
+[4.5.0]: https://github.com/raydenpromen96-maker/moocow-color-tool/releases/tag/v4.5.0
+
+## 4.4.0 integration stage - 2026-07-12 (included in v4.5.0)
+
+### Added
+
+- Added a local, attributed snapshot of all 216 QTC RAL Classic computer-
+  simulated colour references, including HEX, RGB, Lab, Chinese/English names,
+  QTC colour IDs, source URLs, retrieval time, and a reproducible SHA-256.
+- Added `npm run sync:qtc-ral` to rebuild the snapshot from QTC's public
+  directory and colour-detail endpoints with schema, count, code, and HEX/RGB
+  validation.
+- Added tests for 216-code completeness, order, uniqueness, provenance, and
+  HEX/RGB/Lab consistency.
+- Added immutable `paint-catalog.js`, a shared DOM-free `production-runtime.js`,
+  and `npm run test:ral216` for complete offline recipe regression.
+
+### Changed
+
+- Recipe generation now uses QTC Lab as the target when present. HEX remains a
+  display value and a documented fallback only.
+- Preserved the six existing hand-authored recipe presets while replacing the
+  old 191-colour inline display map.
+- Added a visible notice that QTC values are computer-simulated screen
+  references and production work must be confirmed with a current physical
+  colour card.
+- Extracted the current browser model/search path without changing parameters,
+  then fixed representative and complete-catalogue regression hashes to
+  prevent accidental output drift.
+
+### Authorization and boundary
+
+- Integration proceeds on the user's reported telephone confirmation from the
+  RAL Asia-Pacific business manager and the user's identification of QTC as an
+  authorised presentation source.
+- The snapshot is not reflectance data and is not described as a replacement
+  for a physical RAL colour card.
+
 ## [4.3.0] - 2026-07-12
 
 ### Added

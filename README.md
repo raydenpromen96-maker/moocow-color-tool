@@ -1,5 +1,11 @@
 # MooCow Mini 调色工具 / Color Mixing Tool / 調色ツール
 
+#### v4.5.0（2026-07-12）- 遮盖稳定候选优先
+
+- 默认推荐优先满足模型两遍遮盖率 `>=96%`、黑白底差 `<=3.0 dE`，再比较原有模型分数。
+- 候选卡直接显示两遍遮盖率与黑白底差；候选集合、总量 `106g/L`、`0.5g/L` 网格和最多 `4` 种色浆均保持不变。
+- 216 色回归中稳定首选由 `109` 提升到 `197`，模型失败等级由 `96` 降到 `73`。平均屏幕模型 dE 从 `3.937` 升至 `4.723`，原因是不再优先选择依赖黑底掩盖误差的方案；这不等于实体刮样精度已提高。
+
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://raydenpromen96-maker.github.io/moocow-color-tool/)
 [![Version](https://img.shields.io/badge/Version-4.3.0-blue)](https://github.com/raydenpromen96-maker/moocow-color-tool)
 [![Languages](https://img.shields.io/badge/Languages-中文%20%7C%20English%20%7C%20日本語-orange)](https://github.com/raydenpromen96-maker/moocow-color-tool)
@@ -56,7 +62,7 @@
 - 自动保存用户语言偏好设置
 
 ### 🎨 专业调色功能 / Professional Color Mixing / プロフェッショナル調色機能
-- **191种RAL色码** - 覆盖常用 RAL 色卡
+- **216种RAL CLASSIC色码** - 使用带来源记录的千通彩 QTC 电子参考值；Lab 用于模型目标，HEX 用于屏幕显示
 - **14种基础色浆** - 基于科莱恩色浆 Lab、批次强度、颜料索引和近似光谱参考
 - **模型重量换算** - 支持50ML、100ML、500ML、1L、5L、20L多种容量
 - **实时预览** - 颜色混合效果即时显示
@@ -136,7 +142,7 @@
 - 🔧 优化配方搜索，减少过复杂和小剂量堆叠配方
 - 🎨 重做桌面 UI 为左右两栏调色工作台
 - 📱 优化手机端布局，修复横向溢出并提升滑块操作体验
-- ✅ 曾执行191个 RAL 的内部模型回归；该结果不代表实物色差或生产验收
+- ✅ 对216个 RAL CLASSIC 电子参考目标执行数据完整性与模型回归；该结果不代表实物色差或生产验收
 
 ### v2.0.0 (2024-10-11) - 多语言版本
 - ✨ 新增中英日三语言切换功能

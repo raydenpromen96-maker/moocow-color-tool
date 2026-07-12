@@ -1,5 +1,29 @@
 # Third-party data notices
 
+## QTC RAL Classic screen-reference data
+
+`data/qtc-ral-classic.json` and `src/qtc-ral-classic.js` contain a local
+snapshot of 216 computer-simulated RAL Classic screen references published by
+QTC Color (Shenzhen Qiantong Color Management Co., Ltd.).
+
+- Catalogue page: https://m.qtccolor.com/mshop/#/pages/color/dir?articleId=70
+- Directory endpoint: https://m.qtccolor.com/webapi/color/GetDirJSONByArticile?id=70
+- Detail endpoint pattern: https://m.qtccolor.com/webapi/color/getColor?colorId={id}&isUpdateVol=0
+- Bundled values: code, Chinese/English name, HEX, RGB, Lab, QTC colour ID and index
+- Rebuild command: `npm run sync:qtc-ral`
+
+The user reports direct telephone confirmation from the RAL Asia-Pacific
+business manager that this customer colour-selection use is allowed and
+identifies QTC as an authorised presentation source. That user-provided
+authorization is the basis for this integration.
+
+QTC states that the displayed colours and values are computer simulations,
+that different devices may display them differently, and that production work
+must be confirmed against the latest physical colour card. These records are
+therefore target/display references only. They are not measured reflectance
+spectra, do not replace a physical colour card, and are not relicensed as
+measurements made by MooCow.
+
 ## GOLDEN water-based acrylic spectral data
 
 `src/family-spectra.js` contains 30 nm samples selected from the spreadsheet

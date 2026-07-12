@@ -1,0 +1,17 @@
+{
+  "version": "4.4.0",
+  "inputSha256": "8d34f1e17067729d94566eb9778af14d91ee28b0b2ab850bae549e5f5de2aa64",
+  "outputSha256": "6d5011e4f164fb8975679606b0d65622dfd49b9f908332ac691e6cd25f136770",
+  "summary": {
+    "runs": 216,
+    "candidateCount": 648,
+    "stableRecommended": 109,
+    "meanTwoCoatDE": 3.93697849,
+    "grades": {
+      "excellent": 8,
+      "pass": 24,
+      "warning": 88,
+      "fail": 96
+    }
+  }
+}
