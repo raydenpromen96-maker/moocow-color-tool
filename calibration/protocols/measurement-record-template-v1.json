@@ -1,0 +1,104 @@
+{
+  "template_status": "TEMPLATE_NOT_MEASURED",
+  "do_not_import_as_dataset": true,
+  "schema_compatibility_target": "moocow-km-calibration-source-v1 record fields; use with a matching moocow-km-calibration-dataset-v1 manifest after all placeholders are replaced",
+  "dataset_status": "research_only",
+  "physical_ranking_enabled": false,
+  "concentration_basis": "nonvolatile_volume_fraction",
+  "wavelength_nm": [],
+  "locked_conditions": {
+    "instrument_id": "REQUIRED_NOT_YET_KNOWN",
+    "instrument_model": "REQUIRED_NOT_YET_KNOWN",
+    "instrument_software_version": "REQUIRED_NOT_YET_KNOWN",
+    "instrument_calibration_reference_id": "REQUIRED_NOT_YET_KNOWN",
+    "geometry": "REQUIRED_NOT_YET_KNOWN",
+    "specular_component": "REQUIRED_NOT_YET_KNOWN",
+    "uv_mode": "REQUIRED_NOT_YET_KNOWN",
+    "illuminant": "REQUIRED_D65_FOR_PRIMARY_EVALUATION",
+    "observer": "REQUIRED_10deg_FOR_PRIMARY_EVALUATION",
+    "wavelength_grid_definition": "REQUIRED_MEASURED_GRID_START_STOP_INTERVAL_NM",
+    "backing_card_manufacturer": "REQUIRED_NOT_YET_KNOWN",
+    "backing_card_product": "REQUIRED_NOT_YET_KNOWN",
+    "backing_card_lot_id": "REQUIRED_NOT_YET_KNOWN",
+    "base_component_id": "base-waterborne-clear",
+    "base_batch_id": "REQUIRED_NOT_YET_KNOWN",
+    "colorant_lot_registry": "calibration/protocols/current-batch-component-registry-v1.json; physical-label verification required",
+    "cure_protocol": "REQUIRED_NOT_YET_KNOWN",
+    "cure_temperature_c": "REQUIRED_NOT_YET_KNOWN",
+    "cure_relative_humidity_percent": "REQUIRED_NOT_YET_KNOWN",
+    "application_method": "REQUIRED_NOT_YET_KNOWN",
+    "wet_film_target_um": "REQUIRED_NOT_YET_KNOWN",
+    "dft_measurement_method": "REQUIRED_NOT_YET_KNOWN"
+  },
+  "measurements": [
+    {
+      "measurement_id": "TEMPLATE_NOT_MEASURED__MSR-FAM-TR-BASIS-Y83S-CARD-001-BLACK-POS01",
+      "formula_family_id": "TEMPLATE_NOT_MEASURED__FAM-TR-BASIS-Y83S",
+      "formula_id": "TEMPLATE_NOT_MEASURED__FORM-TR-BASIS-Y83S",
+      "formula_batch_id": "TEMPLATE_NOT_MEASURED__FB-TR-BASIS-Y83S-YYYYMMDD-01",
+      "card_id": "TEMPLATE_NOT_MEASURED__CARD-TR-BASIS-Y83S-DFT-L-001",
+      "sample_group_id": "TEMPLATE_NOT_MEASURED__SG-CARD-TR-BASIS-Y83S-DFT-L-001-BLACK",
+      "repeat_id": "TEMPLATE_NOT_MEASURED__POS01",
+      "backing": "black",
+      "components": [
+        {
+          "component_id": "base-waterborne-clear",
+          "nonvolatile_volume_fraction": null
+        },
+        {
+          "component_id": "colorant-Y83S",
+          "nonvolatile_volume_fraction": null
+        }
+      ],
+      "conditions": {
+        "instrument_id": "REQUIRED_NOT_YET_KNOWN",
+        "instrument_model": "REQUIRED_NOT_YET_KNOWN",
+        "instrument_software_version": "REQUIRED_NOT_YET_KNOWN",
+        "instrument_calibration_reference_id": "REQUIRED_NOT_YET_KNOWN",
+        "geometry": "REQUIRED_NOT_YET_KNOWN",
+        "specular_component": "REQUIRED_NOT_YET_KNOWN",
+        "uv_mode": "REQUIRED_NOT_YET_KNOWN",
+        "illuminant": "REQUIRED_D65_FOR_PRIMARY_EVALUATION",
+        "observer": "REQUIRED_10deg_FOR_PRIMARY_EVALUATION",
+        "wavelength_grid_definition": "REQUIRED_MEASURED_GRID_START_STOP_INTERVAL_NM",
+        "backing_card_manufacturer": "REQUIRED_NOT_YET_KNOWN",
+        "backing_card_product": "REQUIRED_NOT_YET_KNOWN",
+        "backing_card_lot_id": "REQUIRED_NOT_YET_KNOWN",
+        "base_component_id": "base-waterborne-clear",
+        "base_batch_id": "REQUIRED_NOT_YET_KNOWN",
+        "colorant_lot_registry": "calibration/protocols/current-batch-component-registry-v1.json; physical-label verification required",
+        "cure_protocol": "REQUIRED_NOT_YET_KNOWN",
+        "cure_temperature_c": "REQUIRED_NOT_YET_KNOWN",
+        "cure_relative_humidity_percent": "REQUIRED_NOT_YET_KNOWN",
+        "application_method": "REQUIRED_NOT_YET_KNOWN",
+        "wet_film_target_um": "REQUIRED_NOT_YET_KNOWN",
+        "dft_measurement_method": "REQUIRED_NOT_YET_KNOWN"
+      },
+      "conditions_sha256": "TEMPLATE_NOT_COMPUTED__MUST_EQUAL_CANONICAL_HASH_OF_LOCKED_CONDITIONS",
+      "dft_um": null,
+      "reflectance": [],
+      "target_kind": "measured_spectrum"
+    }
+  ],
+  "manifest_fields_required_before_validation": [
+    "schema_version: moocow-km-calibration-dataset-v1",
+    "dataset_status: research_only",
+    "physical_ranking_enabled: false",
+    "concentration_basis: nonvolatile_volume_fraction",
+    "wavelength_nm: measured finite uniformly spaced numeric grid within 360-830 nm",
+    "locked_conditions: this completed object",
+    "components: verified base plus declared colorants with batch_id and role",
+    "backings: measured black and white backing reflectance arrays on the same grid",
+    "saunderson: completed valid calibration values",
+    "source_files: measured source path and SHA-256",
+    "splits: train, validation, holdout family lists with no family leakage"
+  ],
+  "why_this_template_must_fail_validation_until_replaced": [
+    "wavelength_nm and reflectance are deliberately empty placeholders, not numeric measured spectra",
+    "nonvolatile_volume_fraction and dft_um are deliberately null",
+    "conditions_sha256 is not a computed canonical hash",
+    "no manifest, source hash, backing spectra, Saunderson values, or split assignment is supplied",
+    "TEMPLATE_NOT_MEASURED values are explicit non-evidence and must never be used for ranking"
+  ],
+  "recording_rule": "Each physical opacity card creates separate black and white records. Preserve every repositioned raw repeat as its own measurement_id and repeat_id; do not average or transfer repeats across formula families or splits."
+}

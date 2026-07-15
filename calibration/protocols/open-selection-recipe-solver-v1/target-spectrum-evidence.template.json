@@ -1,0 +1,23 @@
+{
+  "schema_version": "moocow-open-selection-target-spectrum-evidence-v1",
+  "status": "open_selection_target_spectrum_recorded",
+  "evidence_class": "measured_current_target",
+  "target_id": "REQUIRED_TARGET_ID",
+  "wavelength_nm": [],
+  "cells": [
+    {
+      "cell_id": "REQUIRED_BLACK_CELL_ID",
+      "backing": "black",
+      "dft_um": null,
+      "weight": 1,
+      "reflectance": []
+    },
+    {
+      "cell_id": "REQUIRED_WHITE_CELL_ID",
+      "backing": "white",
+      "dft_um": null,
+      "weight": 1,
+      "reflectance": []
+    }
+  ]
+}

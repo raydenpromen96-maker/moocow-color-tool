@@ -1,0 +1,23 @@
+{
+  "schema_version": "moocow-open-selection-dispense-profile-evidence-v1",
+  "status": "open_selection_dispense_profile_recorded",
+  "profile_id": "REQUIRED_DISPENSE_PROFILE_ID",
+  "maximum_total_mass_error_g": null,
+  "components": [
+    {"component_id": "base-waterborne-clear", "physical_lot_id": "REQUIRED_CURRENT_LOT_ID", "increment_g": null, "minimum_nonzero_g": null, "maximum_wet_mass_g": null},
+    {"component_id": "colorant-Y83S", "physical_lot_id": "REQUIRED_CURRENT_LOT_ID", "increment_g": null, "minimum_nonzero_g": null, "maximum_wet_mass_g": null},
+    {"component_id": "colorant-Y74S", "physical_lot_id": "REQUIRED_CURRENT_LOT_ID", "increment_g": null, "minimum_nonzero_g": null, "maximum_wet_mass_g": null},
+    {"component_id": "colorant-B150S", "physical_lot_id": "REQUIRED_CURRENT_LOT_ID", "increment_g": null, "minimum_nonzero_g": null, "maximum_wet_mass_g": null},
+    {"component_id": "colorant-B153S", "physical_lot_id": "REQUIRED_CURRENT_LOT_ID", "increment_g": null, "minimum_nonzero_g": null, "maximum_wet_mass_g": null},
+    {"component_id": "colorant-R254D", "physical_lot_id": "REQUIRED_CURRENT_LOT_ID", "increment_g": null, "minimum_nonzero_g": null, "maximum_wet_mass_g": null},
+    {"component_id": "colorant-R101Y", "physical_lot_id": "REQUIRED_CURRENT_LOT_ID", "increment_g": null, "minimum_nonzero_g": null, "maximum_wet_mass_g": null},
+    {"component_id": "colorant-R101V", "physical_lot_id": "REQUIRED_CURRENT_LOT_ID", "increment_g": null, "minimum_nonzero_g": null, "maximum_wet_mass_g": null},
+    {"component_id": "colorant-Y42S", "physical_lot_id": "REQUIRED_CURRENT_LOT_ID", "increment_g": null, "minimum_nonzero_g": null, "maximum_wet_mass_g": null},
+    {"component_id": "colorant-073", "physical_lot_id": "REQUIRED_CURRENT_LOT_ID", "increment_g": null, "minimum_nonzero_g": null, "maximum_wet_mass_g": null},
+    {"component_id": "colorant-W064", "physical_lot_id": "REQUIRED_CURRENT_LOT_ID", "increment_g": null, "minimum_nonzero_g": null, "maximum_wet_mass_g": null},
+    {"component_id": "colorant-V23", "physical_lot_id": "REQUIRED_CURRENT_LOT_ID", "increment_g": null, "minimum_nonzero_g": null, "maximum_wet_mass_g": null},
+    {"component_id": "colorant-G7", "physical_lot_id": "REQUIRED_CURRENT_LOT_ID", "increment_g": null, "minimum_nonzero_g": null, "maximum_wet_mass_g": null},
+    {"component_id": "colorant-R122S", "physical_lot_id": "REQUIRED_CURRENT_LOT_ID", "increment_g": null, "minimum_nonzero_g": null, "maximum_wet_mass_g": null},
+    {"component_id": "colorant-BK7H", "physical_lot_id": "REQUIRED_CURRENT_LOT_ID", "increment_g": null, "minimum_nonzero_g": null, "maximum_wet_mass_g": null}
+  ]
+}

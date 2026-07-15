@@ -262,29 +262,84 @@
     return { recipe, metrics, score: metricScore(metrics) };
   }
 
-  function refineWithinSupport(seed, support, evaluate, catalog, resolved, maxRefinementSteps) {
-    let best = evaluateCanonical(canonicalizeOnSupport(seed, support, resolved), evaluate, catalog);
-    const limit = Math.max(0, Math.floor(Number(maxRefinementSteps) || resolved.totalCells));
+  function exactWithinSupport(support, evaluate, catalog, resolved) {
+    const supportKey = support.join('|');
+    let best = null;
+    const consider = recipe => {
+      const evaluated = evaluateCanonical(recipe, evaluate, catalog);
+      if (!best || compareCandidates({ ...evaluated, supportKey }, { ...best, supportKey }) < 0) {
+        best = evaluated;
+      }
+    };
+
+    if (support.length === 1) {
+      consider({ [support[0]]: resolved.totalGpl });
+    } else {
+      for (let leftCells = resolved.minCells; leftCells <= resolved.totalCells - resolved.minCells; leftCells += 1) {
+        consider({
+          [support[0]]: leftCells * resolved.gridGpl,
+          [support[1]]: (resolved.totalCells - leftCells) * resolved.gridGpl
+        });
+      }
+    }
+
+    return evaluateCanonical(best.recipe, evaluate, catalog);
+  }
+
+  function refinementStarts(seed, support, resolved) {
+    const balanced = canonicalizeOnSupport(Object.fromEntries(support.map(code => [code, 1])), support, resolved);
+    const starts = [canonicalizeOnSupport(seed, support, resolved), balanced];
+    const unique = new Map();
+
+    starts.forEach(start => unique.set(recipeKey(start), start));
+    return Array.from(unique.values());
+  }
+
+  function refinementStepLimit(maxRefinementSteps, resolved) {
+    const requested = maxRefinementSteps === 0 ? 0 : Number(maxRefinementSteps) || resolved.totalCells;
+    return Math.max(0, Math.floor(requested));
+  }
+
+  function refineFromStart(seed, support, evaluate, catalog, resolved, maxRefinementSteps) {
+    let best = evaluateCanonical(seed, evaluate, catalog);
+    const limit = refinementStepLimit(maxRefinementSteps, resolved);
+    const transferCells = [1, 2];
 
     for (let iteration = 0; iteration < limit; iteration += 1) {
       let next = null;
       support.forEach(from => {
-        if (best.recipe[from] <= resolved.minActiveGpl) return;
         support.forEach(to => {
           if (from === to) return;
-          const trial = { ...best.recipe, [from]: best.recipe[from] - resolved.gridGpl, [to]: best.recipe[to] + resolved.gridGpl };
-          const evaluated = evaluateCanonical(canonicalizeOnSupport(trial, support, resolved), evaluate, catalog);
-          if (!next || compareCandidates({ ...evaluated, supportKey: support.join('|') }, { ...next, supportKey: support.join('|') }) < 0) {
-            next = evaluated;
-          }
+          transferCells.forEach(cells => {
+            const transfer = cells * resolved.gridGpl;
+            if (best.recipe[from] - transfer < resolved.minActiveGpl) return;
+            const trial = { ...best.recipe, [from]: best.recipe[from] - transfer, [to]: best.recipe[to] + transfer };
+            const evaluated = evaluateCanonical(trial, evaluate, catalog);
+            if (evaluated.score < best.score
+              && (!next || compareCandidates({ ...evaluated, supportKey: support.join('|') }, { ...next, supportKey: support.join('|') }) < 0)) {
+              next = evaluated;
+            }
+          });
         });
       });
 
-      if (!next || next.score >= best.score) break;
+      if (!next) break;
       best = next;
     }
 
     return evaluateCanonical(canonicalizeOnSupport(best.recipe, support, resolved), evaluate, catalog);
+  }
+
+  function refineWithinSupport(seed, support, evaluate, catalog, resolved, maxRefinementSteps) {
+    if (support.length <= 2) return exactWithinSupport(support, evaluate, catalog, resolved);
+
+    const supportKey = support.join('|');
+    const starts = refinementStarts(seed, support, resolved);
+    const totalSteps = refinementStepLimit(maxRefinementSteps, resolved);
+    const stepsPerStart = Math.floor(totalSteps / starts.length);
+    return starts
+      .map(start => refineFromStart(start, support, evaluate, catalog, resolved, stepsPerStart))
+      .sort((left, right) => compareCandidates({ ...left, supportKey }, { ...right, supportKey }))[0];
   }
 
   function normalizeSearchArguments(options, seeds, evaluate, policy) {
@@ -313,10 +368,12 @@
 
     const candidates = supportList(codes, canonicalSeeds, resolved, input.maxSupports).map(support => {
       const supportKey = support.join('|');
-      const matchingSeed = canonicalSeeds
-        .filter(seed => recipeSupportKey(seed) === supportKey)
-        .map(seed => ({ ...evaluateCanonical(seed, input.evaluate, input.catalog), supportKey }))
-        .sort(compareCandidates)[0];
+      const matchingSeed = support.length > 2
+        ? canonicalSeeds
+          .filter(seed => recipeSupportKey(seed) === supportKey)
+          .map(seed => ({ ...evaluateCanonical(seed, input.evaluate, input.catalog), supportKey }))
+          .sort(compareCandidates)[0]
+        : null;
       const evaluated = refineWithinSupport(
         matchingSeed ? matchingSeed.recipe : Object.fromEntries(support.map(code => [code, 1])),
         support,

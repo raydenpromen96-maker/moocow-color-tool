@@ -50,6 +50,14 @@
     return Object.freeze(value);
   }
 
+  const LEGACY_SCREENING_PROVENANCE = deepFreeze({
+    evidence_class: 'catalog_screen_approximation',
+    calibration_status: 'uncalibrated_screening_only',
+    physical_accuracy_verified: false,
+    measured_current_batch: false,
+    runtime_activation_permitted: false
+  });
+
   function create(dependencies) {
     const { ColorCore, RecipeSearch, FamilySpectra, paintCatalog } = dependencies || {};
     if (!ColorCore || !RecipeSearch || !paintCatalog) {
@@ -71,8 +79,13 @@
     const catalog = cloneCatalog(paintCatalog);
 
     function normalizeCurve(curve) {
-      if (!Array.isArray(curve)) return null;
-      return SPECTRAL_WAVELENGTHS.map((_, index) => clampR(Number(curve[index] ?? curve[curve.length - 1] ?? 0.5)));
+      if (!Array.isArray(curve) || curve.length !== SPECTRAL_WAVELENGTHS.length) return null;
+      if (curve.some(value => typeof value !== 'number' || !Number.isFinite(value) || value < 0 || value > 1)) return null;
+      return curve.map(clampR);
+    }
+
+    function linearToRgbFloat(value) {
+      return Math.max(0, Math.min(255, linearToSrgb(Math.max(0, value)) * 255));
     }
 
     function xyzToRgb(X, Y, Z) {
@@ -80,8 +93,21 @@
       const r = X * 3.2406 + Y * -1.5372 + Z * -0.4986;
       const g = X * -0.9689 + Y * 1.8758 + Z * 0.0415;
       const b = X * 0.0557 + Y * -0.2040 + Z * 1.0570;
-      const compand = value => Math.max(0, Math.min(255, Math.round(linearToSrgb(Math.max(0, value)) * 255)));
-      return [compand(r), compand(g), compand(b)];
+      return [linearToRgbFloat(r), linearToRgbFloat(g), linearToRgbFloat(b)];
+    }
+
+    function labToRgbFloat(L, a, b) {
+      let y = (L + 16) / 116;
+      let x = a / 500 + y;
+      let z = y - b / 200;
+      const pivot = value => {
+        const cubed = value * value * value;
+        return cubed > 0.008856 ? cubed : (value - 16 / 116) / 7.787;
+      };
+      x = 95.047 * pivot(x);
+      y = 100 * pivot(y);
+      z = 108.883 * pivot(z);
+      return xyzToRgb(x, y, z);
     }
 
     function spectrumToRgb(curve) {
@@ -116,12 +142,15 @@
         const modelColor = deriveModelColor(pigment);
         pigment.lab = modelColor.modelLab;
         pigment.displayRgb = modelColor.displayRgb;
-        pigment.physicsRgb = modelColor.modelRgb;
+        pigment.physicsRgb = labToRgbFloat(...modelColor.modelLab);
         pigment.hex = pigment.hex || rgbToHex(pigment.physicsRgb);
         pigment.modelInput = modelColor.modelLabSource;
         pigment.displayConflictDE = modelColor.displayConflictDE;
         pigment.effectiveStrength = (pigment.mixStrength || pigment.strength || 1.0) * (pigment.colorStrength || 1.0);
-        pigment.referenceSpectrum = normalizeCurve(REFERENCE_SPECTRA[pigment.ci]);
+        const sourceSpectrum = Object.prototype.hasOwnProperty.call(pigment, 'referenceSpectrum')
+          ? pigment.referenceSpectrum
+          : REFERENCE_SPECTRA[pigment.ci];
+        pigment.referenceSpectrum = normalizeCurve(sourceSpectrum);
         pigment.familySpectralProfile = FamilySpectra?.PROFILES[pigment.ci] || null;
         pigment.spectralRgb = pigment.referenceSpectrum ? spectrumToRgb(pigment.referenceSpectrum) : pigment.physicsRgb;
         pigment.referenceWeight = getReferenceTrust(pigment);
@@ -167,19 +196,20 @@
       });
       if (totalWeight === 0) return [255, 255, 255];
       return [
-        Math.max(0, Math.min(255, Math.round(linearToSrgb(getRfromKS(numR / totalWeight)) * 255))),
-        Math.max(0, Math.min(255, Math.round(linearToSrgb(getRfromKS(numG / totalWeight)) * 255))),
-        Math.max(0, Math.min(255, Math.round(linearToSrgb(getRfromKS(numB / totalWeight)) * 255)))
+        linearToRgbFloat(getRfromKS(numR / totalWeight)),
+        linearToRgbFloat(getRfromKS(numG / totalWeight)),
+        linearToRgbFloat(getRfromKS(numB / totalWeight))
       ];
     }
 
     function simulateMixReferenceSpectra(entries) {
       if (!entries.length) return null;
+      const curves = entries.map(({ pigment }) => normalizeCurve(pigment.referenceSpectrum));
+      if (curves.some(curve => !curve)) return null;
       const ks = SPECTRAL_WAVELENGTHS.map(() => 0);
       let totalWeight = 0;
-      entries.forEach(({ weight, pigment }) => {
-        const curve = normalizeCurve(pigment.referenceSpectrum || REFERENCE_SPECTRA[pigment.ci]);
-        if (!curve) return;
+      entries.forEach(({ weight, pigment }, entryIndex) => {
+        const curve = curves[entryIndex];
         const effectiveWeight = weight * (pigment.effectiveStrength || 1.0) * getPigmentLoadFactor(pigment);
         totalWeight += effectiveWeight;
         curve.forEach((reflectance, index) => { ks[index] += effectiveWeight * getKS(reflectance); });
@@ -198,7 +228,7 @@
       return primaryRgb.map((channel, index) => {
         const primary = srgbToLinear(channel / 255);
         const secondary = srgbToLinear(secondaryRgb[index] / 255);
-        return Math.max(0, Math.min(255, Math.round(linearToSrgb(primary * weight + secondary * (1 - weight)) * 255)));
+        return linearToRgbFloat(primary * weight + secondary * (1 - weight));
       });
     }
 
@@ -236,7 +266,7 @@
       return topRgb.map((channel, index) => {
         const top = srgbToLinear(channel / 255);
         const bottom = srgbToLinear(substrateRgb[index] / 255);
-        return Math.max(0, Math.min(255, Math.round(linearToSrgb(top * alpha + bottom * (1 - alpha)) * 255)));
+        return linearToRgbFloat(top * alpha + bottom * (1 - alpha));
       });
     }
 
@@ -261,7 +291,7 @@
       const { targetRgb, targetLab, targetLabSource } = resolveTargetColor(targetColor);
       const kmRgb = simulateMixKsRgb(entries);
       const referenceRgb = simulateMixReferenceSpectra(entries);
-      const referenceTrust = estimateReferenceTrust(entries);
+      const referenceTrust = referenceRgb ? estimateReferenceTrust(entries) : 0;
       const topRgb = simulateMix(recipe, options);
       const topLab = rgbToLab(...topRgb);
       const single = simulateOverSubstrate(recipe, BLACK_SUBSTRATE_RGB, 1, options);
@@ -291,7 +321,7 @@
       } else if (colorUsable) {
         grade = 'warning';
       }
-      return { targetRgb, targetLab, targetLabSource, topRgb, topLab, kmRgb, referenceRgb, single, double, doubleWhite, dE, singleDE, whiteDE, topDE, substrateShift, modelSpread, referenceTrust, familySpectralCoverage, grade };
+      return { targetRgb, targetLab, targetLabSource, topRgb, topLab, kmRgb, referenceRgb, single, double, doubleWhite, dE, singleDE, whiteDE, topDE, substrateShift, modelSpread, referenceTrust, familySpectralCoverage, provenance: LEGACY_SCREENING_PROVENANCE, grade };
     }
 
     function normalizeRecipe(recipe) {
@@ -348,13 +378,24 @@
       return evaluation.dE + hidingPenalty + substratePenalty + complexityPenalty + topColorPenalty + modelPenalty + confidencePenalty;
     }
 
+    function boundedMetric(value, scale, maximum) {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) return maximum;
+      return Math.min(maximum, Math.max(0, Math.round(numeric * scale)));
+    }
+
     function candidateMetricScore(evaluation, activeCount) {
-      const twoCoatDe = Math.min(9999, Math.max(0, Math.round((Number(evaluation?.dE) || 0) * 100)));
-      const modelSpread = Math.min(999, Math.max(0, Math.round((Number(evaluation?.modelSpread) || 0) * 10)));
-      const substrateShift = Math.min(999, Math.max(0, Math.round((Number(evaluation?.substrateShift) || 0) * 10)));
+      const feasibilityPenalty = candidateFeasibilityTier({
+        hidingAlpha: evaluation?.double?.alpha,
+        substrateShift: evaluation?.substrateShift
+      }) * 1000000000000000;
+      const twoCoatDe = boundedMetric(evaluation?.dE, 100, 9999);
+      const modelSpread = boundedMetric(evaluation?.modelSpread, 10, 999);
+      const substrateShift = boundedMetric(evaluation?.substrateShift, 10, 999);
       const referenceTrustPenalty = Math.min(1000, Math.max(0, Math.round((1 - Math.min(1, Math.max(0, Number(evaluation?.referenceTrust) || 0))) * 1000)));
       const activeCountPenalty = Math.min(99, Math.max(0, Math.round(Number(activeCount) || 0)));
-      return twoCoatDe * 100000000000
+      return feasibilityPenalty
+        + twoCoatDe * 100000000000
         + modelSpread * 100000000
         + substrateShift * 100000
         + referenceTrustPenalty * 100
@@ -518,6 +559,7 @@
           modelSpread: evaluation.modelSpread,
           substrateShift: evaluation.substrateShift,
           referenceTrust: evaluation.referenceTrust,
+          provenance: LEGACY_SCREENING_PROVENANCE,
           grade: evaluation.grade
         };
       };
@@ -562,6 +604,7 @@
 
     return Object.freeze({
       catalog,
+      provenance: LEGACY_SCREENING_PROVENANCE,
       constants: Object.freeze({ TOTAL_PIGMENT_PER_LITER, CANDIDATE_SEARCH_POLICY, CANDIDATE_SEARCH_BOUNDS, BLACK_SUBSTRATE_RGB, WHITE_SUBSTRATE_RGB }),
       preparePigments,
       resolvePaintCode,

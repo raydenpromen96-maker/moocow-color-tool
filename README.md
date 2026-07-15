@@ -169,6 +169,16 @@ MIT License - 详见 [LICENSE](LICENSE) 文件
 - GitHub: [@raydenpromen96-maker](https://github.com/raydenpromen96-maker)
 - Project: [moocow-color-tool](https://github.com/raydenpromen96-maker/moocow-color-tool)
 
+## Physical pilot acquisition gate
+
+The 45-card pilot operator pack is at `calibration/protocols/pilot-acquisition-v1/`, mirrored byte-for-byte at `data/calibration/acquisition/pilot-45-card-current/`. It is deliberately invalid until all 15 current-lot labels are materially verified. Freezing and verification require `--registry-evidence-root`; they bind each whole-file label's size and SHA-256 values and permit acquisition only. Generic `fit-km` accepts `synthetic_only` data only; physical `research_only` fitting remains reserved for the future receipt-gated `fit-pilot-selection` command.
+
+Open-only measurement admission is documented at `calibration/protocols/open-measurement-admission-v1/`. Its two commands bind independently supplied open measurements to a verified acquisition receipt and reverify that binding; they create a non-promotable open-selection dataset only. They do not enable fitting, evaluation, ranking, release, promotion, or runtime activation, and every permission remains false.
+
+The receipt-derived operator templates and instrument-neutral CSV assembler are documented at `calibration/protocols/open-measurement-pack-v1/`. They prepare the exact 36-card, 72-DFT, 6-bare, 216-coated, and 222-spectrum-identity open roster, then assemble completed operator files into the existing admission-input schema. This remains a laboratory data-collection path only; it grants no measured-accuracy or runtime authority.
+
+The deterministic offline inverse recipe boundary is documented at `calibration/protocols/open-selection-recipe-solver-v1/`. It consumes a reverified open-selection K-M fit plus measured target spectra and current-lot dispenser evidence, re-predicts black/white cells after wet-mass quantization, and emits a laboratory-trial candidate only. It does not accept Lab/HEX targets, read sealed holdout data, enable browser/runtime ranking, or claim physical accuracy.
+
 ---
 
 © 2024 MooCow Color Tools. All rights reserved.

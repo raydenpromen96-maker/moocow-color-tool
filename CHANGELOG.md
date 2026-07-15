@@ -2,6 +2,42 @@
 
 All notable changes to MooCow Mini Color Mixing Tool are documented here.
 
+## [Unreleased] - 2026-07-15
+
+### Added
+
+- Added an offline finite-film, two-constant Kubelka-Munk calibration package
+  with hash-bound receipts for pilot acquisition, open-measurement admission,
+  open-selection fitting, independent-holdout activation, and laboratory-trial
+  inverse recipe solving.
+- Added current-lot operator protocols, immutable JSON/CSV templates, synthetic
+  examples, and verification commands for the full calibration evidence chain.
+- Added a JavaScript physical-optical model and deterministic synthetic recovery
+  harness while preserving the existing browser recommendation boundary.
+
+### Changed
+
+- Recipe and runtime continuity checks now fail closed when calibration evidence
+  is absent, malformed, mutated, or not authorized for the requested stage.
+- Laboratory recipe candidates are re-evaluated on black and white substrates
+  after real dispenser wet-mass quantization instead of treating continuous
+  optimizer output as a directly dispensable formula.
+
+### Safety boundary
+
+- The new calibration path is research and laboratory tooling only. It does not
+  activate browser ranking, publish production formulas, accept Lab/HEX as a
+  measured target, or claim physical drawdown accuracy.
+- Production promotion still requires real current-lot spectra, verified batch
+  identity, physical drawdowns, and a separately sealed independent holdout.
+
+### Verification
+
+- Python calibration suite: 263 tests passed.
+- Node application suite: 60 tests passed.
+- Complete 216-target regression passed with numeric hash
+  `6e10fc9f7826a492a2d3bbbac03578ee2dd70e8d172e0f25e97e8c032b1e52d9`.
+
 ## [4.5.0] - 2026-07-12
 
 ### Changed

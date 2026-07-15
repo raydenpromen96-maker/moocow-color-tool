@@ -13,19 +13,26 @@ const ProductionRuntime = require('../src/production-runtime.js');
 const qtcCatalogue = require('../src/qtc-ral-classic.js');
 
 const REPRESENTATIVE_HASHES = Object.freeze({
-  '1021': 'f46e202a2a6fb4df5a63794effcaee6a2985cba7620f52ad725a058484cf581e',
-  '1035': '6f23f32c3fc65b7398866564a6a4f4dee05c834a4f3dfc94c64fe6948890b541',
-  '2004': 'afe5c924b58054f0c965a3d25452a6d0eb99108cf07e285b8b459e694bd05d73',
-  '3020': 'cac0cb1ec3928cea53589b7aa493e7071c91c92ac0b446d8e38e9cc4df2e5836',
-  '4005': '963da0fce54f361ecfa764b59a21c878f2e32cf3167cebcdc7039b36ea1af2a6',
-  '5005': 'a8334319cb9b102fb10bdec05a28c943d93571deb94216b9b486ff35030df9d9',
-  '5015': '2e721c5a1890b42ea18db952975618b56b73c948279c9881f5479c7e8da7b92b',
-  '6005': 'ca5fc2c0df67cee06844b879172f36ec9f055f8d390d7529d64599c7ff2015fb',
-  '6037': '69c80b44d68a8140be86e9454afc07fda319d3e830d5567ff62ab5079238b8dc',
-  '7035': 'db92440263ff572bdfb3edcf611076ac7ca7e4061b19b156837c77b103477d84',
-  '8004': 'd5d3a415ac4ca8dfb667a23b39c57e22ed40c9f7c46c1ec12fcf32736514515b',
-  '9005': 'fb80a56f4710a101f6dc98ee8fff55858f4a8a2f7852ba3e057146fa5d8d2e2b',
-  '9010': '98bd259cf6c0779c82043eb83d1214b1700c1f35985aa0dac2b7aa807f25c269'
+  '1021': '4dea112a02dbd99284aaeb82fc5786e984f5bb82560cfeab162832192dfff487',
+  '1035': '8fc3ef2a40f076ec6a1f1500eb2ccf51e219cd47c5fda14798794c1f83367ff9',
+  '2004': '15c2064b3207d35ad5c6f9258288b4e908eb080738b20aaa53e63b8a9b4f351b',
+  '3020': '24bb35655bda47c2423d56b3eb8c5f0cd74c2a049758c5620d0e9091c9785f21',
+  '4005': 'ebe268b66652a7454e946758d493ab38ba305df51b37686c38f22edbfbd9bd8d',
+  '5005': 'cac80a72c917daafa0f5136067dfdffe02fa7ab954354583f3d8657f178b33a7',
+  '5015': '6d662f6ee0e48ceb88b37e6cc168a8e6b87e8dde44223913eb52ad7c3f1a4b4e',
+  '6005': '8009500cb836283fd13ce6aa66f9bf1e1836769ffae0c956a2da17597d69c88d',
+  '6037': 'e99807ea1dbda368fc0ce48c46be10fe5ffb4033c691ec1f7a681bb3e1c2697b',
+  '7035': '81d5a3e3d4929761d238d8a543941d85a63eba17f1bffa5b32e6d7c2109cf818',
+  '8004': '548539b60de04ef65407ace9eee4751f58711c16e69e46e9ecd1b95a8300b0ea',
+  '9005': '822742d106e9cd1b8f70932db248c08665649a9fcedf767a36f7a503e021d5a4',
+  '9010': 'a5045921f6321eefba7711fb608e590e66d37ef08b55e693c3a0cbb18c11fa5d'
+});
+const LEGACY_SCREENING_PROVENANCE = Object.freeze({
+  evidence_class: 'catalog_screen_approximation',
+  calibration_status: 'uncalibrated_screening_only',
+  physical_accuracy_verified: false,
+  measured_current_batch: false,
+  runtime_activation_permitted: false
 });
 
 function createRuntime() {
@@ -47,12 +54,15 @@ function representativeHash(runtime, code) {
   const payload = {
     code,
     targetLabSource: runtime.resolveTargetColor(color).targetLabSource,
-    candidates: candidates.map(candidate => ({
-      recipe: candidate.recipe,
-      metrics: candidate.metrics,
-      score: candidate.score,
-      supportKey: candidate.supportKey
-    }))
+    candidates: candidates.map(candidate => {
+      const { provenance, ...metrics } = candidate.metrics;
+      return {
+        recipe: candidate.recipe,
+        metrics,
+        score: candidate.score,
+        supportKey: candidate.supportKey
+      };
+    })
   };
   return {
     candidates,
@@ -83,6 +93,24 @@ test('QTC Lab takes precedence over display HEX with a finite fallback', () => {
   assert.ok(fallback.targetLab.every(Number.isFinite));
 });
 
+test('legacy screening provenance is exact, frozen, and present on evaluations and candidate metrics', () => {
+  const runtime = createRuntime();
+  const color = target('1021');
+  const evaluation = runtime.evaluateRecipe({ Y83S: 100 }, color);
+  const candidates = runtime.generateCandidates(color);
+
+  assert.deepEqual(runtime.provenance, LEGACY_SCREENING_PROVENANCE);
+  assert.equal(Object.isFrozen(runtime.provenance), true);
+  assert.throws(() => Object.defineProperty(runtime.provenance, 'evidence_class', { value: 'measured' }), TypeError);
+  assert.deepEqual(evaluation.provenance, LEGACY_SCREENING_PROVENANCE);
+  assert.equal(evaluation.provenance, runtime.provenance);
+  candidates.forEach(candidate => {
+    assert.deepEqual(candidate.metrics.provenance, LEGACY_SCREENING_PROVENANCE);
+    assert.equal(Object.isFrozen(candidate.metrics.provenance), true);
+    assert.equal(candidate.metrics.provenance, runtime.provenance);
+  });
+});
+
 test('candidate recipes use the canonical 106 g/L grid and recompute their metrics', { timeout: 120000 }, () => {
   const runtime = createRuntime();
   const color = target('1021');
@@ -108,12 +136,14 @@ test('candidate recipes use the canonical 106 g/L grid and recompute their metri
   assert.deepEqual(runtime.generateCandidates(color), candidates);
 });
 
-test('recommended candidate prioritizes feasible hiding over a lower black-substrate dE', { timeout: 120000 }, () => {
+test('recommended candidate satisfies strict feasibility and recommendation ordering', { timeout: 120000 }, () => {
   const runtime = createRuntime();
   const candidates = runtime.generateCandidates(target('5005'));
   assert.ok(candidates[0].metrics.hidingAlpha >= 0.96);
   assert.ok(candidates[0].metrics.substrateShift <= 3);
-  assert.ok(candidates.some(candidate => candidate.metrics.dE < candidates[0].metrics.dE));
+  candidates.slice(1).forEach(candidate => {
+    assert.ok(runtime.compareRecommendedCandidates(candidates[0], candidate) <= 0);
+  });
 });
 
 test('shared runtime preserves all required representative browser candidate outputs', { timeout: 300000 }, () => {

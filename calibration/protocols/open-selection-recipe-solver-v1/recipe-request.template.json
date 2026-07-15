@@ -1,0 +1,61 @@
+{
+  "schema_version": "moocow-open-selection-recipe-request-v1",
+  "status": "open_selection_recipe_requested",
+  "request_id": "REQUIRED_UNIQUE_REQUEST_ID",
+  "evidence_class": "measured_current_target",
+  "target": {
+    "evidence": {
+      "relative_path": "evidence/target-spectrum.json",
+      "sha256": "REQUIRED_LOWERCASE_SHA256_OF_COMPLETED_TARGET_RECORD",
+      "record_locator": {
+        "kind": "whole_file"
+      }
+    }
+  },
+  "search_policy": {
+    "allowed_colorant_component_ids": [
+      "colorant-Y83S",
+      "colorant-Y74S",
+      "colorant-B150S",
+      "colorant-B153S",
+      "colorant-R254D",
+      "colorant-R101Y",
+      "colorant-R101V",
+      "colorant-Y42S",
+      "colorant-073",
+      "colorant-W064",
+      "colorant-V23",
+      "colorant-G7",
+      "colorant-R122S",
+      "colorant-BK7H"
+    ],
+    "maximum_colorants": 3,
+    "maximum_total_colorant_nonvolatile_volume_fraction": null,
+    "per_colorant_maximum_nonvolatile_volume_fraction": {
+      "colorant-Y83S": null,
+      "colorant-Y74S": null,
+      "colorant-B150S": null,
+      "colorant-B153S": null,
+      "colorant-R254D": null,
+      "colorant-R101Y": null,
+      "colorant-R101V": null,
+      "colorant-Y42S": null,
+      "colorant-073": null,
+      "colorant-W064": null,
+      "colorant-V23": null,
+      "colorant-G7": null,
+      "colorant-R122S": null,
+      "colorant-BK7H": null
+    }
+  },
+  "batch": {
+    "target_wet_mass_g": null,
+    "dispense_profile_evidence": {
+      "relative_path": "evidence/dispense-profile.json",
+      "sha256": "REQUIRED_DIFFERENT_LOWERCASE_SHA256_OF_COMPLETED_PROFILE_RECORD",
+      "record_locator": {
+        "kind": "whole_file"
+      }
+    }
+  }
+}

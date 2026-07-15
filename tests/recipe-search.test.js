@@ -192,3 +192,22 @@ test('evaluates sorted unique seed supports before generic supports regardless o
   assert.deepEqual(traceSupports(catalog, seedSupports), expected);
   assert.deepEqual(traceSupports(reversedCatalog, seedSupports.slice().reverse()), expected);
 });
+
+test('zero refinement budget performs no transfer evaluations for a three-colour support', () => {
+  const evaluatedRecipes = [];
+
+  RecipeSearch.searchCandidates({
+    catalog: { A: {}, B: {}, C: {} },
+    seeds: [{ A: 80, B: 20, C: 6 }],
+    evaluate: recipe => {
+      evaluatedRecipes.push(recipe);
+      return { score: 0 };
+    },
+    policy: { candidateCount: 1 },
+    maxSupports: 1,
+    maxRefinementSteps: 0
+  });
+
+  assert.equal(evaluatedRecipes.length, 1 + 2 * 2);
+  evaluatedRecipes.forEach(recipe => assert.equal(RecipeSearch.recipeSupportKey(recipe), 'A|B|C'));
+});

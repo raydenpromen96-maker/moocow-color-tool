@@ -1,0 +1,168 @@
+{
+  "schema_version": "moocow-current-batch-component-registry-v1",
+  "registry_status": "REGISTRY_ONLY_NOT_A_CALIBRATION_DATASET",
+  "intended_use": "physical-drawdown-v1 component and lot lock before a real measured-spectrum import",
+  "source_evidence": {
+    "path": "src/paint-catalog.js",
+    "observed_commit": "c7e5a75",
+    "observed_fields": [
+      "catalog code",
+      "productName",
+      "batchNo"
+    ],
+    "scope_note": "This registry transcribes only current local catalog evidence. It does not adopt any public analog, HEX, QTC, manual Lab, strength, hiding-power, density, pigment-content, or solid-content field as physical calibration truth."
+  },
+  "concentration_basis_required_for_import": "nonvolatile_volume_fraction",
+  "spectral_data_policy": "No third-party, approximate, or catalog-derived spectra are included or approved here. Only spectra measured from the verified physical lots under the locked protocol may enter a calibration dataset.",
+  "components": [
+    {
+      "component_id": "base-waterborne-clear",
+      "role": "base",
+      "catalog_code": null,
+      "material_description": "waterborne clear base; exact product and lot are required before drawdown",
+      "product_name": "REQUIRED_NOT_YET_KNOWN",
+      "batch_id": "REQUIRED_NOT_YET_KNOWN",
+      "manufacturer_or_supplier": "REQUIRED_NOT_YET_KNOWN",
+      "wet_density_g_ml": null,
+      "nonvolatile_mass_fraction": null,
+      "nonvolatile_volume_fraction": null,
+      "nonvolatile_density_g_ml": null,
+      "cure_protocol": null,
+      "application_dft_um": null,
+      "lot_verification_status": "REQUIRED_NOT_MEASURED",
+      "spectral_status": "NO_SPECTRUM_APPROVED"
+    },
+    {
+      "component_id": "colorant-Y83S",
+      "role": "colorant",
+      "catalog_code": "Y83S",
+      "product_name": "Colanyl Yellow HR 130-CN",
+      "batch_id": "CNQ1340322",
+      "lot_verification_status": "CATALOG_EVIDENCE_ONLY__VERIFY_CONTAINER_LABEL_BEFORE_USE",
+      "spectral_status": "NO_SPECTRUM_APPROVED"
+    },
+    {
+      "component_id": "colorant-Y74S",
+      "role": "colorant",
+      "catalog_code": "Y74S",
+      "product_name": "Colanyl Yellow 2GXD 130-CN",
+      "batch_id": "CNQ1190325",
+      "lot_verification_status": "CATALOG_EVIDENCE_ONLY__VERIFY_CONTAINER_LABEL_BEFORE_USE",
+      "spectral_status": "NO_SPECTRUM_APPROVED"
+    },
+    {
+      "component_id": "colorant-B150S",
+      "role": "colorant",
+      "catalog_code": "B150S",
+      "product_name": "Colanyl Blue A2R 131-CN",
+      "batch_id": "CNQ1118121",
+      "lot_verification_status": "CATALOG_EVIDENCE_ONLY__VERIFY_CONTAINER_LABEL_BEFORE_USE",
+      "spectral_status": "NO_SPECTRUM_APPROVED"
+    },
+    {
+      "component_id": "colorant-B153S",
+      "role": "colorant",
+      "catalog_code": "B153S",
+      "product_name": "Colanyl Blue B2G 132-CN",
+      "batch_id": "CNQ1250525",
+      "lot_verification_status": "CATALOG_EVIDENCE_ONLY__VERIFY_CONTAINER_LABEL_BEFORE_USE",
+      "spectral_status": "NO_SPECTRUM_APPROVED"
+    },
+    {
+      "component_id": "colorant-R254D",
+      "role": "colorant",
+      "catalog_code": "R254D",
+      "product_name": "Colanyl DPP Red GD 131-CN",
+      "batch_id": "CNQ1471124",
+      "lot_verification_status": "CATALOG_EVIDENCE_ONLY__VERIFY_CONTAINER_LABEL_BEFORE_USE",
+      "spectral_status": "NO_SPECTRUM_APPROVED"
+    },
+    {
+      "component_id": "colorant-R101Y",
+      "role": "colorant",
+      "catalog_code": "R101Y",
+      "product_name": "Colanyl Oxide Red G 100-CN",
+      "batch_id": "CNG2340320",
+      "lot_verification_status": "CATALOG_EVIDENCE_ONLY__VERIFY_CONTAINER_LABEL_BEFORE_USE",
+      "spectral_status": "NO_SPECTRUM_APPROVED"
+    },
+    {
+      "component_id": "colorant-R101V",
+      "role": "colorant",
+      "catalog_code": "R101V",
+      "product_name": "Ecosperse Oxide Red BA 100-CN",
+      "batch_id": "CNG2940223",
+      "lot_verification_status": "CATALOG_EVIDENCE_ONLY__VERIFY_CONTAINER_LABEL_BEFORE_USE",
+      "spectral_status": "NO_SPECTRUM_APPROVED"
+    },
+    {
+      "component_id": "colorant-Y42S",
+      "role": "colorant",
+      "catalog_code": "Y42S",
+      "product_name": "Ecosperse Oxide Yellow RA 100-CN",
+      "batch_id": "CNG2280220",
+      "lot_verification_status": "CATALOG_EVIDENCE_ONLY__VERIFY_CONTAINER_LABEL_BEFORE_USE",
+      "spectral_status": "NO_SPECTRUM_APPROVED"
+    },
+    {
+      "component_id": "colorant-073",
+      "role": "colorant",
+      "catalog_code": "073",
+      "product_name": "Colanyl Orange D2R 100-CN",
+      "batch_id": "CNQ1461622",
+      "lot_verification_status": "CATALOG_EVIDENCE_ONLY__VERIFY_CONTAINER_LABEL_BEFORE_USE",
+      "spectral_status": "NO_SPECTRUM_APPROVED"
+    },
+    {
+      "component_id": "colorant-W064",
+      "role": "colorant",
+      "catalog_code": "W064",
+      "product_name": "Colanyl White TQ 100-CN",
+      "batch_id": "CNQ1431113",
+      "lot_verification_status": "CATALOG_EVIDENCE_ONLY__VERIFY_CONTAINER_LABEL_BEFORE_USE",
+      "spectral_status": "NO_SPECTRUM_APPROVED"
+    },
+    {
+      "component_id": "colorant-V23",
+      "role": "colorant",
+      "catalog_code": "V23",
+      "product_name": "Colanyl Violet RL 131-CN",
+      "batch_id": "CNQ1350313",
+      "lot_verification_status": "CATALOG_EVIDENCE_ONLY__VERIFY_CONTAINER_LABEL_BEFORE_USE",
+      "spectral_status": "NO_SPECTRUM_APPROVED"
+    },
+    {
+      "component_id": "colorant-G7",
+      "role": "colorant",
+      "catalog_code": "G7",
+      "product_name": "Colanyl Green GG 131-CN",
+      "batch_id": "CNQ1321013",
+      "lot_verification_status": "CATALOG_EVIDENCE_ONLY__VERIFY_CONTAINER_LABEL_BEFORE_USE",
+      "spectral_status": "NO_SPECTRUM_APPROVED"
+    },
+    {
+      "component_id": "colorant-R122S",
+      "role": "colorant",
+      "catalog_code": "R122S",
+      "product_name": "Colanyl Pink E 100-CN",
+      "batch_id": "CNQ1361125",
+      "lot_verification_status": "CATALOG_EVIDENCE_ONLY__VERIFY_CONTAINER_LABEL_BEFORE_USE",
+      "spectral_status": "NO_SPECTRUM_APPROVED"
+    },
+    {
+      "component_id": "colorant-BK7H",
+      "role": "colorant",
+      "catalog_code": "BK7H",
+      "product_name": "Colanyl Black N 131-CN",
+      "batch_id": "CNQ1361225",
+      "lot_verification_status": "CATALOG_EVIDENCE_ONLY__VERIFY_CONTAINER_LABEL_BEFORE_USE",
+      "spectral_status": "NO_SPECTRUM_APPROVED"
+    }
+  ],
+  "before_any_drawdown": [
+    "Verify every container label against this registry; correct the registry from the physical label rather than silently using a mismatch.",
+    "Record actual current-lot wet density and nonvolatile mass or volume solids for the base and every colorant used in a formula.",
+    "Record the base cure protocol, application method, wet-film target, and measured DFT only from the real run.",
+    "Create a manifest.components entry for the verified base and every component in the imported dataset, with exactly one role=base entry."
+  ]
+}

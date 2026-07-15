@@ -12,7 +12,7 @@ import qtcCatalogue from '../src/qtc-ral-classic.js';
 
 const EXPECTED_INPUT_SHA256 = '8d34f1e17067729d94566eb9778af14d91ee28b0b2ab850bae549e5f5de2aa64';
 const EXPECTED_COLOURS_SHA256 = 'f0eb5cdb548976d570c04e78c920e4b6f4b307d7398dfbaedb99af7d5a04ccc7';
-const EXPECTED_OUTPUT_SHA256 = 'c946c1b6f79d8539138bbca5c7004eb515fa8da21d9c14318724fb00aa7257d2';
+const EXPECTED_OUTPUT_SHA256 = '6e10fc9f7826a492a2d3bbbac03578ee2dd70e8d172e0f25e97e8c032b1e52d9';
 const RECORD_MODE = process.argv.includes('--record');
 
 function sha256(value) {
@@ -68,12 +68,15 @@ function runCodes(codes) {
     return {
       code,
       targetLabSource: runtime.resolveTargetColor(target).targetLabSource,
-      candidates: candidates.map(candidate => ({
-        recipe: candidate.recipe,
-        supportKey: candidate.supportKey,
-        metrics: candidate.metrics,
-        score: candidate.score
-      }))
+      candidates: candidates.map(candidate => {
+        const { provenance, ...metrics } = candidate.metrics;
+        return {
+          recipe: candidate.recipe,
+          supportKey: candidate.supportKey,
+          metrics,
+          score: candidate.score
+        };
+      })
     };
   });
 }

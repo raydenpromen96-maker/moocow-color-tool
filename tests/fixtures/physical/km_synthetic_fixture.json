@@ -1,0 +1,10 @@
+{
+  "seed": 20260714,
+  "noise_std": 0.0,
+  "expected": {
+    "measurement_count": 84,
+    "train_records": 60,
+    "validation_records": 12,
+    "holdout_records": 12
+  }
+}
