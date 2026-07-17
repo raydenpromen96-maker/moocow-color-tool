@@ -12,7 +12,7 @@ import qtcCatalogue from '../src/qtc-ral-classic.js';
 
 const EXPECTED_INPUT_SHA256 = '8d34f1e17067729d94566eb9778af14d91ee28b0b2ab850bae549e5f5de2aa64';
 const EXPECTED_COLOURS_SHA256 = 'f0eb5cdb548976d570c04e78c920e4b6f4b307d7398dfbaedb99af7d5a04ccc7';
-const EXPECTED_OUTPUT_SHA256 = '6e10fc9f7826a492a2d3bbbac03578ee2dd70e8d172e0f25e97e8c032b1e52d9';
+const EXPECTED_OUTPUT_SHA256 = '7e73bafb42aa59141f52c5cc8d0549f0e344990062a18b99fd158204236bd415';
 const RECORD_MODE = process.argv.includes('--record');
 
 function sha256(value) {

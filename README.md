@@ -1,5 +1,13 @@
 # MooCow Mini 调色工具 / Color Mixing Tool / 調色ツール
 
+#### Unreleased（2026-07-17）- 科莱恩湿密度换算
+
+- 接入供应商提供的14款色浆标称湿密度，并在网页与TXT导出中按 `湿体积mL = 湿重g / 密度g/mL` 自动换算。
+- 供应商确认 `Colanyl DPP Red GD 131-CN = PR254`，项目主代码保持 `R254D`；确认 `Colanyl Orange D2R 100-CN = PO73`，并报送 C.I. 编号 `561170`（项目未独立核验该编号体系）。
+- 原始表未标密度单位，项目按 `g/mL`（数值等同 `g/cm3`）解释并在页面逐项标记“单位假定”。密度不能反推出光谱、K/S、固含或非挥发体积，项目仍保持未物理校准状态。
+- 规范化记录位于 [`data/supplier/colanyl-wet-density-2026-07-17.json`](data/supplier/colanyl-wet-density-2026-07-17.json)，原始聊天附件不进入仓库。
+- 216色屏幕回归全部生成3个候选；稳定首选为 `216/216`，平均两遍模型 dE `4.1612`，失败等级 `60`。这是未校准模型内部指标，不是实体刮板精度。
+
 #### v4.5.0（2026-07-12）- 遮盖稳定候选优先
 
 - 默认推荐优先满足模型两遍遮盖率 `>=96%`、黑白底差 `<=3.0 dE`，再比较原有模型分数。
@@ -91,6 +99,25 @@
 当前模型使用的14种色浆 `manualLab` 参考值；这些值用于屏幕模型，不代表完整实测反射光谱：
 
 家族参考来自 GOLDEN Heavy Body 水性丙烯酸漆膜的实测反射率与单常数 K/S。试样为白色 Leneta 卡上约 6 mil 干膜，白底会影响透明色；它们不是当前科莱恩/Heubach CN 批次，也不代表黑底完全遮盖。系统只接受精确 C.I. 对应并作旁路参考，不参与候选排序。现有 `REFERENCE_SPECTRA` 仍是屏幕模型近似。来源和边界见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
+
+供应商标称湿密度只用于湿重/湿体积换算及现有未校准遮盖筛选。原表没有批次、单位、温度或测试方法；当前按 `g/mL` 解释，不作为当前批次实测密度或物理校准证据。R101V 与 Y42S 的原表品牌为 Colanyl，而目录登记为 Ecosperse，现按产品名暂时映射并在页面标为待确认。
+
+| 代码 | 产品 | C.I. | 标称湿密度（按 g/mL 假定） |
+|------|------|------|------------------|
+| Y83S | Colanyl Yellow HR 130-CN | PY83 | 1.16 |
+| Y74S | Colanyl Yellow 2GXD 130-CN | PY74 | 1.18 |
+| B150S | Colanyl Blue A2R 131-CN | PB15:1 | 1.21 |
+| B153S | Colanyl Blue B2G 132-CN | PB15:3 | 1.21 |
+| R254D | Colanyl DPP Red GD 131-CN | PR254 | 1.19 |
+| R101Y | Colanyl Oxide Red G 100-CN | PR101 | 2.01 |
+| R101V | Ecosperse Oxide Red BA 100-CN | PR101 | 2.25 |
+| Y42S | Ecosperse Oxide Yellow RA 100-CN | PY42 | 1.94 |
+| 073 | Colanyl Orange D2R 100-CN | PO73（供应商报送编号 561170） | 1.07 |
+| W064 | Colanyl White TQ 100-CN | PW6 | 1.83 |
+| V23 | Colanyl Violet RL 131-CN | PV23 | 1.12 |
+| G7 | Colanyl Green GG 131-CN | PG7 | 1.37 |
+| R122S | Colanyl Pink E 100-CN | PR122 | 1.09 |
+| BK7H | Colanyl Black N 131-CN | PBk7 | 1.27 |
 
 | 代码 | 中文名称 | English Name | 日本語名 | L | A | B |
 |------|----------|--------------|----------|---|---|---|

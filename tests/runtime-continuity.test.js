@@ -36,7 +36,7 @@ test('unsupported active coverage fails closed instead of normalizing a partial 
   assert.equal(evaluation.referenceTrust, 0);
   assert.equal(evaluation.familySpectralCoverage.exactFraction, 0.01);
   assert.equal(evaluation.familySpectralCoverage.missingFraction, 0.99);
-  assert.deepEqual(evaluation.familySpectralCoverage.missingCi, ['CI-unverified']);
+  assert.deepEqual(evaluation.familySpectralCoverage.missingCi, ['PO73']);
   assert.equal(evaluation.familySpectralCoverage.predictiveEligible, false);
 });
 

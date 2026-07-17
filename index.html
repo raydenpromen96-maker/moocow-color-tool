@@ -218,6 +218,7 @@
           <div class="flex flex-col items-start gap-1 sm:flex-row sm:items-end">
             <strong class="text-2xl font-black text-primary font-mono leading-none" id="totalPigmentWeight">0.0g</strong>
             <span id="scoopEstimate" class="whitespace-nowrap text-[10px] text-[#3d7569] font-semibold sm:mb-0.5">(约0勺)</span>
+            <span id="totalPigmentVolume" class="whitespace-nowrap text-[10px] text-slate-500 font-semibold sm:mb-0.5">≈0.00mL 湿体积</span>
           </div>
         </div>
         <div class="metric-slab">
@@ -355,9 +356,9 @@
      * ==========================================
      */
     const TRANSLATIONS = {
-      zh: { subtitle: "智能调色助手", disclaimer_title: "黑底遮盖模拟引擎", disclaimer_text: "已载入14个科莱恩色浆Lab参考值、批次强度、公开颜料索引和近似光谱数据。默认按黑色基材、清漆体系和两遍施工评估；无法覆盖或模型分歧大的颜色会提示风险。", target_color_selection: "目标颜色选择", ral_search_label: "RAL代码搜索", ral_search_placeholder: "输入代码或颜色名", ral_select_label: "RAL快速选择", select_ral_code: "选择RAL代码", current_ral: "当前RAL:", color_value: "颜色值:", paint_weight_adjustment: "颜料重量调节", volume_selection: "基料容量:", volume_hint: "(切换容量自动换算重量)", paint_ratio: "混合详情", total_pigment_weight: "总颜料重量: ", varnish_usage: "基料用量: ", per_liter_usage: "每升用量: ", mixing_ratio: "混合比例: P:B = ", add_formula: "微调 (+5%)", reset_formula: "清空颜料", recommended_recipes: "推荐配方库 (点击加载)", package_preview_export: "预览与导出", export_recipe: "导出 TXT", copy_recipe: "复制配方", share_recipe: "快捷分享", recipe_includes_title: "配方包含", generate_recipe: "生成AI候选配方", ral_palette: "RAL 颜色全集", simulation_title: "黑底模型估算", delta_e_label: "两遍模型色差", single_coat_label: "一遍黑底", double_coat_label: "两遍黑底", candidate_section: "模型候选", candidate_label: "候选", candidate_two_coat: "两遍模型 dE", candidate_active: "活性色浆", candidate_min_dose: "当前容量最小剂量", candidate_stability: "两遍遮盖 / 黑白底差", candidate_risk: "模型分歧/风险", candidate_risk_low: "模型低风险", candidate_risk_medium: "模型边界", candidate_risk_high: "模型高风险", candidate_policy: "临时未校准模型政策：总量106g/L，0.5g/L 网格，活性色浆≥1.0g/L，最多4种；候选优先满足两遍遮盖≥96%、黑白底差≤3；非设备或物理准确度验证。" },
-      en: { subtitle: "Smart Mixing Assistant", disclaimer_title: "Black-Substrate Hiding Engine", disclaimer_text: "Loaded 14 Clariant colorant Lab references, batch strengths, public pigment-index metadata, and approximate spectra. The model assumes clear base, black substrate, and two coats; unreachable or high-disagreement colors are flagged.", target_color_selection: "Target Color", ral_search_label: "RAL Search", ral_search_placeholder: "Search code or name", ral_select_label: "Quick Selection", select_ral_code: "Select RAL Code", current_ral: "Current RAL:", color_value: "HEX Value:", paint_weight_adjustment: "Pigment Adjustment", volume_selection: "Base Volume:", volume_hint: "(Auto recalculate weights)", paint_ratio: "Mix Details", total_pigment_weight: "Total Pigment: ", varnish_usage: "Base Usage: ", per_liter_usage: "Per Liter: ", mixing_ratio: "Ratio: P:B = ", add_formula: "Fine-tune (+5%)", reset_formula: "Clear", recommended_recipes: "Recommended Recipes", package_preview_export: "Export & Preview", export_recipe: "Export TXT", copy_recipe: "Copy Recipe", share_recipe: "Share", recipe_includes_title: "Recipe Content", generate_recipe: "Generate AI Candidate", ral_palette: "RAL Palette", simulation_title: "Black-Substrate Model", delta_e_label: "Two-coat model dE", single_coat_label: "One coat", double_coat_label: "Two coats", candidate_section: "Model candidates", candidate_label: "Candidate", candidate_two_coat: "Two-coat model dE", candidate_active: "Active colorants", candidate_min_dose: "Minimum current-volume dose", candidate_stability: "Two-coat hiding / substrate shift", candidate_risk: "Model disagreement/risk", candidate_risk_low: "Lower model risk", candidate_risk_medium: "Model boundary", candidate_risk_high: "High model risk", candidate_policy: "Temporary uncalibrated model policy: 106g/L total, 0.5g/L grid, >=1.0g/L active, max4; recommendations prefer >=96% two-coat hiding and <=3 substrate shift; not verified for physical accuracy." },
-      ja: { subtitle: "スマート調色システム", disclaimer_title: "黒下地隠蔽シミュレーション", disclaimer_text: "14色の科莱恩色浆Lab参考値、ロット強度、公開顔料番号、近似光谱を使用。透明ベース、黒下地、二層塗装を基準に評価し、到達困難またはモデル差が大きい色はリスクとして表示します。", target_color_selection: "ターゲット色", ral_search_label: "RAL検索", ral_search_placeholder: "コードまたは色名", ral_select_label: "クイック選択", select_ral_code: "RALコードを選択", current_ral: "現在のRAL:", color_value: "カラー值:", paint_weight_adjustment: "顔料重量调整", volume_selection: "ベース容量:", volume_hint: "(容量変更で重量を再计算)", paint_ratio: "混合详细", total_pigment_weight: "総顔料重量: ", varnish_usage: "ベース材: ", per_liter_usage: "1L当たり: ", mixing_ratio: "混合比: P:B = ", add_formula: "微调整 (+5%)", reset_formula: "クリア", recommended_recipes: "推奨配合", package_preview_export: "保存とプレビュー", export_recipe: "TXT保存", copy_recipe: "コピー", share_recipe: "共有", recipe_includes_title: "内容", generate_recipe: "AI候補配合を生成", ral_palette: "RALパレット", simulation_title: "黒下地モデル", delta_e_label: "二層モデル色差", single_coat_label: "一層黒下地", double_coat_label: "二層黒下地", candidate_section: "モデル候補", candidate_label: "候補", candidate_two_coat: "二層モデル dE", candidate_active: "活性色浆", candidate_min_dose: "現在の容量での最小量", candidate_stability: "二層隠蔽 / 黒白下地差", candidate_risk: "モデル差/リスク", candidate_risk_low: "低モデルリスク", candidate_risk_medium: "モデル境界", candidate_risk_high: "高モデルリスク", candidate_policy: "仮の未校正モデル方針：総量106g/L、0.5g/L グリッド、活性色浆 >=1.0g/L、最大4種。推奨は二層隠蔽96%以上・黒白下地差3以下を優先します。物理精度は未検証です。" }
+      zh: { subtitle: "智能调色助手", disclaimer_title: "黑底遮盖模拟引擎", disclaimer_text: "已载入14个科莱恩色浆Lab参考值、供应商标称湿密度、公开颜料索引和近似光谱数据。默认按黑色基材、清漆体系和两遍施工评估；无法覆盖或模型分歧大的颜色会提示风险。", target_color_selection: "目标颜色选择", ral_search_label: "RAL代码搜索", ral_search_placeholder: "输入代码或颜色名", ral_select_label: "RAL快速选择", select_ral_code: "选择RAL代码", current_ral: "当前RAL:", color_value: "颜色值:", paint_weight_adjustment: "颜料重量调节", volume_selection: "基料容量:", volume_hint: "(切换容量自动换算重量)", paint_ratio: "混合详情", total_pigment_weight: "总颜料重量: ", varnish_usage: "基料用量: ", per_liter_usage: "每升用量: ", mixing_ratio: "混合比例: P:B = ", add_formula: "微调 (+5%)", reset_formula: "清空颜料", recommended_recipes: "推荐配方库 (点击加载)", package_preview_export: "预览与导出", export_recipe: "导出 TXT", copy_recipe: "复制配方", share_recipe: "快捷分享", recipe_includes_title: "配方包含", generate_recipe: "生成AI候选配方", ral_palette: "RAL 颜色全集", simulation_title: "黑底模型估算", delta_e_label: "两遍模型色差", single_coat_label: "一遍黑底", double_coat_label: "两遍黑底", candidate_section: "模型候选", candidate_label: "候选", candidate_two_coat: "两遍模型 dE", candidate_active: "活性色浆", candidate_min_dose: "当前容量最小剂量", candidate_stability: "两遍遮盖 / 黑白底差", candidate_risk: "模型分歧/风险", candidate_risk_low: "模型低风险", candidate_risk_medium: "模型边界", candidate_risk_high: "模型高风险", candidate_policy: "临时未校准模型政策：总量106g/L，0.5g/L 网格，活性色浆≥1.0g/L，最多4种；候选优先满足两遍遮盖≥96%、黑白底差≤3；非设备或物理准确度验证。" },
+      en: { subtitle: "Smart Mixing Assistant", disclaimer_title: "Black-Substrate Hiding Engine", disclaimer_text: "Loaded 14 Clariant colorant Lab references, supplier nominal wet densities, public pigment-index metadata, and approximate spectra. The model assumes clear base, black substrate, and two coats; unreachable or high-disagreement colors are flagged.", target_color_selection: "Target Color", ral_search_label: "RAL Search", ral_search_placeholder: "Search code or name", ral_select_label: "Quick Selection", select_ral_code: "Select RAL Code", current_ral: "Current RAL:", color_value: "HEX Value:", paint_weight_adjustment: "Pigment Adjustment", volume_selection: "Base Volume:", volume_hint: "(Auto recalculate weights)", paint_ratio: "Mix Details", total_pigment_weight: "Total Pigment: ", varnish_usage: "Base Usage: ", per_liter_usage: "Per Liter: ", mixing_ratio: "Ratio: P:B = ", add_formula: "Fine-tune (+5%)", reset_formula: "Clear", recommended_recipes: "Recommended Recipes", package_preview_export: "Export & Preview", export_recipe: "Export TXT", copy_recipe: "Copy Recipe", share_recipe: "Share", recipe_includes_title: "Recipe Content", generate_recipe: "Generate AI Candidate", ral_palette: "RAL Palette", simulation_title: "Black-Substrate Model", delta_e_label: "Two-coat model dE", single_coat_label: "One coat", double_coat_label: "Two coats", candidate_section: "Model candidates", candidate_label: "Candidate", candidate_two_coat: "Two-coat model dE", candidate_active: "Active colorants", candidate_min_dose: "Minimum current-volume dose", candidate_stability: "Two-coat hiding / substrate shift", candidate_risk: "Model disagreement/risk", candidate_risk_low: "Lower model risk", candidate_risk_medium: "Model boundary", candidate_risk_high: "High model risk", candidate_policy: "Temporary uncalibrated model policy: 106g/L total, 0.5g/L grid, >=1.0g/L active, max4; recommendations prefer >=96% two-coat hiding and <=3 substrate shift; not verified for physical accuracy." },
+      ja: { subtitle: "スマート調色システム", disclaimer_title: "黒下地隠蔽シミュレーション", disclaimer_text: "14色の科莱恩色浆Lab参考値、サプライヤー公称湿潤密度、公開顔料番号、近似光谱を使用。透明ベース、黒下地、二層塗装を基準に評価し、到達困難またはモデル差が大きい色はリスクとして表示します。", target_color_selection: "ターゲット色", ral_search_label: "RAL検索", ral_search_placeholder: "コードまたは色名", ral_select_label: "クイック選択", select_ral_code: "RALコードを選択", current_ral: "現在のRAL:", color_value: "カラー值:", paint_weight_adjustment: "顔料重量调整", volume_selection: "ベース容量:", volume_hint: "(容量変更で重量を再计算)", paint_ratio: "混合详细", total_pigment_weight: "総顔料重量: ", varnish_usage: "ベース材: ", per_liter_usage: "1L当たり: ", mixing_ratio: "混合比: P:B = ", add_formula: "微调整 (+5%)", reset_formula: "クリア", recommended_recipes: "推奨配合", package_preview_export: "保存とプレビュー", export_recipe: "TXT保存", copy_recipe: "コピー", share_recipe: "共有", recipe_includes_title: "内容", generate_recipe: "AI候補配合を生成", ral_palette: "RALパレット", simulation_title: "黒下地モデル", delta_e_label: "二層モデル色差", single_coat_label: "一層黒下地", double_coat_label: "二層黒下地", candidate_section: "モデル候補", candidate_label: "候補", candidate_two_coat: "二層モデル dE", candidate_active: "活性色浆", candidate_min_dose: "現在の容量での最小量", candidate_stability: "二層隠蔽 / 黒白下地差", candidate_risk: "モデル差/リスク", candidate_risk_low: "低モデルリスク", candidate_risk_medium: "モデル境界", candidate_risk_high: "高モデルリスク", candidate_policy: "仮の未校正モデル方針：総量106g/L、0.5g/L グリッド、活性色浆 >=1.0g/L、最大4種。推奨は二層隠蔽96%以上・黒白下地差3以下を優先します。物理精度は未検証です。" }
     };
 
     const targetCatalogue = window.MooCowRalClassic;
@@ -424,6 +425,7 @@
             paintSlidersContainer: document.getElementById("paintSlidersContainer"),
             totalPigmentWeight: document.getElementById("totalPigmentWeight"),
             scoopEstimate: document.getElementById("scoopEstimate"),
+            totalPigmentVolume: document.getElementById("totalPigmentVolume"),
             perLiterAmount: document.getElementById("perLiterAmount"),
             mixingRatio: document.getElementById("mixingRatio"),
             addFormulaBtn: document.getElementById("addFormulaBtn"),
@@ -464,11 +466,24 @@
 
         function calculateTotals() {
             let total = 0;
-            document.querySelectorAll('#paintSlidersContainer input[type="range"]').forEach(s => total += Number(s.value));
+            const wetMassRecipe = {};
+            document.querySelectorAll('#paintSlidersContainer input[type="range"]').forEach(s => {
+                const mass = Number(s.value);
+                total += mass;
+                if (mass > 0) wetMassRecipe[s.dataset.paint] = mass;
+            });
             const factor = currentState.volumeFactor;
+            const totalWetVolume = recipeWetMassToVolumeMlOrNull(wetMassRecipe);
             
             elements.totalPigmentWeight.textContent = `${total.toFixed(2)}g`;
             if (elements.scoopEstimate) elements.scoopEstimate.textContent = `(约${Math.round(total / 50)}勺)`;
+            if (elements.totalPigmentVolume) {
+                const suffix = currentLanguage === 'zh' ? '湿体积（单位假定）' : currentLanguage === 'ja' ? '湿潤体積（単位は仮定）' : 'wet volume (unit assumed)';
+                const unavailable = currentLanguage === 'zh' ? '湿体积不可用' : currentLanguage === 'ja' ? '湿潤体積は利用不可' : 'wet volume unavailable';
+                elements.totalPigmentVolume.textContent = totalWetVolume === null
+                    ? unavailable
+                    : `≈${totalWetVolume.toFixed(2)}mL ${suffix}`;
+            }
             elements.perLiterAmount.textContent = factor > 0 ? `${(total / factor).toFixed(2)}g` : '0.00g';
             const ratio = total > 0 ? Math.round((total / (total + factor * 1000)) * 100) : 0;
             elements.mixingRatio.textContent = `${ratio} : ${100 - ratio}`;
@@ -488,6 +503,11 @@
             evaluateRecipe,
             normalizeRecipe,
             recipePercentToGpl,
+            wetMassToVolumeMl,
+            wetMassToVolumeMlOrNull,
+            wetVolumeToMassG,
+            recipeWetMassToVolumeMl,
+            recipeWetMassToVolumeMlOrNull,
             recipeGplToPercent,
             generateCandidates
         } = runtime;
@@ -759,7 +779,7 @@
                 const k = el.getAttribute('data-i18n-placeholder'); if (trans[k]) el.placeholder = trans[k]; 
             });
             
-            const includes = l === 'zh' ? ['RAL代码和颜色','14色浆精确重量','黑白基材一遍/两遍对比'] : l === 'en' ? ['RAL Code & Color','14 colorant weights','Black/white substrate comparison'] : ['RALコードと色','14色浆重量','黒白下地一層・二層比較'];
+            const includes = l === 'zh' ? ['RAL代码和颜色','14色浆湿重与体积换算','黑白基材一遍/两遍对比'] : l === 'en' ? ['RAL Code & Color','14 colorant wet-mass/volume conversions','Black/white substrate comparison'] : ['RALコードと色','14色浆の湿潤質量・体積換算','黒白下地一層・二層比較'];
             elements.recipeIncludesList.innerHTML = includes.map(t => `<li class="flex items-center gap-1.5"><i class="fa fa-check-circle text-green-500"></i>${t}</li>`).join('');
 
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === l));
@@ -779,10 +799,14 @@
             
             elements.paintSlidersContainer.innerHTML = Object.entries(PAINT_DATA).map(([code, p]) => {
                 let styleId = `style-${code}`;
+                const assumedUnit = currentLanguage === 'zh' ? '单位按g/mL假定' : currentLanguage === 'ja' ? '単位はg/mLと仮定' : 'unit assumed as g/mL';
+                const provisionalMapping = currentLanguage === 'zh' ? '密度映射待确认' : currentLanguage === 'ja' ? '密度対応は要確認' : 'density mapping provisional';
                 const sourceInfo = [
                   p.ci ? `CI ${p.ci}` : null,
+                  p.ciSupplierNumber ? `Supplier C.I. No. ${p.ciSupplierNumber}` : null,
                   p.pigmentContent ? `${p.pigmentContent}% pigment` : null,
-                  p.density ? `${p.density} g/cm3` : null,
+                  p.density ? `${p.density} g/mL wet (${assumedUnit})` : null,
+                  p.densityMappingStatus === 'provisional_brand_mismatch' ? provisionalMapping : null,
                   p.referenceConfidence ? `ref ${p.referenceConfidence}` : null
                 ].filter(Boolean).join(' / ');
                 if (!document.getElementById(styleId)) {
@@ -842,6 +866,12 @@
                     manualCandidate: '手动配方',
                     policy: '临时未校准政策',
                     policyDetail: '总量106g/L；0.5g/L 网格；活性色浆>=1.0g/L；最多4种；未验证设备政策或物理准确度。',
+                    wetVolume: '标称湿体积',
+                    totalWetVolume: '色浆标称湿体积合计',
+                    wetVolumeUnavailable: '湿体积不可用',
+                    densityUnitAssumption: '原表未标单位，按g/mL假定',
+                    provisionalDensityMapping: '密度映射待确认（原表Colanyl / 目录Ecosperse）',
+                    densityBoundary: '密度换算边界：mL = 湿重g ÷ 供应商标称湿密度；这不是固体体积、颜料体积或光谱校准。原表未标单位，本工具按g/mL（数值等同g/cm3）解释。',
                     spectralBoundary: '光谱数据边界：GOLDEN白底约6 mil干膜数据仅作精确C.I.旁路参考，不参与排序、不代表当前CN批次；数据页说明获准分享但未发布命名许可证。',
                     warning: '重要：以上均为屏幕模型估算，不是实测结果或生产验收结论。投产前必须制作实体刮样，并由仪器和人工复核。'
                 },
@@ -861,6 +891,12 @@
                     manualCandidate: 'Manual recipe',
                     policy: 'Temporary uncalibrated policy',
                     policyDetail: '106g/L total; 0.5g/L grid; >=1.0g/L active; max4; unverified equipment policy and physical accuracy.',
+                    wetVolume: 'Nominal wet volume',
+                    totalWetVolume: 'Total nominal colorant wet volume',
+                    wetVolumeUnavailable: 'Wet volume unavailable',
+                    densityUnitAssumption: 'workbook unit omitted; assumed as g/mL',
+                    provisionalDensityMapping: 'density mapping provisional (workbook Colanyl / catalog Ecosperse)',
+                    densityBoundary: 'Density boundary: mL = wet mass g / supplier nominal wet density. This is not solids volume, pigment volume, or spectral calibration. The workbook omits the unit; the tool interprets it as g/mL, numerically equal to g/cm3.',
                     spectralBoundary: 'Spectral-data boundary: GOLDEN white-card ~6 mil dry-film data are exact-C.I. side references only, not ranked and not current CN batches; the host states sharing permission but publishes no named licence.',
                     warning: 'IMPORTANT: All figures are screen-model estimates, not measurements or production acceptance. Make a physical drawdown and verify it instrumentally and visually before production.'
                 },
@@ -880,6 +916,12 @@
                     manualCandidate: '手動配合',
                     policy: '仮の未校正方針',
                     policyDetail: '総量106g/L；0.5g/L グリッド；活性色浆>=1.0g/L；最大4種；装置方針または物理精度は未検証。',
+                    wetVolume: '公称湿潤体積',
+                    totalWetVolume: '色浆公称湿潤体積合計',
+                    wetVolumeUnavailable: '湿潤体積は利用不可',
+                    densityUnitAssumption: '原表に単位なし、g/mLと仮定',
+                    provisionalDensityMapping: '密度対応は要確認（原表Colanyl / カタログEcosperse）',
+                    densityBoundary: '密度換算境界：mL = 湿潤質量g ÷ サプライヤー公称湿潤密度。固形分体積、顔料体積、スペクトル校正ではありません。原表に単位がないためg/mL（数値はg/cm3と同じ）として扱います。',
                     spectralBoundary: 'スペクトルデータ境界：GOLDENの白色カード上約6 mil乾燥膜データは完全一致C.I.の補助参照のみで、順位付けや現在のCNロットには使用しません。共有許可の記載はありますが、名称付きライセンスは未掲載です。',
                     warning: '重要：上記は画面上のモデル推定であり、実測値や生産合格判定ではありません。生産前に必ず実物の塗り板を作成し、測色計と目視で確認してください。'
                 }
@@ -887,6 +929,7 @@
             const labels = exportLabels[currentLanguage] || exportLabels.en;
             const selectedCandidate = currentState.generatedCandidates.find(candidate => candidate.id === currentState.selectedCandidateId);
             let t = `${labels.title} (${currentState.ral?.ral||'Custom'})\n${labels.volume}: ${currentState.volume.toUpperCase()}\n\n`;
+            const exportedWetMassRecipe = {};
             t += `${labels.candidate}: ${selectedCandidate ? getCandidateName(selectedCandidate) : labels.manualCandidate}\n`;
             t += `${labels.policy}: ${labels.policyDetail}\n${labels.spectralBoundary}\n\n`;
             Object.keys(PAINT_DATA).forEach(code => {
@@ -894,8 +937,15 @@
                 if (w > 0) {
                     const p = PAINT_DATA[code];
                     t += `- ${p[`name_${currentLanguage}`] || p.name_zh || code} (${code}): ${w.toFixed(2)}g`;
+                    exportedWetMassRecipe[code] = w;
+                    const wetVolume = wetMassToVolumeMlOrNull(code, w);
+                    t += wetVolume === null
+                        ? ` | ${labels.wetVolumeUnavailable}`
+                        : ` | ${labels.wetVolume} ${wetVolume.toFixed(2)}mL @ ${p.density}g/mL (${labels.densityUnitAssumption})`;
+                    if (p.densityMappingStatus === 'provisional_brand_mismatch') t += ` | ${labels.provisionalDensityMapping}`;
                     if (p.batchNo) t += ` | 批次 ${p.batchNo}`;
                     if (p.ci) t += ` | CI ${p.ci}`;
+                    if (p.ciSupplierNumber) t += ` | Supplier C.I. No. ${p.ciSupplierNumber}`;
                     if (p.pigmentContent) t += ` | 颜料 ${p.pigmentContent}%`;
                     if (p.referenceConfidence) t += ` | 光谱参考 ${p.referenceConfidence}`;
                     if (p.aliases?.length) t += ` | 供应商别名 ${p.aliases.join('/')}`;
@@ -903,6 +953,10 @@
                 }
             });
             t += `\n总重量: ${elements.totalPigmentWeight.textContent}`;
+            const exportedWetVolume = recipeWetMassToVolumeMlOrNull(exportedWetMassRecipe);
+            t += exportedWetVolume === null
+                ? `\n${labels.totalWetVolume}: ${labels.wetVolumeUnavailable}`
+                : `\n${labels.totalWetVolume}: ${exportedWetVolume.toFixed(2)}mL`;
             t += `\n配比 P:B = ${elements.mixingRatio.textContent}`;
             if (currentState.lastEvaluation) {
                 const e = currentState.lastEvaluation;
@@ -920,7 +974,7 @@
                 }
                 t += `\n${labels.status}: ${elements.hidingStatus.textContent}`;
             }
-            t += `\n\n${labels.warning}`;
+            t += `\n\n${labels.densityBoundary}\n${labels.warning}`;
             return t;
         }
 

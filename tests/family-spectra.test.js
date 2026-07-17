@@ -17,7 +17,7 @@ test('waterborne acrylic profiles are valid on the declared 30 nm grid', () => {
 test('only exact CIs present in the shared Golden source are bundled', () => {
   assert.deepEqual(Object.keys(FamilySpectra.PROFILES).sort(), ['PB15:3', 'PBk7', 'PG7', 'PR101', 'PR122', 'PR254', 'PV23', 'PY42', 'PY83'].sort());
   for (const value of Object.values(FamilySpectra.PROFILES)) assert.equal(value.status, 'exact_ci_waterborne_acrylic_reference');
-  for (const ci of ['PY74', 'PB15:1', 'PW6', 'PO13']) assert.equal(FamilySpectra.PROFILES[ci], undefined);
+  for (const ci of ['PY74', 'PB15:1', 'PW6', 'PO13', 'PO73']) assert.equal(FamilySpectra.PROFILES[ci], undefined);
 });
 
 test('all bundled profiles match the reproducible source manifest and full-profile digests', () => {

@@ -1,0 +1,149 @@
+{
+  "schema_version": "moocow-supplier-wet-density-v1",
+  "record_id": "supplier-colanyl-wet-density-20260717",
+  "received_date": "2026-07-17",
+  "source": {
+    "type": "supplier_provided_workbook",
+    "original_filename": "colany 色浆.xlsx",
+    "worksheet": "Sheet1",
+    "source_sha256": "ABCEB5AACB97E2C9287180AA27F60D7CC233C27A229034E1E914BB892C11905C",
+    "source_columns": [
+      "牌号",
+      "密度"
+    ],
+    "reported_unit": null,
+    "operational_unit": "g/mL",
+    "unit_interpretation": "The workbook omits the unit. Values are interpreted as wet product density in g/mL, numerically equal to g/cm3, pending an explicit supplier unit confirmation.",
+    "scope": "Product-grade nominal wet density. The workbook contains no batch IDs, solids, spectra, formula, method, temperature, or repeatability data.",
+    "redistribution": "Normalized values only; the original workbook is not included."
+  },
+  "identity_confirmations": [
+    {
+      "catalog_code": "R254D",
+      "product_name": "Colanyl DPP Red GD 131-CN",
+      "ci_generic_name": "PR254",
+      "evidence": "Supplier confirmation relayed by the user on 2026-07-17"
+    },
+    {
+      "catalog_code": "073",
+      "product_name": "Colanyl Orange D2R 100-CN",
+      "ci_generic_name": "PO73",
+      "supplier_reported_ci_number": "561170",
+      "evidence": "Supplier confirmation relayed by the user on 2026-07-17"
+    }
+  ],
+  "colorants": [
+    {
+      "catalog_code": "Y74S",
+      "source_label": "colany yellow 2GXD 130-CN",
+      "product_name": "Colanyl Yellow 2GXD 130-CN",
+      "wet_density_g_ml": 1.18,
+      "mapping_status": "normalized_product_match"
+    },
+    {
+      "catalog_code": "Y83S",
+      "source_label": "colany yellow HR 130-CN",
+      "product_name": "Colanyl Yellow HR 130-CN",
+      "wet_density_g_ml": 1.16,
+      "mapping_status": "normalized_product_match"
+    },
+    {
+      "catalog_code": "073",
+      "source_label": "colany orange D2R100-CN",
+      "product_name": "Colanyl Orange D2R 100-CN",
+      "wet_density_g_ml": 1.07,
+      "mapping_status": "normalized_product_match"
+    },
+    {
+      "catalog_code": "R254D",
+      "source_label": "colany DPP RED GD 131-CN",
+      "product_name": "Colanyl DPP Red GD 131-CN",
+      "wet_density_g_ml": 1.19,
+      "mapping_status": "normalized_product_match"
+    },
+    {
+      "catalog_code": "R122S",
+      "source_label": "colany pink E 100-CN",
+      "product_name": "Colanyl Pink E 100-CN",
+      "wet_density_g_ml": 1.09,
+      "mapping_status": "normalized_product_match"
+    },
+    {
+      "catalog_code": "R101Y",
+      "source_label": "colanyl oxide RED G 100-CN",
+      "product_name": "Colanyl Oxide Red G 100-CN",
+      "wet_density_g_ml": 2.01,
+      "mapping_status": "normalized_product_match"
+    },
+    {
+      "catalog_code": "R101V",
+      "source_label": "colanyl oxide RED BA 100-CN",
+      "product_name": "Ecosperse Oxide Red BA 100-CN",
+      "wet_density_g_ml": 2.25,
+      "mapping_status": "provisional_brand_mismatch_colanyl_in_workbook_ecosperse_in_catalog"
+    },
+    {
+      "catalog_code": "Y42S",
+      "source_label": "colanyl oxide yellow RA 100-CN",
+      "product_name": "Ecosperse Oxide Yellow RA 100-CN",
+      "wet_density_g_ml": 1.94,
+      "mapping_status": "provisional_brand_mismatch_colanyl_in_workbook_ecosperse_in_catalog"
+    },
+    {
+      "catalog_code": "BK7H",
+      "source_label": "colany black N131-CN",
+      "product_name": "Colanyl Black N 131-CN",
+      "wet_density_g_ml": 1.27,
+      "mapping_status": "normalized_product_match"
+    },
+    {
+      "catalog_code": "W064",
+      "source_label": "Colany white TQ 100-CN",
+      "product_name": "Colanyl White TQ 100-CN",
+      "wet_density_g_ml": 1.83,
+      "mapping_status": "normalized_product_match"
+    },
+    {
+      "catalog_code": "V23",
+      "source_label": "Colanyl Violet RL 131-CN",
+      "product_name": "Colanyl Violet RL 131-CN",
+      "wet_density_g_ml": 1.12,
+      "mapping_status": "normalized_product_match"
+    },
+    {
+      "catalog_code": "G7",
+      "source_label": "Colanyl Green GG 131-CN",
+      "product_name": "Colanyl Green GG 131-CN",
+      "wet_density_g_ml": 1.37,
+      "mapping_status": "normalized_product_match"
+    },
+    {
+      "catalog_code": "B150S",
+      "source_label": "colany blue A2R 131-CN",
+      "product_name": "Colanyl Blue A2R 131-CN",
+      "wet_density_g_ml": 1.21,
+      "mapping_status": "normalized_product_match"
+    },
+    {
+      "catalog_code": "B153S",
+      "source_label": "Colany blue B2G 132-CN",
+      "product_name": "Colanyl Blue B2G 132-CN",
+      "wet_density_g_ml": 1.21,
+      "mapping_status": "normalized_product_match"
+    }
+  ],
+  "calibration_boundary": {
+    "supports": [
+      "wet mass to wet product volume conversion",
+      "wet product volume to wet mass conversion",
+      "nominal density input to the uncalibrated hiding-screen model"
+    ],
+    "does_not_support": [
+      "spectral reflectance inference",
+      "K or S coefficient inference",
+      "nonvolatile volume conversion",
+      "pigment concentration inference",
+      "physical accuracy or production approval"
+    ]
+  }
+}

@@ -6,6 +6,10 @@ All notable changes to MooCow Mini Color Mixing Tool are documented here.
 
 ### Added
 
+- Added a normalized, hash-attributed supplier record for all 14 nominal wet
+  densities and deterministic wet-mass/wet-volume conversion helpers.
+- Added supplier-confirmed identity metadata for DPP Red GD (`PR254`) and
+  Orange D2R (`PO73`, supplier-reported C.I. number `561170`).
 - Added an offline finite-film, two-constant Kubelka-Munk calibration package
   with hash-bound receipts for pilot acquisition, open-measurement admission,
   open-selection fitting, independent-holdout activation, and laboratory-trial
@@ -17,6 +21,9 @@ All notable changes to MooCow Mini Color Mixing Tool are documented here.
 
 ### Changed
 
+- Replaced public-analog density values in the screen catalog with supplier
+  nominal wet densities and exposed the resulting mL equivalents in the UI and
+  TXT export without changing the 106 g/L wet-mass recipe policy.
 - Recipe and runtime continuity checks now fail closed when calibration evidence
   is absent, malformed, mutated, or not authorized for the requested stage.
 - Laboratory recipe candidates are re-evaluated on black and white substrates
@@ -30,6 +37,10 @@ All notable changes to MooCow Mini Color Mixing Tool are documented here.
   measured target, or claim physical drawdown accuracy.
 - Production promotion still requires real current-lot spectra, verified batch
   identity, physical drawdowns, and a separately sealed independent holdout.
+- The supplier workbook contains density values only and omits their unit,
+  method, temperature, batch identity, solids, and spectra. Values are treated
+  as nominal wet density in g/mL, not as evidence for K/S, nonvolatile volume,
+  physical accuracy, or production acceptance.
 
 ### Verification
 

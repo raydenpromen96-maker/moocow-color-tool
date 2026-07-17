@@ -169,6 +169,56 @@
       return Object.keys(catalog).find(key => (catalog[key].aliases || []).includes(code)) || code;
     }
 
+    function resolveWetDensity(paintCode) {
+      const code = resolvePaintCode(String(paintCode));
+      const pigment = catalog[code];
+      if (!pigment) throw new RangeError(`Unknown paint code: ${paintCode}`);
+      const density = Number(pigment.density);
+      if (!Number.isFinite(density) || density <= 0) {
+        throw new RangeError(`Missing positive wet density for paint code: ${code}`);
+      }
+      return { code, density };
+    }
+
+    function wetMassToVolumeMl(paintCode, wetMassG) {
+      const mass = Number(wetMassG);
+      if (!Number.isFinite(mass) || mass < 0) {
+        throw new RangeError('wet mass must be a finite non-negative number');
+      }
+      return mass / resolveWetDensity(paintCode).density;
+    }
+
+    function wetMassToVolumeMlOrNull(paintCode, wetMassG) {
+      try {
+        return wetMassToVolumeMl(paintCode, wetMassG);
+      } catch {
+        return null;
+      }
+    }
+
+    function wetVolumeToMassG(paintCode, wetVolumeMl) {
+      const volume = Number(wetVolumeMl);
+      if (!Number.isFinite(volume) || volume < 0) {
+        throw new RangeError('wet volume must be a finite non-negative number');
+      }
+      return volume * resolveWetDensity(paintCode).density;
+    }
+
+    function recipeWetMassToVolumeMl(recipe) {
+      if (!recipe || typeof recipe !== 'object' || Array.isArray(recipe)) {
+        throw new TypeError('wet-mass recipe must be an object');
+      }
+      return Object.entries(recipe).reduce((total, [code, mass]) => total + wetMassToVolumeMl(code, mass), 0);
+    }
+
+    function recipeWetMassToVolumeMlOrNull(recipe) {
+      try {
+        return recipeWetMassToVolumeMl(recipe);
+      } catch {
+        return null;
+      }
+    }
+
     function getRecipeEntries(recipe, options = {}) {
       const sum = Object.values(recipe || {}).reduce((total, value) => total + Math.max(0, Number(value) || 0), 0);
       if (sum <= 0) return [];
@@ -608,6 +658,11 @@
       constants: Object.freeze({ TOTAL_PIGMENT_PER_LITER, CANDIDATE_SEARCH_POLICY, CANDIDATE_SEARCH_BOUNDS, BLACK_SUBSTRATE_RGB, WHITE_SUBSTRATE_RGB }),
       preparePigments,
       resolvePaintCode,
+      wetMassToVolumeMl,
+      wetMassToVolumeMlOrNull,
+      wetVolumeToMassG,
+      recipeWetMassToVolumeMl,
+      recipeWetMassToVolumeMlOrNull,
       getRecipeEntries,
       simulateMix,
       calculateHidingAlpha,
