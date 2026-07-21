@@ -12,7 +12,9 @@ import qtcCatalogue from '../src/qtc-ral-classic.js';
 
 const EXPECTED_INPUT_SHA256 = '8d34f1e17067729d94566eb9778af14d91ee28b0b2ab850bae549e5f5de2aa64';
 const EXPECTED_COLOURS_SHA256 = 'f0eb5cdb548976d570c04e78c920e4b6f4b307d7398dfbaedb99af7d5a04ccc7';
-const EXPECTED_OUTPUT_SHA256 = '7e73bafb42aa59141f52c5cc8d0549f0e344990062a18b99fd158204236bd415';
+// v5: 引擎切换为实测/锚定代理光谱 + 有效颜料质量加权单常数 K-M（15 支色浆含 G36），
+// 输出全量变化，钉死值按 --record 模式重录（摘要：stableRecommended 216，fail 54）。
+const EXPECTED_OUTPUT_SHA256 = '68598c5e30ed2a68a62db89eb5ff7108333951ebfba87f55b439767bb7fc81dd';
 const RECORD_MODE = process.argv.includes('--record');
 
 function sha256(value) {

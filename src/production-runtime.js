@@ -12,22 +12,12 @@
     y: Object.freeze([0.000396, 0.0116, 0.06, 0.20802, 0.71, 0.9949501, 0.87, 0.503, 0.175, 0.032, 0.004102]),
     z: Object.freeze([0.06785001, 1.3856, 1.6692, 0.46518, 0.07824999, 0.00875, 0.00165, 0.00034, 0.00002, 0, 0])
   });
+  // 光谱配色模型（v5）：11 波长点（400-700nm 每 30nm）单常数 Kubelka-Munk。
+  // 反射率来自 src/family-spectra.js 的实测/锚定档案（GOLDEN 实测 9 支、
+  // CHSOS Pigments Checker 丙烯粘合剂实测 4 支、PG7 平移+官方本色锚定 1 支），
+  // 不再使用任何手工编造的近似曲线。混合权重 = 色浆克数 × 官方颜料含量%
+  // （有效颜料质量；水/乙二醇/助剂成膜后不占体积）。代理数据，待 45 卡实测校准替换。
   const REFERENCE_TRUST = Object.freeze({ high: 0.82, medium: 0.62, low: 0.42 });
-  const REFERENCE_SPECTRA = Object.freeze({
-    PY74: Object.freeze([0.06, 0.08, 0.12, 0.35, 0.72, 0.87, 0.90, 0.88, 0.84, 0.82, 0.80]),
-    PY83: Object.freeze([0.04, 0.05, 0.07, 0.18, 0.52, 0.82, 0.90, 0.88, 0.83, 0.77, 0.70]),
-    'PB15:1': Object.freeze([0.12, 0.20, 0.34, 0.25, 0.08, 0.035, 0.025, 0.022, 0.025, 0.030, 0.040]),
-    'PB15:3': Object.freeze([0.10, 0.22, 0.38, 0.34, 0.14, 0.050, 0.025, 0.022, 0.025, 0.030, 0.040]),
-    PG7: Object.freeze([0.04, 0.06, 0.08, 0.22, 0.42, 0.32, 0.08, 0.035, 0.025, 0.025, 0.030]),
-    PR254: Object.freeze([0.04, 0.04, 0.05, 0.06, 0.07, 0.12, 0.34, 0.62, 0.74, 0.72, 0.66]),
-    PR101: Object.freeze([0.08, 0.07, 0.07, 0.08, 0.10, 0.16, 0.28, 0.38, 0.45, 0.49, 0.50]),
-    PY42: Object.freeze([0.10, 0.11, 0.13, 0.18, 0.30, 0.45, 0.56, 0.58, 0.55, 0.50, 0.45]),
-    PO13: Object.freeze([0.05, 0.05, 0.06, 0.08, 0.14, 0.30, 0.62, 0.78, 0.76, 0.70, 0.62]),
-    PR122: Object.freeze([0.16, 0.22, 0.26, 0.18, 0.08, 0.06, 0.11, 0.30, 0.56, 0.64, 0.60]),
-    PV23: Object.freeze([0.18, 0.24, 0.30, 0.18, 0.07, 0.04, 0.05, 0.10, 0.18, 0.26, 0.32]),
-    PBk7: Object.freeze([0.020, 0.021, 0.021, 0.022, 0.023, 0.024, 0.025, 0.026, 0.027, 0.028, 0.030]),
-    PW6: Object.freeze([0.92, 0.93, 0.94, 0.95, 0.96, 0.96, 0.95, 0.95, 0.94, 0.94, 0.93])
-  });
   const TOTAL_PIGMENT_PER_LITER = 106;
   const CANDIDATE_SEARCH_POLICY = Object.freeze({ totalGpl: 106, gridGpl: 0.5, minActiveGpl: 1.0, maxActive: 4, candidateCount: 3 });
   const CANDIDATE_SEARCH_BOUNDS = Object.freeze({ maxSupports: 30, maxRefinementSteps: 60 });
@@ -51,8 +41,8 @@
   }
 
   const LEGACY_SCREENING_PROVENANCE = deepFreeze({
-    evidence_class: 'catalog_screen_approximation',
-    calibration_status: 'uncalibrated_screening_only',
+    evidence_class: 'proxy_measured_spectra_km_model',
+    calibration_status: 'uncalibrated_proxy_spectra_pending_drawdown_measurement',
     physical_accuracy_verified: false,
     measured_current_batch: false,
     runtime_activation_permitted: false
@@ -149,7 +139,7 @@
         pigment.effectiveStrength = (pigment.mixStrength || pigment.strength || 1.0) * (pigment.colorStrength || 1.0);
         const sourceSpectrum = Object.prototype.hasOwnProperty.call(pigment, 'referenceSpectrum')
           ? pigment.referenceSpectrum
-          : REFERENCE_SPECTRA[pigment.ci];
+          : (FamilySpectra?.PROFILES[pigment.ci]?.reflectance ?? null);
         pigment.referenceSpectrum = normalizeCurve(sourceSpectrum);
         pigment.familySpectralProfile = FamilySpectra?.PROFILES[pigment.ci] || null;
         pigment.spectralRgb = pigment.referenceSpectrum ? spectrumToRgb(pigment.referenceSpectrum) : pigment.physicsRgb;
@@ -219,6 +209,14 @@
       }
     }
 
+    // 配方每支色浆的 g/L → mL/L（用供应商标称湿密度换算；缺密度时该支为 null）
+    function recipeGplToMlPerL(recipeGpl) {
+      return Object.fromEntries(Object.entries(recipeGpl || {}).map(([code, gpl]) => [
+        code,
+        wetMassToVolumeMlOrNull(code, gpl)
+      ]));
+    }
+
     function getRecipeEntries(recipe, options = {}) {
       const sum = Object.values(recipe || {}).reduce((total, value) => total + Math.max(0, Number(value) || 0), 0);
       if (sum <= 0) return [];
@@ -260,7 +258,9 @@
       let totalWeight = 0;
       entries.forEach(({ weight, pigment }, entryIndex) => {
         const curve = curves[entryIndex];
-        const effectiveWeight = weight * (pigment.effectiveStrength || 1.0) * getPigmentLoadFactor(pigment);
+        // 有效颜料质量 = 色浆克数 × 官方颜料含量%（pigmentContent），与
+        // experiments/whatif-real-spectra.mjs 验证过的模型一致；未公开含量按 40% 兜底。
+        const effectiveWeight = weight * (Number(pigment.pigmentContent) || 40) / 100;
         totalWeight += effectiveWeight;
         curve.forEach((reflectance, index) => { ks[index] += effectiveWeight * getKS(reflectance); });
       });
@@ -274,6 +274,7 @@
     }
 
     function blendRgbModels(primaryRgb, secondaryRgb, primaryWeight) {
+      // 保留未使用：v5 起光谱模型直接呈色，不再按可信度与 3 通道模型混合。
       const weight = Math.max(0, Math.min(1, primaryWeight));
       return primaryRgb.map((channel, index) => {
         const primary = srgbToLinear(channel / 255);
@@ -285,14 +286,12 @@
     function simulateMix(recipe, options = {}) {
       const entries = getRecipeEntries(recipe, options);
       if (!entries.length) return [255, 255, 255];
-      const kmRgb = simulateMixKsRgb(entries);
+      // 11 点光谱 K-M 为主模型；任一支色浆缺实测光谱时整体回落到旧 3 通道
+      // K/S 近似（fail-closed，不用部分光谱归一化）。kmRgb 仍保留为模型分歧
+      // 指标 modelSpread 的对照，不再参与呈色。
       const referenceRgb = simulateMixReferenceSpectra(entries);
-      let output = kmRgb;
-      if (referenceRgb) {
-        const trust = Math.max(0.35, Math.min(0.76, estimateReferenceTrust(entries)));
-        output = blendRgbModels(referenceRgb, output, trust);
-      }
-      return output;
+      if (referenceRgb) return referenceRgb;
+      return simulateMixKsRgb(entries);
     }
 
     function calculateHidingAlpha(recipe, coats = 2, options = {}) {
@@ -643,6 +642,7 @@
             id: `model-candidate-${index + 1}`,
             recipeGpl,
             recipePercent: recipeGplToPercent(recipeGpl),
+            recipeMlPerL: recipeGplToMlPerL(recipeGpl),
             activeCount: Object.keys(recipeGpl).length,
             minDoseGpl: Math.min(...Object.values(recipeGpl))
           };
@@ -663,6 +663,7 @@
       wetVolumeToMassG,
       recipeWetMassToVolumeMl,
       recipeWetMassToVolumeMlOrNull,
+      recipeGplToMlPerL,
       getRecipeEntries,
       simulateMix,
       calculateHidingAlpha,

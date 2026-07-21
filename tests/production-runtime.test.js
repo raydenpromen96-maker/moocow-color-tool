@@ -12,24 +12,28 @@ const PaintCatalog = require('../src/paint-catalog.js');
 const ProductionRuntime = require('../src/production-runtime.js');
 const qtcCatalogue = require('../src/qtc-ral-classic.js');
 
+// v5 重录：引擎从"编造 REFERENCE_SPECTRA + 3 通道混合"切换为"实测/锚定代理光谱 +
+// 有效颜料质量加权单常数 K-M"，候选配方与指标全部改变，代表色哈希按新引擎重录。
 const REPRESENTATIVE_HASHES = Object.freeze({
-  "1021": "7bdcb69ee7b04d536e98524e124cd11982a40b7e6e23e6f056db7405a4fb6966",
-  "1035": "465c20bfbd7bbce42e5054847c5a7f51ebdc8afc5111b313694aef30ea0cc708",
-  "2004": "5f226e65e79b7192fde4f03c6d483067d06e01916f9691f26d87e578a9a4286b",
-  "3020": "efa6c5ceb154e9167aa9081f5a41fd6776c2ee50fd1fb95092f8b675355598c3",
-  "4005": "4935f1a12d2c61a4b4877c82b22e577075fa2c297691dd63ca2b1e4936b1d2e4",
-  "5005": "0ed9729f2b45895a6c7b042dd8eadd3f171b784d566e7f1caea836da88beb2df",
-  "5015": "bca119d835c1d73b7a834c47ba451acfe2fb6bdae8d452b5329237056bb9dd90",
-  "6005": "a5d52db893866668c5638d8c7c6879b135832a947ef73e0bdc4b02e4dc99f880",
-  "6037": "8514432e6c248994532a50a4d7dfa6fcfd49e65e1c204529c58c23f1c6454ed6",
-  "7035": "b95baa0105d00625c563a59425ef123450ed10724c63331464088e0d7e82b065",
-  "8004": "7029a48955cacdcf3d44b77949116f24e5e9e83b10028640b3e870ec35e4aee3",
-  "9005": "7511c8728ee4102589d2018e725f8387c83924613ecb778d752c7863d129c4d6",
-  "9010": "fb6d07cca7dc899a3f60700d413ad19643ff7d3e887a78adbb7fbad89cca363d"
+  "1021": "4be03d2182c4d059b24871e74ff7a566ee30b4cb3b751124f50e08eed5fbb137",
+  "1035": "0e9c8b281f107c6a14217bd54cab213004d288d98609f3429f2d2c9280384b43",
+  "2004": "497c90c43af1fd787e8d2eee53a605bf1afa51d82dbafc2dfb6555c4ddbb08bf",
+  "3020": "f36ccb4e894126fbc0d44b434ad4a1d3776d577a0d6aca4f0474d744866d88f9",
+  "4005": "6ff2896c5090dc0c962c74932e663769cae70eafef59f35d822e1c483b3b979a",
+  "5005": "1d57ee0edb96d798579b3b3bee314ee1d3f64b6fca66aa82281859af0cbbac50",
+  "5015": "8703ccc536eeca03bc9ee7bd59eb3c6c68c86629dde3d29f8c9b344f5b1a51ea",
+  "6005": "9878611db3ac8776afc6259cb6876422fd4addc23934a90da870517b31981c08",
+  "6037": "9055b93a768ee519bd9bc3edffe8bf3459357fd92af45dd13bc0ddaa389909d2",
+  "7035": "b5e61bcfd4be805be961d254b62afd67b83baa9867f520b3b952c52bd2ab4167",
+  "8004": "2e9895f0a998f27ba16242f1aa8046491992aee174ab2f36b415305be3669f46",
+  "9005": "f90410b829a9fe6fffa05a68f3ab6a9ed19afde5a55298902469de0f394625e2",
+  "9010": "19992bc29bde374a43feaa963452abf8aa84254a8727ba25b1ca9914e550c189"
 });
+// v5: 引擎改用实测/锚定代理光谱 + 有效颜料质量加权的单常数 K-M，
+// 但仍是未校准代理模型（等待 45 卡实测），provenance 文案相应更新。
 const LEGACY_SCREENING_PROVENANCE = Object.freeze({
-  evidence_class: 'catalog_screen_approximation',
-  calibration_status: 'uncalibrated_screening_only',
+  evidence_class: 'proxy_measured_spectra_km_model',
+  calibration_status: 'uncalibrated_proxy_spectra_pending_drawdown_measurement',
   physical_accuracy_verified: false,
   measured_current_batch: false,
   runtime_activation_permitted: false
@@ -78,7 +82,7 @@ test('runtime is a DOM-free UMD factory with injected dependencies', () => {
   assert.deepEqual(Object.keys(browserContext.MooCowProductionRuntime), ['create']);
   assert.throws(() => ProductionRuntime.create({}), /requires ColorCore, RecipeSearch, and paintCatalog/);
   const runtime = createRuntime();
-  assert.equal(Object.keys(runtime.catalog).length, 14);
+  assert.equal(Object.keys(runtime.catalog).length, 15);
   assert.equal(Object.isFrozen(runtime.catalog), true);
   Object.values(runtime.catalog).forEach(pigment => assert.equal(Object.isFrozen(pigment), true));
   assert.equal(runtime.preparePigments(), runtime.catalog);

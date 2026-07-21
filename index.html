@@ -356,13 +356,17 @@
      * ==========================================
      */
     const TRANSLATIONS = {
-      zh: { subtitle: "智能调色助手", disclaimer_title: "黑底遮盖模拟引擎", disclaimer_text: "已载入14个科莱恩色浆Lab参考值、供应商标称湿密度、公开颜料索引和近似光谱数据。默认按黑色基材、清漆体系和两遍施工评估；无法覆盖或模型分歧大的颜色会提示风险。", target_color_selection: "目标颜色选择", ral_search_label: "RAL代码搜索", ral_search_placeholder: "输入代码或颜色名", ral_select_label: "RAL快速选择", select_ral_code: "选择RAL代码", current_ral: "当前RAL:", color_value: "颜色值:", paint_weight_adjustment: "颜料重量调节", volume_selection: "基料容量:", volume_hint: "(切换容量自动换算重量)", paint_ratio: "混合详情", total_pigment_weight: "总颜料重量: ", varnish_usage: "基料用量: ", per_liter_usage: "每升用量: ", mixing_ratio: "混合比例: P:B = ", add_formula: "微调 (+5%)", reset_formula: "清空颜料", recommended_recipes: "推荐配方库 (点击加载)", package_preview_export: "预览与导出", export_recipe: "导出 TXT", copy_recipe: "复制配方", share_recipe: "快捷分享", recipe_includes_title: "配方包含", generate_recipe: "生成AI候选配方", ral_palette: "RAL 颜色全集", simulation_title: "黑底模型估算", delta_e_label: "两遍模型色差", single_coat_label: "一遍黑底", double_coat_label: "两遍黑底", candidate_section: "模型候选", candidate_label: "候选", candidate_two_coat: "两遍模型 dE", candidate_active: "活性色浆", candidate_min_dose: "当前容量最小剂量", candidate_stability: "两遍遮盖 / 黑白底差", candidate_risk: "模型分歧/风险", candidate_risk_low: "模型低风险", candidate_risk_medium: "模型边界", candidate_risk_high: "模型高风险", candidate_policy: "临时未校准模型政策：总量106g/L，0.5g/L 网格，活性色浆≥1.0g/L，最多4种；候选优先满足两遍遮盖≥96%、黑白底差≤3；非设备或物理准确度验证。" },
-      en: { subtitle: "Smart Mixing Assistant", disclaimer_title: "Black-Substrate Hiding Engine", disclaimer_text: "Loaded 14 Clariant colorant Lab references, supplier nominal wet densities, public pigment-index metadata, and approximate spectra. The model assumes clear base, black substrate, and two coats; unreachable or high-disagreement colors are flagged.", target_color_selection: "Target Color", ral_search_label: "RAL Search", ral_search_placeholder: "Search code or name", ral_select_label: "Quick Selection", select_ral_code: "Select RAL Code", current_ral: "Current RAL:", color_value: "HEX Value:", paint_weight_adjustment: "Pigment Adjustment", volume_selection: "Base Volume:", volume_hint: "(Auto recalculate weights)", paint_ratio: "Mix Details", total_pigment_weight: "Total Pigment: ", varnish_usage: "Base Usage: ", per_liter_usage: "Per Liter: ", mixing_ratio: "Ratio: P:B = ", add_formula: "Fine-tune (+5%)", reset_formula: "Clear", recommended_recipes: "Recommended Recipes", package_preview_export: "Export & Preview", export_recipe: "Export TXT", copy_recipe: "Copy Recipe", share_recipe: "Share", recipe_includes_title: "Recipe Content", generate_recipe: "Generate AI Candidate", ral_palette: "RAL Palette", simulation_title: "Black-Substrate Model", delta_e_label: "Two-coat model dE", single_coat_label: "One coat", double_coat_label: "Two coats", candidate_section: "Model candidates", candidate_label: "Candidate", candidate_two_coat: "Two-coat model dE", candidate_active: "Active colorants", candidate_min_dose: "Minimum current-volume dose", candidate_stability: "Two-coat hiding / substrate shift", candidate_risk: "Model disagreement/risk", candidate_risk_low: "Lower model risk", candidate_risk_medium: "Model boundary", candidate_risk_high: "High model risk", candidate_policy: "Temporary uncalibrated model policy: 106g/L total, 0.5g/L grid, >=1.0g/L active, max4; recommendations prefer >=96% two-coat hiding and <=3 substrate shift; not verified for physical accuracy." },
-      ja: { subtitle: "スマート調色システム", disclaimer_title: "黒下地隠蔽シミュレーション", disclaimer_text: "14色の科莱恩色浆Lab参考値、サプライヤー公称湿潤密度、公開顔料番号、近似光谱を使用。透明ベース、黒下地、二層塗装を基準に評価し、到達困難またはモデル差が大きい色はリスクとして表示します。", target_color_selection: "ターゲット色", ral_search_label: "RAL検索", ral_search_placeholder: "コードまたは色名", ral_select_label: "クイック選択", select_ral_code: "RALコードを選択", current_ral: "現在のRAL:", color_value: "カラー值:", paint_weight_adjustment: "顔料重量调整", volume_selection: "ベース容量:", volume_hint: "(容量変更で重量を再计算)", paint_ratio: "混合详细", total_pigment_weight: "総顔料重量: ", varnish_usage: "ベース材: ", per_liter_usage: "1L当たり: ", mixing_ratio: "混合比: P:B = ", add_formula: "微调整 (+5%)", reset_formula: "クリア", recommended_recipes: "推奨配合", package_preview_export: "保存とプレビュー", export_recipe: "TXT保存", copy_recipe: "コピー", share_recipe: "共有", recipe_includes_title: "内容", generate_recipe: "AI候補配合を生成", ral_palette: "RALパレット", simulation_title: "黒下地モデル", delta_e_label: "二層モデル色差", single_coat_label: "一層黒下地", double_coat_label: "二層黒下地", candidate_section: "モデル候補", candidate_label: "候補", candidate_two_coat: "二層モデル dE", candidate_active: "活性色浆", candidate_min_dose: "現在の容量での最小量", candidate_stability: "二層隠蔽 / 黒白下地差", candidate_risk: "モデル差/リスク", candidate_risk_low: "低モデルリスク", candidate_risk_medium: "モデル境界", candidate_risk_high: "高モデルリスク", candidate_policy: "仮の未校正モデル方針：総量106g/L、0.5g/L グリッド、活性色浆 >=1.0g/L、最大4種。推奨は二層隠蔽96%以上・黒白下地差3以下を優先します。物理精度は未検証です。" }
+      zh: { subtitle: "智能调色助手", disclaimer_title: "黑底遮盖模拟引擎", disclaimer_text: "已载入15支色浆（14支科莱恩CN系列+1支PG36待采购）的Lab参考值、供应商标称湿密度、GOLDEN/CHSOS实测代理光谱和科莱恩官方颜料含量%。光谱为代理数据（GOLDEN白卡刮膜实测9支、CHSOS Pigments Checker丙烯粘合剂实测4支、PG7平移+官方本色锚定PG36），投产前需按45卡实测校准替换。默认按黑色基材、清漆体系和两遍施工评估；无法覆盖或模型分歧大的颜色会提示风险。", target_color_selection: "目标颜色选择", ral_search_label: "RAL代码搜索", ral_search_placeholder: "输入代码或颜色名", ral_select_label: "RAL快速选择", select_ral_code: "选择RAL代码", current_ral: "当前RAL:", color_value: "颜色值:", paint_weight_adjustment: "颜料重量调节", volume_selection: "基料容量:", volume_hint: "(切换容量自动换算重量)", paint_ratio: "混合详情", total_pigment_weight: "总颜料重量: ", varnish_usage: "基料用量: ", per_liter_usage: "每升用量: ", mixing_ratio: "混合比例: P:B = ", add_formula: "微调 (+5%)", reset_formula: "清空颜料", recommended_recipes: "推荐配方库 (点击加载)", package_preview_export: "预览与导出", export_recipe: "导出 TXT", copy_recipe: "复制配方", share_recipe: "快捷分享", recipe_includes_title: "配方包含", generate_recipe: "生成AI候选配方", ral_palette: "RAL 颜色全集", simulation_title: "黑底模型估算", delta_e_label: "两遍模型色差", single_coat_label: "一遍黑底", double_coat_label: "两遍黑底", candidate_section: "模型候选", candidate_label: "候选", candidate_two_coat: "两遍模型 dE", candidate_active: "活性色浆", candidate_min_dose: "当前容量最小剂量", candidate_stability: "两遍遮盖 / 黑白底差", candidate_risk: "模型分歧/风险", candidate_risk_low: "模型低风险", candidate_risk_medium: "模型边界", candidate_risk_high: "模型高风险", candidate_policy: "临时未校准模型政策：总量106g/L，0.5g/L 网格，活性色浆≥1.0g/L，最多4种；候选优先满足两遍遮盖≥96%、黑白底差≤3；非设备或物理准确度验证。" },
+      en: { subtitle: "Smart Mixing Assistant", disclaimer_title: "Black-Substrate Hiding Engine", disclaimer_text: "Loaded 15 colorants (14 Clariant CN series + 1 PG36 pending purchase) with Lab references, supplier nominal wet densities, GOLDEN/CHSOS measured proxy spectra, and official Clariant pigment contents. Spectra are proxy data (9 GOLDEN white-card drawdowns, 4 CHSOS Pigments Checker acrylic-binder measurements, PG36 from a PG7 shift fit anchored to the official masstone Lab) and must be replaced by measured 45-card calibration before production. The model assumes clear base, black substrate, and two coats; unreachable or high-disagreement colors are flagged.", target_color_selection: "Target Color", ral_search_label: "RAL Search", ral_search_placeholder: "Search code or name", ral_select_label: "Quick Selection", select_ral_code: "Select RAL Code", current_ral: "Current RAL:", color_value: "HEX Value:", paint_weight_adjustment: "Pigment Adjustment", volume_selection: "Base Volume:", volume_hint: "(Auto recalculate weights)", paint_ratio: "Mix Details", total_pigment_weight: "Total Pigment: ", varnish_usage: "Base Usage: ", per_liter_usage: "Per Liter: ", mixing_ratio: "Ratio: P:B = ", add_formula: "Fine-tune (+5%)", reset_formula: "Clear", recommended_recipes: "Recommended Recipes", package_preview_export: "Export & Preview", export_recipe: "Export TXT", copy_recipe: "Copy Recipe", share_recipe: "Share", recipe_includes_title: "Recipe Content", generate_recipe: "Generate AI Candidate", ral_palette: "RAL Palette", simulation_title: "Black-Substrate Model", delta_e_label: "Two-coat model dE", single_coat_label: "One coat", double_coat_label: "Two coats", candidate_section: "Model candidates", candidate_label: "Candidate", candidate_two_coat: "Two-coat model dE", candidate_active: "Active colorants", candidate_min_dose: "Minimum current-volume dose", candidate_stability: "Two-coat hiding / substrate shift", candidate_risk: "Model disagreement/risk", candidate_risk_low: "Lower model risk", candidate_risk_medium: "Model boundary", candidate_risk_high: "High model risk", candidate_policy: "Temporary uncalibrated model policy: 106g/L total, 0.5g/L grid, >=1.0g/L active, max4; recommendations prefer >=96% two-coat hiding and <=3 substrate shift; not verified for physical accuracy." },
+      ja: { subtitle: "スマート調色システム", disclaimer_title: "黒下地隠蔽シミュレーション", disclaimer_text: "15色の色浆（科莱恩CNシリーズ14色+PG36 1色・未購入）のLab参考値、サプライヤー公称湿潤密度、GOLDEN/CHSOS実測プロキシスペクトル、科莱恩公式顔料含有率を使用。スペクトルはプロキシデータ（GOLDEN白カード実測9色、CHSOS Pigments Checker アクリル粘合剤実測4色、PG7シフト+公式マスストーンLabアンカーのPG36）であり、生産前に45カード実測校正で置き換える必要があります。透明ベース、黒下地、二層塗装を基準に評価し、到達困難またはモデル差が大きい色はリスクとして表示します。", target_color_selection: "ターゲット色", ral_search_label: "RAL検索", ral_search_placeholder: "コードまたは色名", ral_select_label: "クイック選択", select_ral_code: "RALコードを選択", current_ral: "現在のRAL:", color_value: "カラー值:", paint_weight_adjustment: "顔料重量调整", volume_selection: "ベース容量:", volume_hint: "(容量変更で重量を再计算)", paint_ratio: "混合详细", total_pigment_weight: "総顔料重量: ", varnish_usage: "ベース材: ", per_liter_usage: "1L当たり: ", mixing_ratio: "混合比: P:B = ", add_formula: "微调整 (+5%)", reset_formula: "クリア", recommended_recipes: "推奨配合", package_preview_export: "保存とプレビュー", export_recipe: "TXT保存", copy_recipe: "コピー", share_recipe: "共有", recipe_includes_title: "内容", generate_recipe: "AI候補配合を生成", ral_palette: "RALパレット", simulation_title: "黒下地モデル", delta_e_label: "二層モデル色差", single_coat_label: "一層黒下地", double_coat_label: "二層黒下地", candidate_section: "モデル候補", candidate_label: "候補", candidate_two_coat: "二層モデル dE", candidate_active: "活性色浆", candidate_min_dose: "現在の容量での最小量", candidate_stability: "二層隠蔽 / 黒白下地差", candidate_risk: "モデル差/リスク", candidate_risk_low: "低モデルリスク", candidate_risk_medium: "モデル境界", candidate_risk_high: "高モデルリスク", candidate_policy: "仮の未校正モデル方針：総量106g/L、0.5g/L グリッド、活性色浆 >=1.0g/L、最大4種。推奨は二層隠蔽96%以上・黒白下地差3以下を優先します。物理精度は未検証です。" }
     };
 
     const targetCatalogue = window.MooCowRalClassic;
-    const ralPaintMap = window.MooCowPaintCatalog.buildTargets(targetCatalogue);
+    // 物理不可调的效果色：荧光色（1026/2005/2007/3024/3026/6038）、珠光色（6035/6036）与铝粉金属色（9006/9007）。
+    // 常规色浆无法复现荧光/珠光/金属效果，从选色与配方生成体系中移除，避免给出虚假配方。
+    const EXCLUDED_EFFECT_CODES = new Set(['1026', '2005', '2007', '3024', '3026', '6038', '6035', '6036', '9006', '9007']);
+    const ralPaintMap = window.MooCowPaintCatalog.buildTargets(targetCatalogue)
+      .filter(color => !EXCLUDED_EFFECT_CODES.has(color.code));
     const runtime = window.MooCowProductionRuntime.create({
       ColorCore: window.MooCowColorCore,
       RecipeSearch: window.MooCowRecipeSearch,
@@ -382,7 +386,7 @@
       double_coat_label: "两遍黑底",
       white_two_coat_label: "两遍白底",
       substrate_shift_label: "黑白基材差异",
-      target_source_notice: "目标色采用千通彩 QTC 计算机模拟参考值；不同设备显示会有差异，生产请以最新实物色卡确认。"
+      target_source_notice: "目标色采用千通彩 QTC 计算机模拟参考值；不同设备显示会有差异，生产请以最新实物色卡确认。荧光色（1026/2005/2007/3024/3026/6038）、珠光色（6035/6036）与铝粉金属色（9006/9007）为效果色，常规色浆物理上无法复现，已从本工具移除。"
     });
     Object.assign(TRANSLATIONS.en, {
       simulation_title: "Black / White Substrate Model",
@@ -390,7 +394,7 @@
       double_coat_label: "Black substrate, 2 coats",
       white_two_coat_label: "White substrate, 2 coats",
       substrate_shift_label: "Black-white substrate shift",
-      target_source_notice: "Target colours use QTC computer-simulated screen references. Displays vary; confirm production work against a current physical colour card."
+      target_source_notice: "Target colours use QTC computer-simulated screen references. Displays vary; confirm production work against a current physical colour card. Fluorescent (1026/2005/2007/3024/3026/6038), pearlescent (6035/6036) and metallic aluminium (9006/9007) shades are effect colours that conventional colorants cannot reproduce and have been removed from this tool."
     });
     Object.assign(TRANSLATIONS.ja, {
       simulation_title: "黒白下地モデル",
@@ -398,7 +402,7 @@
       double_coat_label: "黒下地二層",
       white_two_coat_label: "白下地二層",
       substrate_shift_label: "黒白下地差",
-      target_source_notice: "ターゲット色はQTCのコンピュータシミュレーション参考値です。生産時は最新の実物色見本で確認してください。"
+      target_source_notice: "ターゲット色はQTCのコンピュータシミュレーション参考値です。生産時は最新の実物色見本で確認してください。蛍光色（1026/2005/2007/3024/3026/6038）、パール色（6035/6036）、アルミ金属色（9006/9007）は効果色のため通常の色浆では再現できず、本ツールから除外しました。"
     });
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -512,6 +516,12 @@
             generateCandidates
         } = runtime;
 
+        // 克数 + 毫升双单位显示（mL = 湿重 g ÷ 供应商标称湿密度）
+        function doseText(code, grams) {
+            const ml = wetMassToVolumeMlOrNull(code, grams);
+            return ml === null ? `${grams.toFixed(2)}g` : `${grams.toFixed(2)}g≈${ml.toFixed(2)}mL`;
+        }
+
         function updateVisualMix() {
             let currentRecipe = {};
             let totalW = 0;
@@ -548,10 +558,10 @@
                 elements.doubleCoatSwatch.style.backgroundColor = '#000000';
                 elements.whiteTwoCoatSwatch.style.backgroundColor = '#FFFFFF';
                 elements.simulationNote.textContent = currentLanguage === 'zh'
-                    ? '对比黑白基材上的一遍/两遍施工；本版会融合公开颜料号近似光谱、Lab批次值和遮盖力数据。'
+                    ? '对比黑白基材上的一遍/两遍施工；本版用 GOLDEN/CHSOS 实测代理光谱（11 点单常数 K-M）按官方颜料含量%加权配色，结合 Lab 批次值和遮盖力数据；代理数据待 45 卡实测校准替换。'
                     : currentLanguage === 'ja'
-                      ? '黒白下地での一層・二層塗装を比較します。公開顔料番号の近似光谱、Labロット値、隠蔽力を併用します。'
-                      : 'Compares one- and two-coat results on black and white substrates using public pigment-index spectral approximations with Lab, batch strength, and hiding data.';
+                      ? '黒白下地での一層・二層塗装を比較します。GOLDEN/CHSOS 実測プロキシスペクトル（11点・単一定数K-M）を公式顔料含有率で重み付けして配色し、Labロット値と隠蔽力を併用します。プロキシデータは45カード実測校正で置き換え予定です。'
+                      : 'Compares one- and two-coat results on black and white substrates using GOLDEN/CHSOS measured proxy spectra (11-point single-constant K-M) weighted by official pigment contents, with Lab batch values and hiding data; proxy data pending 45-card measured calibration.';
                 return;
             }
 
@@ -594,11 +604,12 @@
             const confidencePct = Math.round((evaluation.referenceTrust || 0) * 100);
             const familyCoverage = evaluation.familySpectralCoverage;
             const exactPct = Math.round((familyCoverage?.exactFraction || 0) * 100);
+            const proxyPct = Math.round((familyCoverage?.proxyFraction || 0) * 100);
             const familyGap = familyCoverage?.missingCi?.length ? familyCoverage.missingCi.join('/') : 'none';
             const spreadRisk = evaluation.modelSpread >= 13;
-            const noteZh = `黑底一遍dE2000=${evaluation.singleDE.toFixed(2)}，黑底两遍dE2000=${evaluation.dE.toFixed(2)}，白底两遍dE2000=${evaluation.whiteDE.toFixed(2)}，黑白基材差异dE=${evaluation.substrateShift.toFixed(2)}，模型分歧dE=${evaluation.modelSpread.toFixed(2)}，参考可信度=${confidencePct}%。GOLDEN水性丙烯酸实测家族参考覆盖=${exactPct}%，缺口=${familyGap}；数据为白色Leneta卡上约6 mil干膜，只按精确C.I.作旁路参考，不参与候选排序，也不代表当前CN批次。来源页说明GOLDEN允许分享，但未发布命名数据许可证。${spreadRisk ? '模型分歧偏大，必须刮样确认。' : ''}${evaluation.grade === 'fail' ? '建议加白浆/底漆/膜厚或重新打样。' : '仍需用实际刮样校准。'}`;
-            const noteEn = `Black one-coat dE2000=${evaluation.singleDE.toFixed(2)}, black two-coat dE2000=${evaluation.dE.toFixed(2)}, white two-coat dE2000=${evaluation.whiteDE.toFixed(2)}, black-white substrate shift dE=${evaluation.substrateShift.toFixed(2)}, model spread dE=${evaluation.modelSpread.toFixed(2)}, reference confidence=${confidencePct}%. GOLDEN measured waterborne-acrylic family-reference coverage=${exactPct}%, gaps=${familyGap}; data were measured over a white Leneta card at about 6 mil dry film and are exact-C.I. side references only. They do not rank candidates or represent the current CN batches. The source page states that Golden allowed sharing but publishes no named data licence. ${spreadRisk ? 'Model disagreement is high; confirm with a physical drawdown. ' : ''}${evaluation.grade === 'fail' ? 'Use white hiding paste, primer, more film thickness, or re-sample.' : 'Still calibrate with a physical drawdown.'}`;
-            const noteJa = `黒下地一層dE2000=${evaluation.singleDE.toFixed(2)}、黒下地二層dE2000=${evaluation.dE.toFixed(2)}、白下地二層dE2000=${evaluation.whiteDE.toFixed(2)}、黒白下地差dE=${evaluation.substrateShift.toFixed(2)}、モデル差dE=${evaluation.modelSpread.toFixed(2)}、参考信頼度=${confidencePct}%。GOLDEN水性アクリル実測ファミリー参照カバレッジ=${exactPct}%、不足=${familyGap}。白色Lenetaカード上の約6 mil乾燥膜データで、完全一致C.I.の補助参照のみです。候補順位には使わず、現在のCNロットを表すものでもありません。出典ページには共有許可の記載がありますが、名称付きデータライセンスは掲載されていません。${spreadRisk ? 'モデル差が大きいため、必ず実塗装で確認してください。' : ''}${evaluation.grade === 'fail' ? '白色隠蔽材、下塗り、膜厚、再試験が必要です。' : '実塗装サンプルで校正してください。'}`;
+            const noteZh = `黑底一遍dE2000=${evaluation.singleDE.toFixed(2)}，黑底两遍dE2000=${evaluation.dE.toFixed(2)}，白底两遍dE2000=${evaluation.whiteDE.toFixed(2)}，黑白基材差异dE=${evaluation.substrateShift.toFixed(2)}，模型分歧dE=${evaluation.modelSpread.toFixed(2)}，参考可信度=${confidencePct}%。光谱覆盖：GOLDEN实测=${exactPct}%，CHSOS/锚定代理=${proxyPct}%，缺口=${familyGap}；代理光谱按科莱恩官方颜料含量%加权参与配色，但不代表当前CN批次，投产前需按45卡实测校准替换。来源页说明GOLDEN允许分享，但未发布命名数据许可证。${spreadRisk ? '模型分歧偏大，必须刮样确认。' : ''}${evaluation.grade === 'fail' ? '建议加白浆/底漆/膜厚或重新打样。' : '仍需用实际刮样校准。'}`;
+            const noteEn = `Black one-coat dE2000=${evaluation.singleDE.toFixed(2)}, black two-coat dE2000=${evaluation.dE.toFixed(2)}, white two-coat dE2000=${evaluation.whiteDE.toFixed(2)}, black-white substrate shift dE=${evaluation.substrateShift.toFixed(2)}, model spread dE=${evaluation.modelSpread.toFixed(2)}, reference confidence=${confidencePct}%. Spectral coverage: GOLDEN measured=${exactPct}%, CHSOS/anchored proxy=${proxyPct}%, gaps=${familyGap}; proxy spectra are weighted by official Clariant pigment contents for ranking but do not represent the current CN batches and must be replaced by measured 45-card calibration before production. The source page states that Golden allowed sharing but publishes no named data licence. ${spreadRisk ? 'Model disagreement is high; confirm with a physical drawdown. ' : ''}${evaluation.grade === 'fail' ? 'Use white hiding paste, primer, more film thickness, or re-sample.' : 'Still calibrate with a physical drawdown.'}`;
+            const noteJa = `黒下地一層dE2000=${evaluation.singleDE.toFixed(2)}、黒下地二層dE2000=${evaluation.dE.toFixed(2)}、白下地二層dE2000=${evaluation.whiteDE.toFixed(2)}、黒白下地差dE=${evaluation.substrateShift.toFixed(2)}、モデル差dE=${evaluation.modelSpread.toFixed(2)}、参考信頼度=${confidencePct}%。スペクトルカバレッジ：GOLDEN実測=${exactPct}%、CHSOS/アンカープロキシ=${proxyPct}%、不足=${familyGap}。プロキシスペクトルは科莱恩公式顔料含有率で重み付けして配色に使用しますが、現在のCNロットを表すものではなく、生産前に45カード実測校正で置き換えが必要です。出典ページには共有許可の記載がありますが、名称付きデータライセンスは掲載されていません。${spreadRisk ? 'モデル差が大きいため、必ず実塗装で確認してください。' : ''}${evaluation.grade === 'fail' ? '白色隠蔽材、下塗り、膜厚、再試験が必要です。' : '実塗装サンプルで校正してください。'}`;
             elements.simulationNote.textContent = currentLanguage === 'zh' ? noteZh : currentLanguage === 'ja' ? noteJa : noteEn;
         }
 
@@ -639,7 +650,7 @@
                 const slider = document.getElementById(`slider${code}`);
                 if (slider) {
                     slider.value = val;
-                    document.getElementById(`value${code}`).textContent = `${val.toFixed(2)}g`;
+                    document.getElementById(`value${code}`).textContent = doseText(code, val);
                 }
             });
             calculateTotals(); updatePaintChart();
@@ -779,7 +790,7 @@
                 const k = el.getAttribute('data-i18n-placeholder'); if (trans[k]) el.placeholder = trans[k]; 
             });
             
-            const includes = l === 'zh' ? ['RAL代码和颜色','14色浆湿重与体积换算','黑白基材一遍/两遍对比'] : l === 'en' ? ['RAL Code & Color','14 colorant wet-mass/volume conversions','Black/white substrate comparison'] : ['RALコードと色','14色浆の湿潤質量・体積換算','黒白下地一層・二層比較'];
+            const includes = l === 'zh' ? ['RAL代码和颜色','15色浆湿重与体积换算（1支PG36待采购）','黑白基材一遍/两遍对比'] : l === 'en' ? ['RAL Code & Color','15 colorant wet-mass/volume conversions (PG36 pending purchase)','Black/white substrate comparison'] : ['RALコードと色','15色浆の湿潤質量・体積換算（PG36は未購入）','黒白下地一層・二層比較'];
             elements.recipeIncludesList.innerHTML = includes.map(t => `<li class="flex items-center gap-1.5"><i class="fa fa-check-circle text-green-500"></i>${t}</li>`).join('');
 
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === l));
@@ -800,12 +811,14 @@
             elements.paintSlidersContainer.innerHTML = Object.entries(PAINT_DATA).map(([code, p]) => {
                 let styleId = `style-${code}`;
                 const assumedUnit = currentLanguage === 'zh' ? '单位按g/mL假定' : currentLanguage === 'ja' ? '単位はg/mLと仮定' : 'unit assumed as g/mL';
+                const estimatedDensity = currentLanguage === 'zh' ? '密度为估计值' : currentLanguage === 'ja' ? '密度は推定値' : 'density estimated';
+                const estimatedContent = currentLanguage === 'zh' ? '含量为估计' : currentLanguage === 'ja' ? '含有率は推定' : 'content estimated';
                 const provisionalMapping = currentLanguage === 'zh' ? '密度映射待确认' : currentLanguage === 'ja' ? '密度対応は要確認' : 'density mapping provisional';
                 const sourceInfo = [
                   p.ci ? `CI ${p.ci}` : null,
                   p.ciSupplierNumber ? `Supplier C.I. No. ${p.ciSupplierNumber}` : null,
-                  p.pigmentContent ? `${p.pigmentContent}% pigment` : null,
-                  p.density ? `${p.density} g/mL wet (${assumedUnit})` : null,
+                  p.pigmentContent ? `${p.pigmentContent}% pigment${p.pigmentContentStatus === 'estimated_unpublished' ? ` (${estimatedContent})` : ''}` : null,
+                  p.density ? `${p.density} g/mL wet (${p.densityUnitStatus === 'estimated_not_measured' ? estimatedDensity : assumedUnit})` : null,
                   p.densityMappingStatus === 'provisional_brand_mismatch' ? provisionalMapping : null,
                   p.referenceConfidence ? `ref ${p.referenceConfidence}` : null
                 ].filter(Boolean).join(' / ');
@@ -860,7 +873,7 @@
                     substrate: '黑白基材差异 dE2000',
                     spread: '模型分歧 dE2000',
                     confidence: '模型参考可信度',
-                    familyEvidence: 'GOLDEN水性丙烯酸家族参考覆盖',
+                    familyEvidence: '光谱覆盖（GOLDEN实测 / CHSOS·锚定代理）',
                     status: '模型状态',
                     candidate: '已选模型候选',
                     manualCandidate: '手动配方',
@@ -870,9 +883,11 @@
                     totalWetVolume: '色浆标称湿体积合计',
                     wetVolumeUnavailable: '湿体积不可用',
                     densityUnitAssumption: '原表未标单位，按g/mL假定',
+                    densityEstimated: '密度为估计值（待采购实测）',
+                    contentEstimated: '含量为估计',
                     provisionalDensityMapping: '密度映射待确认（原表Colanyl / 目录Ecosperse）',
                     densityBoundary: '密度换算边界：mL = 湿重g ÷ 供应商标称湿密度；这不是固体体积、颜料体积或光谱校准。原表未标单位，本工具按g/mL（数值等同g/cm3）解释。',
-                    spectralBoundary: '光谱数据边界：GOLDEN白底约6 mil干膜数据仅作精确C.I.旁路参考，不参与排序、不代表当前CN批次；数据页说明获准分享但未发布命名许可证。',
+                    spectralBoundary: '光谱数据边界：光谱为代理数据——GOLDEN白底约6 mil干膜实测（9支）、CHSOS Pigments Checker丙烯粘合剂实测（4支，chsopensource.org）、PG7平移+官方本色Lab锚定（PG36）——按科莱恩官方颜料含量%折算有效颜料质量参与配色排序，但不代表当前CN批次；投产前必须按45卡实测校准替换。GOLDEN数据页说明获准分享但未发布命名许可证。',
                     warning: '重要：以上均为屏幕模型估算，不是实测结果或生产验收结论。投产前必须制作实体刮样，并由仪器和人工复核。'
                 },
                 en: {
@@ -885,7 +900,7 @@
                     substrate: 'Black-white substrate shift dE2000',
                     spread: 'Model disagreement dE2000',
                     confidence: 'Model reference confidence',
-                    familyEvidence: 'GOLDEN waterborne-acrylic family-reference coverage',
+                    familyEvidence: 'Spectral coverage (GOLDEN measured / CHSOS-anchored proxy)',
                     status: 'Model status',
                     candidate: 'Selected model candidate',
                     manualCandidate: 'Manual recipe',
@@ -895,9 +910,11 @@
                     totalWetVolume: 'Total nominal colorant wet volume',
                     wetVolumeUnavailable: 'Wet volume unavailable',
                     densityUnitAssumption: 'workbook unit omitted; assumed as g/mL',
+                    densityEstimated: 'density estimated (pending purchase measurement)',
+                    contentEstimated: 'content estimated',
                     provisionalDensityMapping: 'density mapping provisional (workbook Colanyl / catalog Ecosperse)',
                     densityBoundary: 'Density boundary: mL = wet mass g / supplier nominal wet density. This is not solids volume, pigment volume, or spectral calibration. The workbook omits the unit; the tool interprets it as g/mL, numerically equal to g/cm3.',
-                    spectralBoundary: 'Spectral-data boundary: GOLDEN white-card ~6 mil dry-film data are exact-C.I. side references only, not ranked and not current CN batches; the host states sharing permission but publishes no named licence.',
+                    spectralBoundary: 'Spectral-data boundary: spectra are proxy data — GOLDEN white-card ~6 mil dry-film measurements (9), CHSOS Pigments Checker acrylic-binder measurements (4, chsopensource.org), and PG36 from a PG7 shift fit anchored to the official masstone Lab — weighted by official Clariant pigment contents for ranking, but they do not represent current CN batches; replace with measured 45-card calibration before production. The GOLDEN page states sharing permission but publishes no named licence.',
                     warning: 'IMPORTANT: All figures are screen-model estimates, not measurements or production acceptance. Make a physical drawdown and verify it instrumentally and visually before production.'
                 },
                 ja: {
@@ -910,7 +927,7 @@
                     substrate: '黒白下地差 dE2000',
                     spread: 'モデル差 dE2000',
                     confidence: 'モデル参考信頼度',
-                    familyEvidence: 'GOLDEN水性アクリル・ファミリー参照カバレッジ',
+                    familyEvidence: 'スペクトルカバレッジ（GOLDEN実測 / CHSOS・アンカープロキシ）',
                     status: 'モデル状態',
                     candidate: '選択したモデル候補',
                     manualCandidate: '手動配合',
@@ -920,9 +937,11 @@
                     totalWetVolume: '色浆公称湿潤体積合計',
                     wetVolumeUnavailable: '湿潤体積は利用不可',
                     densityUnitAssumption: '原表に単位なし、g/mLと仮定',
+                    densityEstimated: '密度は推定値（購入後に実測）',
+                    contentEstimated: '含有率は推定',
                     provisionalDensityMapping: '密度対応は要確認（原表Colanyl / カタログEcosperse）',
                     densityBoundary: '密度換算境界：mL = 湿潤質量g ÷ サプライヤー公称湿潤密度。固形分体積、顔料体積、スペクトル校正ではありません。原表に単位がないためg/mL（数値はg/cm3と同じ）として扱います。',
-                    spectralBoundary: 'スペクトルデータ境界：GOLDENの白色カード上約6 mil乾燥膜データは完全一致C.I.の補助参照のみで、順位付けや現在のCNロットには使用しません。共有許可の記載はありますが、名称付きライセンスは未掲載です。',
+                    spectralBoundary: 'スペクトルデータ境界：スペクトルはプロキシデータです（GOLDEN白色カード上約6 mil乾燥膜実測9色、CHSOS Pigments Checkerアクリル粘合剤実測4色・chsopensource.org、PG7シフト+公式マスストーンLabアンカーのPG36）。科莱恩公式顔料含有率で有効顔料質量に換算して順位付けに使用しますが、現在のCNロットを表すものではありません。生産前に45カード実測校正で置き換えてください。GOLDENのページには共有許可の記載がありますが、名称付きライセンスは未掲載です。',
                     warning: '重要：上記は画面上のモデル推定であり、実測値や生産合格判定ではありません。生産前に必ず実物の塗り板を作成し、測色計と目視で確認してください。'
                 }
             };
@@ -941,12 +960,12 @@
                     const wetVolume = wetMassToVolumeMlOrNull(code, w);
                     t += wetVolume === null
                         ? ` | ${labels.wetVolumeUnavailable}`
-                        : ` | ${labels.wetVolume} ${wetVolume.toFixed(2)}mL @ ${p.density}g/mL (${labels.densityUnitAssumption})`;
+                        : ` | ${labels.wetVolume} ${wetVolume.toFixed(2)}mL @ ${p.density}g/mL (${p.densityUnitStatus === 'estimated_not_measured' ? labels.densityEstimated : labels.densityUnitAssumption})`;
                     if (p.densityMappingStatus === 'provisional_brand_mismatch') t += ` | ${labels.provisionalDensityMapping}`;
                     if (p.batchNo) t += ` | 批次 ${p.batchNo}`;
                     if (p.ci) t += ` | CI ${p.ci}`;
                     if (p.ciSupplierNumber) t += ` | Supplier C.I. No. ${p.ciSupplierNumber}`;
-                    if (p.pigmentContent) t += ` | 颜料 ${p.pigmentContent}%`;
+                    if (p.pigmentContent) t += ` | 颜料 ${p.pigmentContent}%${p.pigmentContentStatus === 'estimated_unpublished' ? ` (${labels.contentEstimated})` : ''}`;
                     if (p.referenceConfidence) t += ` | 光谱参考 ${p.referenceConfidence}`;
                     if (p.aliases?.length) t += ` | 供应商别名 ${p.aliases.join('/')}`;
                     t += `\n`;
@@ -970,7 +989,8 @@
                 if (e.familySpectralCoverage) {
                     const f = e.familySpectralCoverage;
                     const gaps = f.missingCi.length ? f.missingCi.join('/') : 'none';
-                    t += `\n${labels.familyEvidence}: exact-C.I. ${Math.round(f.exactFraction * 100)}% | gaps ${gaps} | reference only, not ranked, not current CN batches`;
+                    const proxies = f.proxyCi?.length ? f.proxyCi.join('/') : 'none';
+                    t += `\n${labels.familyEvidence}: GOLDEN exact ${Math.round(f.exactFraction * 100)}% | CHSOS/anchored proxy ${Math.round((f.proxyFraction || 0) * 100)}% (${proxies}) | gaps ${gaps} | proxy data weighted by official pigment contents, not current CN batches, pending 45-card calibration`;
                 }
                 t += `\n${labels.status}: ${elements.hidingStatus.textContent}`;
             }
@@ -1007,7 +1027,7 @@
                 if (Number(slider.value) > 0) { 
                     slider.disabled = false;
                     slider.value = (Number(slider.value) * 1.05).toFixed(2); 
-                    document.getElementById(`value${slider.dataset.paint}`).textContent = `${Number(slider.value).toFixed(2)}g`; 
+                    document.getElementById(`value${slider.dataset.paint}`).textContent = doseText(slider.dataset.paint, Number(slider.value)); 
                     changed = true; 
                 }
             });
@@ -1023,7 +1043,7 @@
             if (e.target.type === 'range') { 
                 currentState.generatedRecipe = null;
                 clearGeneratedCandidates();
-                document.getElementById(`value${e.target.dataset.paint}`).textContent = `${Number(e.target.value).toFixed(2)}g`; 
+                document.getElementById(`value${e.target.dataset.paint}`).textContent = doseText(e.target.dataset.paint, Number(e.target.value)); 
                 calculateTotals(); updatePaintChart(); 
             }
         });

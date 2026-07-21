@@ -11,32 +11,49 @@ function createRuntime(paintCatalog = PaintCatalog.PAINT_DATA) {
   return ProductionRuntime.create({ ColorCore, RecipeSearch, FamilySpectra, paintCatalog });
 }
 
-test('073 remains on the K/S path when a supported pigment is added', () => {
+test('a pigment without a spectral profile stays on the K/S path even beside a supported pigment', () => {
+  // v5: 073 现在自带 CHSOS 实测代理光谱；改用"去掉 CI 的克隆目录"验证 fail-closed 语义不变。
   const runtime = createRuntime();
-  const withoutBlueReference = structuredClone(PaintCatalog.PAINT_DATA);
-  withoutBlueReference.B153S.ci = null;
-  const controlRuntime = createRuntime(withoutBlueReference);
-  const pure = runtime.evaluateRecipe({ '073': 100 }, '#EF7622');
-  const mixed = runtime.evaluateRecipe({ '073': 99, B153S: 1 }, '#EF7622');
-  const controlMixed = controlRuntime.evaluateRecipe({ '073': 99, B153S: 1 }, '#EF7622');
+  const withoutOrangeProfile = structuredClone(PaintCatalog.PAINT_DATA);
+  withoutOrangeProfile['073'].ci = null;
+  const controlRuntime = createRuntime(withoutOrangeProfile);
+  const pure = controlRuntime.evaluateRecipe({ '073': 100 }, '#EF7622');
+  const mixed = controlRuntime.evaluateRecipe({ '073': 99, B153S: 1 }, '#EF7622');
 
   assert.equal(pure.referenceRgb, null);
   assert.equal(mixed.referenceRgb, null);
   assert.equal(mixed.referenceTrust, 0);
   assert.deepEqual(mixed.topRgb, mixed.kmRgb);
-  assert.deepEqual(mixed.topRgb, controlMixed.topRgb);
-  assert.ok(mixed.topRgb[0] < pure.topRgb[0]);
+  // 完整目录下同一配方走 11 点光谱路径（两支均有实测/代理光谱）
+  const spectralMixed = runtime.evaluateRecipe({ '073': 99, B153S: 1 }, '#EF7622');
+  assert.notEqual(spectralMixed.referenceRgb, null);
+  assert.ok(spectralMixed.referenceTrust > 0);
+  assert.notDeepEqual(spectralMixed.topRgb, mixed.topRgb);
 });
 
 test('unsupported active coverage fails closed instead of normalizing a partial spectrum', () => {
-  const runtime = createRuntime();
+  const withoutOrangeProfile = structuredClone(PaintCatalog.PAINT_DATA);
+  withoutOrangeProfile['073'].ci = null;
+  const runtime = createRuntime(withoutOrangeProfile);
   const evaluation = runtime.evaluateRecipe({ '073': 99, B153S: 1 }, '#EF7622');
 
   assert.equal(evaluation.referenceRgb, null);
   assert.equal(evaluation.referenceTrust, 0);
   assert.equal(evaluation.familySpectralCoverage.exactFraction, 0.01);
   assert.equal(evaluation.familySpectralCoverage.missingFraction, 0.99);
-  assert.deepEqual(evaluation.familySpectralCoverage.missingCi, ['PO73']);
+  assert.deepEqual(evaluation.familySpectralCoverage.missingCi, ['CI-unverified']);
+  assert.equal(evaluation.familySpectralCoverage.predictiveEligible, false);
+});
+
+test('measured-proxy coverage is reported as proxy, never promoted to exact', () => {
+  const runtime = createRuntime();
+  const evaluation = runtime.evaluateRecipe({ '073': 99, B153S: 1 }, '#EF7622');
+
+  assert.notEqual(evaluation.referenceRgb, null);
+  assert.equal(evaluation.familySpectralCoverage.exactFraction, 0.01);
+  assert.equal(evaluation.familySpectralCoverage.proxyFraction, 0.99);
+  assert.deepEqual(evaluation.familySpectralCoverage.proxyCi, ['PO73']);
+  assert.equal(evaluation.familySpectralCoverage.missingFraction, 0);
   assert.equal(evaluation.familySpectralCoverage.predictiveEligible, false);
 });
 
@@ -64,8 +81,10 @@ test('runtime evaluation keeps floating-point mix and substrate values until dis
   assert.equal(ColorCore.rgbToHex(evaluation.double.rgb), ColorCore.rgbToHex(roundedDouble));
 });
 
-test('fail-closed floating-point evaluation remains deterministic', () => {
-  const runtime = createRuntime();
+test('fail-closed fallback evaluation remains deterministic', () => {
+  const withoutOrangeProfile = structuredClone(PaintCatalog.PAINT_DATA);
+  withoutOrangeProfile['073'].ci = null;
+  const runtime = createRuntime(withoutOrangeProfile);
   const recipe = { '073': 99, B153S: 1 };
   const expected = JSON.stringify(runtime.evaluateRecipe(recipe, '#EF7622'));
 

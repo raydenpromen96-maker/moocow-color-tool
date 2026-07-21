@@ -14,17 +14,34 @@ test('waterborne acrylic profiles are valid on the declared 30 nm grid', () => {
   }
 });
 
-test('only exact CIs present in the shared Golden source are bundled', () => {
-  assert.deepEqual(Object.keys(FamilySpectra.PROFILES).sort(), ['PB15:3', 'PBk7', 'PG7', 'PR101', 'PR122', 'PR254', 'PV23', 'PY42', 'PY83'].sort());
-  for (const value of Object.values(FamilySpectra.PROFILES)) assert.equal(value.status, 'exact_ci_waterborne_acrylic_reference');
-  for (const ci of ['PY74', 'PB15:1', 'PW6', 'PO13', 'PO73']) assert.equal(FamilySpectra.PROFILES[ci], undefined);
+test('profiles bundle the nine exact Golden CIs plus declared measured/anchored proxies', () => {
+  // v5: 新增 4 支 CHSOS 实测代理（PY74/PB15:1/PO73/PW6）+ 1 支 PG7 平移锚定（PG36），
+  // 替换原先引擎内手工编造的近似曲线；全部为代理数据，待 45 卡实测校准替换。
+  assert.deepEqual(
+    Object.keys(FamilySpectra.PROFILES).sort(),
+    ['PB15:1', 'PB15:3', 'PBk7', 'PG7', 'PG36', 'PO73', 'PR101', 'PR122', 'PR254', 'PV23', 'PW6', 'PY42', 'PY74', 'PY83'].sort()
+  );
+  const golden = Object.values(FamilySpectra.PROFILES).filter(p => p.status === 'exact_ci_waterborne_acrylic_reference');
+  assert.deepEqual(golden.map(p => p.ci).sort(), ['PB15:3', 'PBk7', 'PG7', 'PR101', 'PR122', 'PR254', 'PV23', 'PY42', 'PY83'].sort());
+  for (const ci of ['PY74', 'PB15:1', 'PO73', 'PW6']) {
+    assert.equal(FamilySpectra.PROFILES[ci].status, 'chsos_measured_acrylic_proxy_reference');
+    assert.equal(FamilySpectra.PROFILES[ci].sourceId, FamilySpectra.CHSOS_SOURCE.id);
+  }
+  const pg36 = FamilySpectra.PROFILES.PG36;
+  assert.equal(pg36.status, 'pg7_shift_masstone_anchored_proxy_reference');
+  assert.equal(pg36.sourceId, FamilySpectra.PG36_SOURCE.id);
+  assert.deepEqual(pg36.source.anchorLab, [27.82, -11.83, -0.17]);
 });
 
-test('all bundled profiles match the reproducible source manifest and full-profile digests', () => {
+test('all bundled Golden profiles match the reproducible source manifest and full-profile digests', () => {
   assert.deepEqual(manifest.source.wavelengths, FamilySpectra.WAVELENGTHS);
   assert.equal(manifest.source.zipSha256, FamilySpectra.SOURCE.sourceZipSha256);
   assert.equal(manifest.source.workbookSha256, FamilySpectra.SOURCE.spreadsheetSha256);
-  assert.deepEqual(Object.keys(manifest.profiles).sort(), Object.keys(FamilySpectra.PROFILES).sort());
+  // manifest 只覆盖 GOLDEN 来源档案；CHSOS/PG36 代理档案另有来源声明，不在该 manifest 内。
+  const goldenProfiles = Object.fromEntries(
+    Object.entries(FamilySpectra.PROFILES).filter(([, p]) => p.sourceId === FamilySpectra.SOURCE.id)
+  );
+  assert.deepEqual(Object.keys(manifest.profiles).sort(), Object.keys(goldenProfiles).sort());
 
   for (const [ci, expected] of Object.entries(manifest.profiles)) {
     const actual = FamilySpectra.PROFILES[ci];
@@ -36,16 +53,17 @@ test('all bundled profiles match the reproducible source manifest and full-profi
   }
 });
 
-test('coverage is weighted and unsupported or unverified CIs fail closed', () => {
+test('coverage separates exact, measured-proxy, and unsupported CIs and fails closed', () => {
   const coverage = FamilySpectra.summarizeCoverage([
     { ci: 'PY83', fraction: 0.5 },
     { ci: 'PB15:3', fraction: 0.25 },
-    { ci: null, fraction: 0.25 }
+    { ci: 'PO73', fraction: 0.125 },
+    { ci: null, fraction: 0.125 }
   ]);
   assert.equal(coverage.exactFraction, 0.75);
-  assert.equal(coverage.proxyFraction, 0);
-  assert.equal(coverage.missingFraction, 0.25);
-  assert.deepEqual(coverage.proxyCi, []);
+  assert.equal(coverage.proxyFraction, 0.125);
+  assert.equal(coverage.missingFraction, 0.125);
+  assert.deepEqual(coverage.proxyCi, ['PO73']);
   assert.deepEqual(coverage.missingCi, ['CI-unverified']);
   assert.equal(coverage.predictiveEligible, false);
 });

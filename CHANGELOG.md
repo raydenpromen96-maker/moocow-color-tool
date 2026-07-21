@@ -2,6 +2,61 @@
 
 All notable changes to MooCow Mini Color Mixing Tool are documented here.
 
+## [Unreleased] - spectral engine v5
+
+### Added
+
+- Added measured proxy spectra to `src/family-spectra.js`: 4 CHSOS Pigments
+  Checker acrylic-binder measurements (PY74, PB15:1, PO73, PW6 rutile,
+  resampled to the 11-point 400-700 nm grid and hardcoded with source
+  attribution) and PG36 as a GOLDEN-measured PG7 curve shifted +23 nm and
+  anchored to the GOLDEN official PG36 masstone Lab (27.82, -11.83, -0.17,
+  fit error 0.32). All proxy data is marked pending 45-card measured
+  calibration.
+- Added a 15th colorant G36 (PG36, `pending_purchase`) with estimated
+  pigment content (30%) and estimated density (1.35 g/mL), both flagged as
+  estimates in catalog fields, the UI, and the TXT export.
+- Added official Clariant pigment-content values for R254D (50%) and 073
+  (30%, estimated) and corrected W064 to 55% (estimated; the previous 70%
+  was the White R 130 analog, inconsistent with the 1.83 wet density).
+- Recipe candidates now carry `recipeMlPerL` (per-colorant mL/L from
+  supplier wet densities), and the UI dose readouts show grams and mL
+  together.
+
+### Changed
+
+- The production engine (`src/production-runtime.js`) now evaluates colour
+  with an 11-wavelength single-constant Kubelka-Munk model over the bundled
+  measured/proxy spectra, weighted by effective pigment mass (colorant grams
+  x official pigment content %), replacing the fabricated REFERENCE_SPECTRA
+  table and the 3-channel trust blend. The legacy 3-channel K/S model is
+  kept only as the modelSpread divergence indicator.
+- Runtime provenance updated to `proxy_measured_spectra_km_model` /
+  `uncalibrated_proxy_spectra_pending_drawdown_measurement`; still not
+  verified for physical accuracy.
+- Validation: `experiments/validate-engine.mjs` scores the production
+  engine's first-choice recipes for all 216 RAL targets against the measured
+  -spectra truth function from `experiments/whatif-real-spectra.mjs`:
+  mean dE2000 4.19, median 3.60, 119/216 above 3 dE (acceptance: mean <= 5;
+  oracle bound 3.51).
+- Re-pinned deterministic fixtures after the engine change:
+  `tests/production-runtime.test.js` representative hashes (13 RAL codes)
+  and `scripts/ral-216-regression.mjs` `EXPECTED_OUTPUT_SHA256`
+  (new summary: stableRecommended 216/216, grades 29/39/94/54).
+- Test updates with documented causes: catalog and runtime catalog sizes
+  14 -> 15 (G36 added); fail-closed continuity tests now null out a CI in a
+  cloned catalog because 073 gained a real CHSOS proxy spectrum; the
+  supplier-density test scopes the dated supplier record to the 14 purchased
+  colorants while G36 keeps explicit estimated-density provenance; the
+  family-spectra manifest test compares only GOLDEN-sourced profiles.
+
+### Safety boundary
+
+- Spectra remain proxy data (GOLDEN white-card drawdowns, CHSOS acrylic
+  samples, one anchored extrapolation); they do not represent current
+  Clariant CN batches and must be replaced by measured 45-card calibration
+  before any production use.
+
 ## [Unreleased] - 2026-07-15
 
 ### Added

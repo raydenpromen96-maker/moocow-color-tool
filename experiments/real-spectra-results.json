@@ -1,0 +1,3335 @@
+{
+  "disclaimer": "合成模拟结果，非物理实测，不可用于生产配方。真值=CHSOS+GOLDEN实测光谱的单常数K-M混合；实测样本非科莱恩Colanyl批次。",
+  "spectraSources": {
+    "Y83S": "GOLDEN实测",
+    "Y74S": "CHSOS实测",
+    "B150S": "CHSOS实测",
+    "B153S": "GOLDEN实测",
+    "R254D": "GOLDEN实测",
+    "R101Y": "GOLDEN实测",
+    "R101V": "GOLDEN实测",
+    "Y42S": "GOLDEN实测",
+    "073": "CHSOS实测",
+    "W064": "CHSOS实测",
+    "V23": "GOLDEN实测",
+    "G7": "GOLDEN实测",
+    "R122S": "GOLDEN实测",
+    "BK7H": "GOLDEN实测"
+  },
+  "summary": {
+    "currentModel": {
+      "mean": 14.420945103671833,
+      "median": 14.208908172440909,
+      "p90": 23.791799918338224,
+      "max": 40.517265410668706,
+      "over3": 209,
+      "over1": 216
+    },
+    "oracle15": {
+      "mean": 3.600904407675834,
+      "median": 2.688380909267401,
+      "p90": 8.037676428275052,
+      "max": 16.328298244985216,
+      "over3": 101,
+      "over1": 169
+    }
+  },
+  "results": [
+    {
+      "code": "1000",
+      "currentRecipe": {
+        "073": 14,
+        "V23": 6,
+        "W064": 64,
+        "Y74S": 22
+      },
+      "currentTruthDE": 22.224599824004297,
+      "oracleRecipe": {
+        "G36": 2.5,
+        "W064": 93,
+        "Y83S": 10.5
+      },
+      "oracleTruthDE": 3.2473651144808993
+    },
+    {
+      "code": "1011",
+      "currentRecipe": {
+        "R101Y": 10.5,
+        "V23": 13.5,
+        "W064": 21.5,
+        "Y83S": 60.5
+      },
+      "currentTruthDE": 10.485640752605244,
+      "oracleRecipe": {
+        "R122S": 6,
+        "Y42S": 100
+      },
+      "oracleTruthDE": 1.456610424711076
+    },
+    {
+      "code": "1019",
+      "currentRecipe": {
+        "073": 32.5,
+        "V23": 20,
+        "W064": 32.5,
+        "Y74S": 21
+      },
+      "currentTruthDE": 22.30211195927399,
+      "oracleRecipe": {
+        "B150S": 6.5,
+        "W064": 80.5,
+        "Y83S": 19
+      },
+      "oracleTruthDE": 2.6183054821725773
+    },
+    {
+      "code": "1032",
+      "currentRecipe": {
+        "R101V": 3.5,
+        "R254D": 2.5,
+        "W064": 11.5,
+        "Y83S": 88.5
+      },
+      "currentTruthDE": 14.965828631610401,
+      "oracleRecipe": {
+        "R101V": 5.5,
+        "Y74S": 100.5
+      },
+      "oracleTruthDE": 2.0421125872710837
+    },
+    {
+      "code": "2002",
+      "currentRecipe": {
+        "073": 1,
+        "R101Y": 67,
+        "R254D": 8,
+        "Y83S": 30
+      },
+      "currentTruthDE": 6.7965209119524905,
+      "oracleRecipe": {
+        "073": 95,
+        "R122S": 11
+      },
+      "oracleTruthDE": 2.3774050278136944
+    },
+    {
+      "code": "2011",
+      "currentRecipe": {
+        "R101Y": 7.5,
+        "R254D": 28,
+        "W064": 16.5,
+        "Y83S": 54
+      },
+      "currentTruthDE": 16.66547248701812,
+      "oracleRecipe": {
+        "073": 8,
+        "R101V": 12,
+        "Y83S": 86
+      },
+      "oracleTruthDE": 2.6246068632980752
+    },
+    {
+      "code": "3004",
+      "currentRecipe": {
+        "073": 1,
+        "BK7H": 2,
+        "R101V": 68,
+        "V23": 35
+      },
+      "currentTruthDE": 13.102431762360277,
+      "oracleRecipe": {
+        "R254D": 88,
+        "V23": 18
+      },
+      "oracleTruthDE": 6.476842380335889
+    },
+    {
+      "code": "3015",
+      "currentRecipe": {
+        "R122S": 30.5,
+        "W064": 61,
+        "Y42S": 14.5
+      },
+      "currentTruthDE": 21.7911475740487,
+      "oracleRecipe": {
+        "073": 3,
+        "R122S": 5,
+        "W064": 98
+      },
+      "oracleTruthDE": 3.281799287544702
+    },
+    {
+      "code": "3027",
+      "currentRecipe": {
+        "073": 1,
+        "R101V": 49,
+        "R122S": 19.5,
+        "R254D": 36.5
+      },
+      "currentTruthDE": 6.099161744827049,
+      "oracleRecipe": {
+        "R122S": 17.5,
+        "R254D": 88.5
+      },
+      "oracleTruthDE": 2.0180274026309353
+    },
+    {
+      "code": "4004",
+      "currentRecipe": {
+        "R101V": 45.5,
+        "V23": 60.5
+      },
+      "currentTruthDE": 16.960692906962876,
+      "oracleRecipe": {
+        "B153S": 3.5,
+        "R122S": 102.5
+      },
+      "oracleTruthDE": 6.010296833532701
+    },
+    {
+      "code": "4012",
+      "currentRecipe": {
+        "073": 1,
+        "BK7H": 23.5,
+        "V23": 37,
+        "W064": 44.5
+      },
+      "currentTruthDE": 15.190804477495238,
+      "oracleRecipe": {
+        "B150S": 4.5,
+        "B153S": 9.5,
+        "BK7H": 12,
+        "W064": 80
+      },
+      "oracleTruthDE": 1.397493428019335
+    },
+    {
+      "code": "5008",
+      "currentRecipe": {
+        "B150S": 7,
+        "BK7H": 39,
+        "V23": 40,
+        "W064": 20
+      },
+      "currentTruthDE": 9.02046149997171,
+      "oracleRecipe": {
+        "B150S": 14.5,
+        "G7": 84.5,
+        "V23": 7
+      },
+      "oracleTruthDE": 1.673052470762586
+    },
+    {
+      "code": "5017",
+      "currentRecipe": {
+        "B150S": 69.5,
+        "R101V": 6,
+        "V23": 6,
+        "W064": 24.5
+      },
+      "currentTruthDE": 13.304279064756587,
+      "oracleRecipe": {
+        "B150S": 27,
+        "G36": 19.5,
+        "W064": 59.5
+      },
+      "oracleTruthDE": 7.464385312654595
+    },
+    {
+      "code": "5025",
+      "currentRecipe": {
+        "B150S": 38.5,
+        "G7": 16.5,
+        "R254D": 19.5,
+        "W064": 31.5
+      },
+      "currentTruthDE": 22.068441650625232,
+      "oracleRecipe": {
+        "B150S": 11,
+        "G36": 27.5,
+        "W064": 67.5
+      },
+      "oracleTruthDE": 6.917125492012722
+    },
+    {
+      "code": "6006",
+      "currentRecipe": {
+        "BK7H": 75,
+        "Y83S": 31
+      },
+      "currentTruthDE": 4.960583889087575,
+      "oracleRecipe": {
+        "G36": 24.5,
+        "V23": 55.5,
+        "Y83S": 26
+      },
+      "oracleTruthDE": 4.270262213693155
+    },
+    {
+      "code": "6014",
+      "currentRecipe": {
+        "BK7H": 48.5,
+        "R101Y": 14,
+        "W064": 7.5,
+        "Y83S": 36
+      },
+      "currentTruthDE": 6.232490302730068,
+      "oracleRecipe": {
+        "G36": 18,
+        "V23": 51.5,
+        "Y83S": 36.5
+      },
+      "oracleTruthDE": 2.2146196887017493
+    },
+    {
+      "code": "6022",
+      "currentRecipe": {
+        "BK7H": 61,
+        "R101V": 2,
+        "R101Y": 15,
+        "Y83S": 28
+      },
+      "currentTruthDE": 7.439310034241622,
+      "oracleRecipe": {
+        "G36": 12.5,
+        "V23": 68.5,
+        "Y83S": 25
+      },
+      "oracleTruthDE": 5.961601102769097
+    },
+    {
+      "code": "6033",
+      "currentRecipe": {
+        "B153S": 15,
+        "G7": 7.5,
+        "R101Y": 15.5,
+        "W064": 68
+      },
+      "currentTruthDE": 35.53114176148886,
+      "oracleRecipe": {
+        "G36": 20.5,
+        "W064": 85.5
+      },
+      "oracleTruthDE": 6.393927790566013
+    },
+    {
+      "code": "7001",
+      "currentRecipe": {
+        "BK7H": 7,
+        "W064": 99
+      },
+      "currentTruthDE": 5.882219033114978,
+      "oracleRecipe": {
+        "G7": 9,
+        "R101V": 2,
+        "W064": 95
+      },
+      "oracleTruthDE": 2.1495591179424167
+    },
+    {
+      "code": "7010",
+      "currentRecipe": {
+        "B153S": 15.5,
+        "R101V": 37,
+        "R122S": 40,
+        "W064": 13.5
+      },
+      "currentTruthDE": 23.791799918338224,
+      "oracleRecipe": {
+        "BK7H": 24,
+        "G7": 17,
+        "W064": 48,
+        "Y74S": 17
+      },
+      "oracleTruthDE": 0.20148549925023457
+    },
+    {
+      "code": "7023",
+      "currentRecipe": {
+        "BK7H": 12,
+        "R254D": 2,
+        "W064": 82,
+        "Y74S": 10
+      },
+      "currentTruthDE": 4.7025036386550125,
+      "oracleRecipe": {
+        "BK7H": 15.5,
+        "W064": 83,
+        "Y74S": 7.5
+      },
+      "oracleTruthDE": 0.9030505973569782
+    },
+    {
+      "code": "7035",
+      "currentRecipe": {
+        "BK7H": 1.5,
+        "W064": 104.5
+      },
+      "currentTruthDE": 1.9494448463827287,
+      "oracleRecipe": {
+        "BK7H": 1.5,
+        "W064": 104.5
+      },
+      "oracleTruthDE": 1.9494448463827287
+    },
+    {
+      "code": "7044",
+      "currentRecipe": {
+        "073": 6,
+        "BK7H": 6,
+        "W064": 79,
+        "Y42S": 15
+      },
+      "currentTruthDE": 17.49096435882004,
+      "oracleRecipe": {
+        "BK7H": 4,
+        "W064": 97.5,
+        "Y42S": 4.5
+      },
+      "oracleTruthDE": 2.1774643074346356
+    },
+    {
+      "code": "8003",
+      "currentRecipe": {
+        "BK7H": 8.5,
+        "R101Y": 54,
+        "R254D": 25,
+        "Y83S": 18.5
+      },
+      "currentTruthDE": 11.181168342816548,
+      "oracleRecipe": {
+        "073": 26,
+        "V23": 22,
+        "Y83S": 58
+      },
+      "oracleTruthDE": 3.9304832747539495
+    },
+    {
+      "code": "8016",
+      "currentRecipe": {
+        "BK7H": 43.5,
+        "R101V": 62.5
+      },
+      "currentTruthDE": 8.190243937305917,
+      "oracleRecipe": {
+        "073": 47,
+        "R254D": 7.5,
+        "V23": 51.5
+      },
+      "oracleTruthDE": 6.38179728077017
+    },
+    {
+      "code": "8029",
+      "currentRecipe": {
+        "073": 1,
+        "BK7H": 11,
+        "R101V": 78,
+        "Y83S": 16
+      },
+      "currentTruthDE": 2.991109421184788,
+      "oracleRecipe": {
+        "073": 78,
+        "R254D": 6.5,
+        "V23": 21.5
+      },
+      "oracleTruthDE": 0.7686873763521255
+    },
+    {
+      "code": "9010",
+      "currentRecipe": {
+        "W064": 105,
+        "Y42S": 1
+      },
+      "currentTruthDE": 2.118568155064792,
+      "oracleRecipe": {
+        "W064": 105,
+        "Y42S": 1
+      },
+      "oracleTruthDE": 2.118568155064792
+    },
+    {
+      "code": "1001",
+      "currentRecipe": {
+        "073": 7,
+        "V23": 6,
+        "W064": 5,
+        "Y42S": 88
+      },
+      "currentTruthDE": 18.230508779944792,
+      "oracleRecipe": {
+        "BK7H": 3,
+        "W064": 91,
+        "Y83S": 12
+      },
+      "oracleTruthDE": 2.8777834188334874
+    },
+    {
+      "code": "1012",
+      "currentRecipe": {
+        "W064": 3,
+        "Y42S": 47,
+        "Y83S": 56
+      },
+      "currentTruthDE": 9.40688704037596,
+      "oracleRecipe": {
+        "Y42S": 36.5,
+        "Y74S": 69.5
+      },
+      "oracleTruthDE": 0.6359591392295417
+    },
+    {
+      "code": "1020",
+      "currentRecipe": {
+        "V23": 19.5,
+        "W064": 34,
+        "Y42S": 2,
+        "Y83S": 50.5
+      },
+      "currentTruthDE": 14.719960659665846,
+      "oracleRecipe": {
+        "G36": 8,
+        "W064": 71.5,
+        "Y83S": 26.5
+      },
+      "oracleTruthDE": 2.025509195160787
+    },
+    {
+      "code": "1033",
+      "currentRecipe": {
+        "R254D": 12.5,
+        "W064": 14.5,
+        "Y83S": 79
+      },
+      "currentTruthDE": 18.33902957872817,
+      "oracleRecipe": {
+        "R122S": 1.5,
+        "Y83S": 104.5
+      },
+      "oracleTruthDE": 0.6752622302058384
+    },
+    {
+      "code": "2003",
+      "currentRecipe": {
+        "R254D": 34.5,
+        "W064": 18,
+        "Y83S": 53.5
+      },
+      "currentTruthDE": 17.49828698053771,
+      "oracleRecipe": {
+        "073": 21.5,
+        "Y42S": 9,
+        "Y83S": 75.5
+      },
+      "oracleTruthDE": 0.32146703059857035
+    },
+    {
+      "code": "2012",
+      "currentRecipe": {
+        "R101Y": 8.5,
+        "R122S": 5.5,
+        "R254D": 77,
+        "W064": 15
+      },
+      "currentTruthDE": 16.635198885020085,
+      "oracleRecipe": {
+        "073": 28.5,
+        "R101V": 15.5,
+        "W064": 62
+      },
+      "oracleTruthDE": 0.3728786646897461
+    },
+    {
+      "code": "3005",
+      "currentRecipe": {
+        "073": 1,
+        "R101V": 52,
+        "V23": 53
+      },
+      "currentTruthDE": 14.579360384663302,
+      "oracleRecipe": {
+        "B153S": 8.5,
+        "R254D": 80.5,
+        "V23": 17
+      },
+      "oracleTruthDE": 8.188199370350883
+    },
+    {
+      "code": "3016",
+      "currentRecipe": {
+        "073": 1,
+        "R101V": 8,
+        "R101Y": 97
+      },
+      "currentTruthDE": 4.576161801319913,
+      "oracleRecipe": {
+        "073": 65,
+        "R101V": 26.5,
+        "R122S": 14.5
+      },
+      "oracleTruthDE": 1.065102593686808
+    },
+    {
+      "code": "3028",
+      "currentRecipe": {
+        "073": 1,
+        "R101Y": 54.5,
+        "R254D": 33,
+        "Y83S": 17.5
+      },
+      "currentTruthDE": 8.791537436469124,
+      "oracleRecipe": {
+        "073": 73,
+        "R101V": 8,
+        "R254D": 25
+      },
+      "oracleTruthDE": 1.9917381257665905
+    },
+    {
+      "code": "4005",
+      "currentRecipe": {
+        "073": 6,
+        "R254D": 9.5,
+        "V23": 62,
+        "W064": 28.5
+      },
+      "currentTruthDE": 23.661389034856604,
+      "oracleRecipe": {
+        "B153S": 21.5,
+        "W064": 84.5
+      },
+      "oracleTruthDE": 2.6659318421928093
+    },
+    {
+      "code": "5000",
+      "currentRecipe": {
+        "B150S": 17.5,
+        "BK7H": 10,
+        "V23": 51.5,
+        "W064": 27
+      },
+      "currentTruthDE": 13.101709622804218,
+      "oracleRecipe": {
+        "B150S": 40,
+        "G36": 23,
+        "W064": 43
+      },
+      "oracleTruthDE": 1.5712401098624673
+    },
+    {
+      "code": "5009",
+      "currentRecipe": {
+        "B150S": 46,
+        "B153S": 11,
+        "BK7H": 10.5,
+        "W064": 38.5
+      },
+      "currentTruthDE": 16.263745229632253,
+      "oracleRecipe": {
+        "B150S": 19,
+        "G36": 27.5,
+        "W064": 59.5
+      },
+      "oracleTruthDE": 5.752693762367159
+    },
+    {
+      "code": "5018",
+      "currentRecipe": {
+        "B153S": 37,
+        "G7": 42.5,
+        "W064": 26.5
+      },
+      "currentTruthDE": 32.06144634701637,
+      "oracleRecipe": {
+        "G36": 20.5,
+        "W064": 85.5
+      },
+      "oracleTruthDE": 10.620669165548705
+    },
+    {
+      "code": "5026",
+      "currentRecipe": {
+        "B150S": 26,
+        "BK7H": 25.5,
+        "V23": 31,
+        "W064": 23.5
+      },
+      "currentTruthDE": 12.598468130516848,
+      "oracleRecipe": {
+        "B150S": 72.5,
+        "G7": 33.5
+      },
+      "oracleTruthDE": 4.966805348462382
+    },
+    {
+      "code": "6007",
+      "currentRecipe": {
+        "BK7H": 63.5,
+        "G7": 3,
+        "R101V": 19.5,
+        "Y83S": 20
+      },
+      "currentTruthDE": 14.208908172440909,
+      "oracleRecipe": {
+        "G36": 51.5,
+        "V23": 30.5,
+        "Y83S": 24
+      },
+      "oracleTruthDE": 8.161433028594521
+    },
+    {
+      "code": "6015",
+      "currentRecipe": {
+        "BK7H": 68,
+        "R254D": 2,
+        "W064": 4,
+        "Y83S": 32
+      },
+      "currentTruthDE": 5.475388729803864,
+      "oracleRecipe": {
+        "G36": 30.5,
+        "V23": 56,
+        "Y83S": 19.5
+      },
+      "oracleTruthDE": 2.0921162139022726
+    },
+    {
+      "code": "6024",
+      "currentRecipe": {
+        "G7": 55.5,
+        "R101V": 13,
+        "W064": 14,
+        "Y83S": 23.5
+      },
+      "currentTruthDE": 28.44752439594836,
+      "oracleRecipe": {
+        "G36": 25,
+        "W064": 48,
+        "Y74S": 33
+      },
+      "oracleTruthDE": 11.456522635204106
+    },
+    {
+      "code": "6034",
+      "currentRecipe": {
+        "B153S": 21,
+        "G7": 21,
+        "W064": 64
+      },
+      "currentTruthDE": 35.4146196398587,
+      "oracleRecipe": {
+        "G36": 7.5,
+        "W064": 98.5
+      },
+      "oracleTruthDE": 5.163443938692249
+    },
+    {
+      "code": "7002",
+      "currentRecipe": {
+        "BK7H": 14,
+        "W064": 42.5,
+        "Y42S": 43,
+        "Y83S": 6.5
+      },
+      "currentTruthDE": 4.2922468473153526,
+      "oracleRecipe": {
+        "BK7H": 16,
+        "W064": 59,
+        "Y42S": 31
+      },
+      "oracleTruthDE": 0.5591836402380044
+    },
+    {
+      "code": "7011",
+      "currentRecipe": {
+        "BK7H": 22.5,
+        "G7": 2,
+        "R122S": 38,
+        "W064": 43.5
+      },
+      "currentTruthDE": 16.428568008391718,
+      "oracleRecipe": {
+        "BK7H": 23,
+        "G7": 23,
+        "W064": 60
+      },
+      "oracleTruthDE": 0.30381970749797493
+    },
+    {
+      "code": "7024",
+      "currentRecipe": {
+        "BK7H": 51,
+        "R254D": 2,
+        "V23": 13.5,
+        "W064": 39.5
+      },
+      "currentTruthDE": 4.492358065289162,
+      "oracleRecipe": {
+        "B153S": 35,
+        "G36": 30,
+        "Y42S": 41
+      },
+      "oracleTruthDE": 0.0905871827389733
+    },
+    {
+      "code": "7036",
+      "currentRecipe": {
+        "073": 20,
+        "BK7H": 13.5,
+        "W064": 67,
+        "Y42S": 5.5
+      },
+      "currentTruthDE": 20.214579519788774,
+      "oracleRecipe": {
+        "V23": 8.5,
+        "W064": 97.5
+      },
+      "oracleTruthDE": 1.1154501639295928
+    },
+    {
+      "code": "7045",
+      "currentRecipe": {
+        "073": 1,
+        "BK7H": 17.5,
+        "W064": 84,
+        "Y42S": 3.5
+      },
+      "currentTruthDE": 10.547276982158802,
+      "oracleRecipe": {
+        "G36": 7.5,
+        "R122S": 5,
+        "W064": 93.5
+      },
+      "oracleTruthDE": 1.928127212066703
+    },
+    {
+      "code": "8004",
+      "currentRecipe": {
+        "BK7H": 3.5,
+        "R101Y": 57,
+        "R254D": 22.5,
+        "V23": 23
+      },
+      "currentTruthDE": 11.23112534258082,
+      "oracleRecipe": {
+        "073": 71.5,
+        "BK7H": 15.5,
+        "Y83S": 19
+      },
+      "oracleTruthDE": 0.5948108723790074
+    },
+    {
+      "code": "8017",
+      "currentRecipe": {
+        "BK7H": 42,
+        "R101V": 32.5,
+        "R122S": 31.5
+      },
+      "currentTruthDE": 6.207344430456016,
+      "oracleRecipe": {
+        "073": 27.5,
+        "R254D": 10,
+        "V23": 68.5
+      },
+      "oracleTruthDE": 4.417408646375413
+    },
+    {
+      "code": "9001",
+      "currentRecipe": {
+        "V23": 2,
+        "W064": 99.5,
+        "Y42S": 2.5,
+        "Y83S": 2
+      },
+      "currentTruthDE": 9.624065706857836,
+      "oracleRecipe": {
+        "W064": 105,
+        "Y83S": 1
+      },
+      "oracleTruthDE": 3.16455501744576
+    },
+    {
+      "code": "9011",
+      "currentRecipe": {
+        "BK7H": 105,
+        "G7": 1
+      },
+      "currentTruthDE": 6.684085761119368,
+      "oracleRecipe": {
+        "G7": 46,
+        "V23": 60
+      },
+      "oracleTruthDE": 6.2085370679050556
+    },
+    {
+      "code": "1002",
+      "currentRecipe": {
+        "V23": 6,
+        "W064": 21,
+        "Y42S": 68,
+        "Y74S": 11
+      },
+      "currentTruthDE": 12.261107244576126,
+      "oracleRecipe": {
+        "W064": 59,
+        "Y42S": 47
+      },
+      "oracleTruthDE": 2.2063715010109837
+    },
+    {
+      "code": "1013",
+      "currentRecipe": {
+        "V23": 2.5,
+        "W064": 95.5,
+        "Y42S": 4.5,
+        "Y74S": 3.5
+      },
+      "currentTruthDE": 9.694630952115658,
+      "oracleRecipe": {
+        "W064": 103.5,
+        "Y42S": 2.5
+      },
+      "oracleTruthDE": 3.1857483280335335
+    },
+    {
+      "code": "1021",
+      "currentRecipe": {
+        "R254D": 4,
+        "W064": 13,
+        "Y83S": 89
+      },
+      "currentTruthDE": 18.99180216078985,
+      "oracleRecipe": {
+        "R254D": 2,
+        "Y74S": 104
+      },
+      "oracleTruthDE": 1.2599853299776294
+    },
+    {
+      "code": "1034",
+      "currentRecipe": {
+        "R254D": 17.5,
+        "W064": 27.5,
+        "Y42S": 20.5,
+        "Y83S": 40.5
+      },
+      "currentTruthDE": 18.811882889425025,
+      "oracleRecipe": {
+        "R101Y": 10.5,
+        "W064": 58.5,
+        "Y74S": 37
+      },
+      "oracleTruthDE": 3.2599649345311486
+    },
+    {
+      "code": "2004",
+      "currentRecipe": {
+        "R101Y": 16.5,
+        "R254D": 46.5,
+        "W064": 14.5,
+        "Y83S": 28.5
+      },
+      "currentTruthDE": 16.88691430557949,
+      "oracleRecipe": {
+        "073": 37.5,
+        "R101V": 10,
+        "Y83S": 58.5
+      },
+      "oracleTruthDE": 3.8160493336826313
+    },
+    {
+      "code": "2013",
+      "currentRecipe": {
+        "073": 1,
+        "BK7H": 2,
+        "R101V": 62,
+        "Y83S": 41
+      },
+      "currentTruthDE": 6.2458460692225,
+      "oracleRecipe": {
+        "073": 92.5,
+        "V23": 13.5
+      },
+      "oracleTruthDE": 2.681221111300912
+    },
+    {
+      "code": "3007",
+      "currentRecipe": {
+        "BK7H": 33.5,
+        "R101V": 34.5,
+        "V23": 38
+      },
+      "currentTruthDE": 11.99447506817152,
+      "oracleRecipe": {
+        "B153S": 14.5,
+        "R254D": 56,
+        "V23": 35.5
+      },
+      "oracleTruthDE": 7.835905831730579
+    },
+    {
+      "code": "3017",
+      "currentRecipe": {
+        "R101Y": 20,
+        "R122S": 64.5,
+        "W064": 21.5
+      },
+      "currentTruthDE": 17.28088445931261,
+      "oracleRecipe": {
+        "R254D": 36.5,
+        "W064": 69.5
+      },
+      "oracleTruthDE": 2.6480406580023
+    },
+    {
+      "code": "3031",
+      "currentRecipe": {
+        "073": 1,
+        "R101V": 67.5,
+        "R101Y": 5,
+        "R254D": 32.5
+      },
+      "currentTruthDE": 3.063045137141698,
+      "oracleRecipe": {
+        "R101V": 37.5,
+        "R254D": 68.5
+      },
+      "oracleTruthDE": 0.2093543482661131
+    },
+    {
+      "code": "4006",
+      "currentRecipe": {
+        "R101V": 9.5,
+        "R122S": 19.5,
+        "V23": 52,
+        "W064": 25
+      },
+      "currentTruthDE": 21.20556396407616,
+      "oracleRecipe": {
+        "B150S": 3.5,
+        "R122S": 56.5,
+        "W064": 46
+      },
+      "oracleTruthDE": 11.669236980860429
+    },
+    {
+      "code": "5001",
+      "currentRecipe": {
+        "B150S": 63,
+        "BK7H": 16,
+        "V23": 4.5,
+        "W064": 22.5
+      },
+      "currentTruthDE": 13.526840145046778,
+      "oracleRecipe": {
+        "B150S": 32.5,
+        "G36": 44,
+        "W064": 29.5
+      },
+      "oracleTruthDE": 5.557654655399947
+    },
+    {
+      "code": "5010",
+      "currentRecipe": {
+        "B150S": 48,
+        "BK7H": 7,
+        "V23": 25,
+        "W064": 26
+      },
+      "currentTruthDE": 12.856427813293367,
+      "oracleRecipe": {
+        "B150S": 38.5,
+        "G36": 25,
+        "W064": 42.5
+      },
+      "oracleTruthDE": 6.608307139937606
+    },
+    {
+      "code": "5019",
+      "currentRecipe": {
+        "B150S": 49.5,
+        "B153S": 25.5,
+        "BK7H": 7,
+        "W064": 24
+      },
+      "currentTruthDE": 17.492443222798368,
+      "oracleRecipe": {
+        "B150S": 22.5,
+        "G36": 24,
+        "W064": 59.5
+      },
+      "oracleTruthDE": 7.440518946415168
+    },
+    {
+      "code": "6000",
+      "currentRecipe": {
+        "BK7H": 11.5,
+        "G7": 35.5,
+        "W064": 44,
+        "Y74S": 15
+      },
+      "currentTruthDE": 16.667880272482623,
+      "oracleRecipe": {
+        "G36": 32,
+        "W064": 59.5,
+        "Y74S": 14.5
+      },
+      "oracleTruthDE": 5.473830939584875
+    },
+    {
+      "code": "6008",
+      "currentRecipe": {
+        "BK7H": 75,
+        "Y83S": 31
+      },
+      "currentTruthDE": 6.127997934737865,
+      "oracleRecipe": {
+        "G36": 22.5,
+        "V23": 64,
+        "Y83S": 19.5
+      },
+      "oracleTruthDE": 5.322732417881507
+    },
+    {
+      "code": "6016",
+      "currentRecipe": {
+        "BK7H": 11,
+        "G7": 59,
+        "W064": 17.5,
+        "Y74S": 18.5
+      },
+      "currentTruthDE": 20.15528090195517,
+      "oracleRecipe": {
+        "G36": 45,
+        "W064": 29,
+        "Y74S": 32
+      },
+      "oracleTruthDE": 9.463850140178728
+    },
+    {
+      "code": "6025",
+      "currentRecipe": {
+        "B153S": 9,
+        "R101Y": 26.5,
+        "W064": 12.5,
+        "Y83S": 58
+      },
+      "currentTruthDE": 27.4354191281617,
+      "oracleRecipe": {
+        "G36": 27.5,
+        "Y74S": 68,
+        "Y83S": 10.5
+      },
+      "oracleTruthDE": 1.464054355605191
+    },
+    {
+      "code": "6035",
+      "currentRecipe": {
+        "073": 1,
+        "G7": 7,
+        "R101Y": 59.5,
+        "Y83S": 38.5
+      },
+      "currentTruthDE": 40.285700985946455,
+      "oracleRecipe": {
+        "G36": 58.5,
+        "Y74S": 47.5
+      },
+      "oracleTruthDE": 9.175637092430266
+    },
+    {
+      "code": "7003",
+      "currentRecipe": {
+        "G7": 9,
+        "R101Y": 19.5,
+        "R122S": 39.5,
+        "W064": 38
+      },
+      "currentTruthDE": 24.473564148518697,
+      "oracleRecipe": {
+        "BK7H": 19.5,
+        "W064": 73.5,
+        "Y74S": 8.5,
+        "Y83S": 4.5
+      },
+      "oracleTruthDE": 0.7810217159052549
+    },
+    {
+      "code": "7012",
+      "currentRecipe": {
+        "073": 5.5,
+        "BK7H": 69,
+        "W064": 24.5,
+        "Y83S": 7
+      },
+      "currentTruthDE": 9.500184010454163,
+      "oracleRecipe": {
+        "G36": 30,
+        "R122S": 16.5,
+        "W064": 59.5
+      },
+      "oracleTruthDE": 0.3559648691923956
+    },
+    {
+      "code": "7026",
+      "currentRecipe": {
+        "B153S": 4,
+        "BK7H": 56.5,
+        "V23": 16,
+        "W064": 29.5
+      },
+      "currentTruthDE": 7.748517312676871,
+      "oracleRecipe": {
+        "G36": 15,
+        "G7": 75.5,
+        "Y83S": 15.5
+      },
+      "oracleTruthDE": 0.15636476236349986
+    },
+    {
+      "code": "7037",
+      "currentRecipe": {
+        "073": 11,
+        "BK7H": 29,
+        "W064": 60.5,
+        "Y74S": 5.5
+      },
+      "currentTruthDE": 13.81257185466914,
+      "oracleRecipe": {
+        "B150S": 12.5,
+        "W064": 61,
+        "Y42S": 32.5
+      },
+      "oracleTruthDE": 1.0731708748426763
+    },
+    {
+      "code": "7046",
+      "currentRecipe": {
+        "B150S": 5.5,
+        "R122S": 14.5,
+        "R254D": 20,
+        "W064": 66
+      },
+      "currentTruthDE": 26.210895993042648,
+      "oracleRecipe": {
+        "G7": 8.5,
+        "V23": 6,
+        "W064": 91.5
+      },
+      "oracleTruthDE": 1.6566740277716796
+    },
+    {
+      "code": "8007",
+      "currentRecipe": {
+        "BK7H": 15,
+        "R101Y": 46,
+        "R254D": 33.5,
+        "Y83S": 11.5
+      },
+      "currentTruthDE": 9.592422037990715,
+      "oracleRecipe": {
+        "073": 31,
+        "V23": 29,
+        "Y83S": 46
+      },
+      "oracleTruthDE": 3.464911780001912
+    },
+    {
+      "code": "8019",
+      "currentRecipe": {
+        "BK7H": 65,
+        "R101V": 14.5,
+        "R122S": 8.5,
+        "V23": 18
+      },
+      "currentTruthDE": 2.3812274048290853,
+      "oracleRecipe": {
+        "R254D": 5.5,
+        "V23": 100.5
+      },
+      "oracleTruthDE": 1.5565658387148267
+    },
+    {
+      "code": "9002",
+      "currentRecipe": {
+        "073": 2,
+        "BK7H": 2,
+        "W064": 96,
+        "Y42S": 6
+      },
+      "currentTruthDE": 14.735388595176286,
+      "oracleRecipe": {
+        "BK7H": 1,
+        "W064": 105
+      },
+      "oracleTruthDE": 4.968489025231887
+    },
+    {
+      "code": "9012",
+      "currentRecipe": {
+        "W064": 104.5,
+        "Y42S": 1.5
+      },
+      "currentTruthDE": 2.3561711112055272,
+      "oracleRecipe": {
+        "W064": 105,
+        "Y42S": 1
+      },
+      "oracleTruthDE": 2.2883986567084023
+    },
+    {
+      "code": "1003",
+      "currentRecipe": {
+        "R254D": 7,
+        "W064": 14,
+        "Y74S": 2,
+        "Y83S": 83
+      },
+      "currentTruthDE": 18.288838066135515,
+      "oracleRecipe": {
+        "073": 4.5,
+        "Y74S": 101.5
+      },
+      "oracleTruthDE": 1.7788737200735423
+    },
+    {
+      "code": "1014",
+      "currentRecipe": {
+        "R122S": 5.5,
+        "W064": 75.5,
+        "Y42S": 19.5,
+        "Y74S": 5.5
+      },
+      "currentTruthDE": 13.947949486345449,
+      "oracleRecipe": {
+        "W064": 93.5,
+        "Y42S": 12.5
+      },
+      "oracleTruthDE": 2.999425736207094
+    },
+    {
+      "code": "1023",
+      "currentRecipe": {
+        "R254D": 4.5,
+        "W064": 15.5,
+        "Y83S": 86
+      },
+      "currentTruthDE": 19.3844510000417,
+      "oracleRecipe": {
+        "R254D": 2,
+        "Y74S": 104
+      },
+      "oracleTruthDE": 1.3223473672064359
+    },
+    {
+      "code": "1035",
+      "currentRecipe": {
+        "BK7H": 3.5,
+        "V23": 19,
+        "W064": 43.5,
+        "Y74S": 40
+      },
+      "currentTruthDE": 10.378723797652867,
+      "oracleRecipe": {
+        "BK7H": 12.5,
+        "W064": 81,
+        "Y83S": 12.5
+      },
+      "oracleTruthDE": 0.829433322658684
+    },
+    {
+      "code": "2005",
+      "currentRecipe": {
+        "R254D": 56,
+        "W064": 18.5,
+        "Y83S": 31.5
+      },
+      "currentTruthDE": 16.429793052790618,
+      "oracleRecipe": {
+        "073": 59,
+        "Y83S": 47
+      },
+      "oracleTruthDE": 2.9985309686152952
+    },
+    {
+      "code": "2017",
+      "currentRecipe": {
+        "R254D": 52,
+        "W064": 18.5,
+        "Y83S": 35.5
+      },
+      "currentTruthDE": 16.788920060688213,
+      "oracleRecipe": {
+        "073": 50,
+        "Y83S": 56
+      },
+      "oracleTruthDE": 2.688380909267401
+    },
+    {
+      "code": "3009",
+      "currentRecipe": {
+        "073": 1,
+        "BK7H": 21,
+        "R101V": 84
+      },
+      "currentTruthDE": 5.661133350254339,
+      "oracleRecipe": {
+        "073": 45,
+        "R254D": 35.5,
+        "V23": 25.5
+      },
+      "oracleTruthDE": 2.439674610870419
+    },
+    {
+      "code": "3018",
+      "currentRecipe": {
+        "R101Y": 31,
+        "R122S": 59.5,
+        "W064": 15.5
+      },
+      "currentTruthDE": 14.869901130497237,
+      "oracleRecipe": {
+        "R101V": 6,
+        "R254D": 53,
+        "W064": 47
+      },
+      "oracleTruthDE": 1.424142936839226
+    },
+    {
+      "code": "3032",
+      "currentRecipe": {
+        "073": 1,
+        "BK7H": 2,
+        "R101V": 74.5,
+        "V23": 28.5
+      },
+      "currentTruthDE": 12.292689290323901,
+      "oracleRecipe": {
+        "R254D": 90,
+        "V23": 16
+      },
+      "oracleTruthDE": 6.063339750022828
+    },
+    {
+      "code": "4007",
+      "currentRecipe": {
+        "BK7H": 15,
+        "R101V": 11.5,
+        "V23": 59,
+        "W064": 20.5
+      },
+      "currentTruthDE": 17.095201987253965,
+      "oracleRecipe": {
+        "B153S": 32,
+        "R122S": 74
+      },
+      "oracleTruthDE": 6.391849111875224
+    },
+    {
+      "code": "5002",
+      "currentRecipe": {
+        "B150S": 20,
+        "BK7H": 9.5,
+        "V23": 49.5,
+        "W064": 27
+      },
+      "currentTruthDE": 19.483278813513042,
+      "oracleRecipe": {
+        "B150S": 106
+      },
+      "oracleTruthDE": 3.3740146119124423
+    },
+    {
+      "code": "5011",
+      "currentRecipe": {
+        "B150S": 2,
+        "BK7H": 85.5,
+        "V23": 18.5
+      },
+      "currentTruthDE": 12.00658807841599,
+      "oracleRecipe": {
+        "B150S": 40,
+        "G7": 53.5,
+        "V23": 12.5
+      },
+      "oracleTruthDE": 6.077786191349683
+    },
+    {
+      "code": "5020",
+      "currentRecipe": {
+        "B150S": 19.5,
+        "B153S": 29.5,
+        "BK7H": 38.5,
+        "W064": 18.5
+      },
+      "currentTruthDE": 19.613875769699888,
+      "oracleRecipe": {
+        "B150S": 22,
+        "G36": 84
+      },
+      "oracleTruthDE": 6.140429693626579
+    },
+    {
+      "code": "6001",
+      "currentRecipe": {
+        "G7": 44,
+        "R101Y": 36,
+        "W064": 5.5,
+        "Y83S": 20.5
+      },
+      "currentTruthDE": 29.001985408815784,
+      "oracleRecipe": {
+        "G36": 38.5,
+        "Y74S": 67.5
+      },
+      "oracleTruthDE": 5.788176279165913
+    },
+    {
+      "code": "6009",
+      "currentRecipe": {
+        "BK7H": 69.5,
+        "G7": 8,
+        "W064": 4.5,
+        "Y83S": 24
+      },
+      "currentTruthDE": 12.24430337743304,
+      "oracleRecipe": {
+        "G36": 75,
+        "V23": 22,
+        "Y83S": 9
+      },
+      "oracleTruthDE": 6.33039959842904
+    },
+    {
+      "code": "6017",
+      "currentRecipe": {
+        "G7": 21.5,
+        "R101Y": 22.5,
+        "W064": 13,
+        "Y83S": 49
+      },
+      "currentTruthDE": 28.54002863963213,
+      "oracleRecipe": {
+        "G36": 22,
+        "W064": 14,
+        "Y74S": 70
+      },
+      "oracleTruthDE": 3.7463490010622023
+    },
+    {
+      "code": "6026",
+      "currentRecipe": {
+        "BK7H": 15.5,
+        "G7": 67,
+        "W064": 16.5,
+        "Y74S": 7
+      },
+      "currentTruthDE": 19.25561568503812,
+      "oracleRecipe": {
+        "G36": 56.5,
+        "W064": 30.5,
+        "Y74S": 19
+      },
+      "oracleTruthDE": 8.562658862533056
+    },
+    {
+      "code": "6036",
+      "currentRecipe": {
+        "BK7H": 20,
+        "G7": 63,
+        "W064": 16.5,
+        "Y74S": 6.5
+      },
+      "currentTruthDE": 17.537694267365517,
+      "oracleRecipe": {
+        "G36": 68.5,
+        "W064": 23.5,
+        "Y74S": 14
+      },
+      "oracleTruthDE": 7.69385310676827
+    },
+    {
+      "code": "7004",
+      "currentRecipe": {
+        "073": 7.5,
+        "BK7H": 12.5,
+        "W064": 80.5,
+        "Y42S": 5.5
+      },
+      "currentTruthDE": 15.898264011101396,
+      "oracleRecipe": {
+        "BK7H": 7.5,
+        "W064": 98.5
+      },
+      "oracleTruthDE": 0.26239014785304215
+    },
+    {
+      "code": "7013",
+      "currentRecipe": {
+        "BK7H": 37.5,
+        "R101Y": 10,
+        "Y42S": 58.5
+      },
+      "currentTruthDE": 3.3164717077616634,
+      "oracleRecipe": {
+        "G36": 36.5,
+        "R101V": 33.5,
+        "Y42S": 36
+      },
+      "oracleTruthDE": 0.14630022996742045
+    },
+    {
+      "code": "7030",
+      "currentRecipe": {
+        "073": 16.5,
+        "BK7H": 15.5,
+        "W064": 46,
+        "Y42S": 28
+      },
+      "currentTruthDE": 19.417852281425112,
+      "oracleRecipe": {
+        "BK7H": 10.5,
+        "W064": 88,
+        "Y42S": 7.5
+      },
+      "oracleTruthDE": 1.0384069487305039
+    },
+    {
+      "code": "7038",
+      "currentRecipe": {
+        "BK7H": 4,
+        "W064": 97.5,
+        "Y42S": 2,
+        "Y74S": 2.5
+      },
+      "currentTruthDE": 4.080619823617674,
+      "oracleRecipe": {
+        "BK7H": 4.5,
+        "W064": 98.5,
+        "Y42S": 3
+      },
+      "oracleTruthDE": 2.3243649241964257
+    },
+    {
+      "code": "7047",
+      "currentRecipe": {
+        "BK7H": 1,
+        "W064": 105
+      },
+      "currentTruthDE": 2.353496516214687,
+      "oracleRecipe": {
+        "BK7H": 1.5,
+        "W064": 104.5
+      },
+      "oracleTruthDE": 0.6732322473543784
+    },
+    {
+      "code": "8008",
+      "currentRecipe": {
+        "BK7H": 12.5,
+        "R101Y": 45.5,
+        "R254D": 8.5,
+        "Y83S": 39.5
+      },
+      "currentTruthDE": 9.020286385157249,
+      "oracleRecipe": {
+        "073": 16,
+        "V23": 27.5,
+        "Y83S": 62.5
+      },
+      "oracleTruthDE": 4.617615447425939
+    },
+    {
+      "code": "8022",
+      "currentRecipe": {
+        "BK7H": 106
+      },
+      "currentTruthDE": 11.969987246561164,
+      "oracleRecipe": {
+        "B150S": 11,
+        "V23": 95
+      },
+      "oracleTruthDE": 11.3462828040248
+    },
+    {
+      "code": "9003",
+      "currentRecipe": {
+        "W064": 106
+      },
+      "currentTruthDE": 4.127729789647416,
+      "oracleRecipe": {
+        "W064": 106
+      },
+      "oracleTruthDE": 4.127729789647416
+    },
+    {
+      "code": "9016",
+      "currentRecipe": {
+        "W064": 106
+      },
+      "currentTruthDE": 4.6045812069018455,
+      "oracleRecipe": {
+        "W064": 105,
+        "Y42S": 1
+      },
+      "oracleTruthDE": 3.8801123383627902
+    },
+    {
+      "code": "1004",
+      "currentRecipe": {
+        "R101V": 3.5,
+        "R254D": 4.5,
+        "W064": 12,
+        "Y83S": 86
+      },
+      "currentTruthDE": 15.942778755332109,
+      "oracleRecipe": {
+        "G36": 1,
+        "Y83S": 105
+      },
+      "oracleTruthDE": 1.5801618766465766
+    },
+    {
+      "code": "1015",
+      "currentRecipe": {
+        "R122S": 4,
+        "W064": 90,
+        "Y42S": 9,
+        "Y74S": 3
+      },
+      "currentTruthDE": 13.641377712522665,
+      "oracleRecipe": {
+        "W064": 100.5,
+        "Y42S": 5.5
+      },
+      "oracleTruthDE": 3.419706942526607
+    },
+    {
+      "code": "1024",
+      "currentRecipe": {
+        "R101Y": 6,
+        "V23": 9,
+        "W064": 20.5,
+        "Y83S": 70.5
+      },
+      "currentTruthDE": 10.238295442553044,
+      "oracleRecipe": {
+        "B150S": 1,
+        "Y42S": 105
+      },
+      "oracleTruthDE": 0.9586393745267452
+    },
+    {
+      "code": "1036",
+      "currentRecipe": {
+        "BK7H": 8.5,
+        "R101V": 17,
+        "W064": 13.5,
+        "Y83S": 67
+      },
+      "currentTruthDE": 8.303743036871088,
+      "oracleRecipe": {
+        "B150S": 15,
+        "Y83S": 91
+      },
+      "oracleTruthDE": 0.025355519544938882
+    },
+    {
+      "code": "2007",
+      "currentRecipe": {
+        "R254D": 5.5,
+        "W064": 13.5,
+        "Y83S": 87
+      },
+      "currentTruthDE": 18.81475859511169,
+      "oracleRecipe": {
+        "073": 3.5,
+        "Y74S": 102.5
+      },
+      "oracleTruthDE": 0.9165922759529942
+    },
+    {
+      "code": "3000",
+      "currentRecipe": {
+        "073": 1,
+        "R101V": 21.5,
+        "R101Y": 83.5
+      },
+      "currentTruthDE": 7.264760830195576,
+      "oracleRecipe": {
+        "073": 68.5,
+        "BK7H": 5.5,
+        "R254D": 32
+      },
+      "oracleTruthDE": 3.9364811400393256
+    },
+    {
+      "code": "3011",
+      "currentRecipe": {
+        "073": 1,
+        "BK7H": 8,
+        "R101V": 97
+      },
+      "currentTruthDE": 8.859381426154101,
+      "oracleRecipe": {
+        "073": 21,
+        "R254D": 70.5,
+        "V23": 14.5
+      },
+      "oracleTruthDE": 5.068347670652532
+    },
+    {
+      "code": "3020",
+      "currentRecipe": {
+        "073": 1,
+        "R101Y": 91.5,
+        "Y83S": 13.5
+      },
+      "currentTruthDE": 9.808050683959069,
+      "oracleRecipe": {
+        "073": 82,
+        "BK7H": 3.5,
+        "R254D": 20.5
+      },
+      "oracleTruthDE": 5.636119595475188
+    },
+    {
+      "code": "3033",
+      "currentRecipe": {
+        "073": 1,
+        "R101V": 15,
+        "R101Y": 90
+      },
+      "currentTruthDE": 4.74793108251885,
+      "oracleRecipe": {
+        "073": 76.5,
+        "BK7H": 6.5,
+        "R254D": 23
+      },
+      "oracleTruthDE": 1.3826714892764145
+    },
+    {
+      "code": "4008",
+      "currentRecipe": {
+        "R101V": 6,
+        "R122S": 21,
+        "V23": 52.5,
+        "W064": 26.5
+      },
+      "currentTruthDE": 20.35295016248112,
+      "oracleRecipe": {
+        "B153S": 16,
+        "R122S": 22,
+        "W064": 68
+      },
+      "oracleTruthDE": 9.563613238461452
+    },
+    {
+      "code": "5003",
+      "currentRecipe": {
+        "B150S": 26,
+        "BK7H": 25.5,
+        "V23": 31,
+        "W064": 23.5
+      },
+      "currentTruthDE": 10.012246023763433,
+      "oracleRecipe": {
+        "B150S": 72,
+        "G36": 34
+      },
+      "oracleTruthDE": 2.365205762784103
+    },
+    {
+      "code": "5012",
+      "currentRecipe": {
+        "B153S": 45,
+        "G7": 7.5,
+        "V23": 7.5,
+        "W064": 46
+      },
+      "currentTruthDE": 31.858146758518334,
+      "oracleRecipe": {
+        "B150S": 8.5,
+        "G36": 9.5,
+        "W064": 88
+      },
+      "oracleTruthDE": 10.698898803474169
+    },
+    {
+      "code": "5021",
+      "currentRecipe": {
+        "B153S": 3,
+        "G7": 51.5,
+        "V23": 29.5,
+        "W064": 22
+      },
+      "currentTruthDE": 23.356412747286974,
+      "oracleRecipe": {
+        "G36": 33.5,
+        "W064": 72.5
+      },
+      "oracleTruthDE": 9.226031266944583
+    },
+    {
+      "code": "6002",
+      "currentRecipe": {
+        "BK7H": 17,
+        "G7": 16,
+        "W064": 18,
+        "Y74S": 55
+      },
+      "currentTruthDE": 13.539441125185093,
+      "oracleRecipe": {
+        "G36": 45,
+        "Y74S": 61
+      },
+      "oracleTruthDE": 7.016335028712113
+    },
+    {
+      "code": "6010",
+      "currentRecipe": {
+        "BK7H": 11.5,
+        "G7": 4,
+        "W064": 20.5,
+        "Y83S": 70
+      },
+      "currentTruthDE": 21.65774071030435,
+      "oracleRecipe": {
+        "G36": 30.5,
+        "Y74S": 75.5
+      },
+      "oracleTruthDE": 3.0097764788506773
+    },
+    {
+      "code": "6018",
+      "currentRecipe": {
+        "G7": 11,
+        "R101Y": 8.5,
+        "W064": 14.5,
+        "Y83S": 72
+      },
+      "currentTruthDE": 31.09296073202036,
+      "oracleRecipe": {
+        "G36": 12.5,
+        "W064": 33.5,
+        "Y74S": 60
+      },
+      "oracleTruthDE": 7.490461254125435
+    },
+    {
+      "code": "6027",
+      "currentRecipe": {
+        "B150S": 12,
+        "W064": 64.5,
+        "Y74S": 29.5
+      },
+      "currentTruthDE": 20.698283472160682,
+      "oracleRecipe": {
+        "G36": 5.5,
+        "W064": 100.5
+      },
+      "oracleTruthDE": 7.617164612342819
+    },
+    {
+      "code": "6037",
+      "currentRecipe": {
+        "G7": 34,
+        "R101Y": 10.5,
+        "W064": 16,
+        "Y83S": 45.5
+      },
+      "currentTruthDE": 31.52464734670133,
+      "oracleRecipe": {
+        "G36": 20.5,
+        "W064": 14.5,
+        "Y74S": 71
+      },
+      "oracleTruthDE": 12.85209427859295
+    },
+    {
+      "code": "7005",
+      "currentRecipe": {
+        "B150S": 9.5,
+        "R101Y": 25,
+        "R122S": 28,
+        "W064": 43.5
+      },
+      "currentTruthDE": 21.154986686093558,
+      "oracleRecipe": {
+        "BK7H": 19,
+        "G7": 6.5,
+        "W064": 74.5,
+        "Y74S": 6
+      },
+      "oracleTruthDE": 0.7564319514401946
+    },
+    {
+      "code": "7015",
+      "currentRecipe": {
+        "BK7H": 23.5,
+        "G7": 2,
+        "R122S": 45,
+        "W064": 35.5
+      },
+      "currentTruthDE": 14.441017436002946,
+      "oracleRecipe": {
+        "G7": 44.5,
+        "R101V": 14.5,
+        "W064": 47
+      },
+      "oracleTruthDE": 0.3529853240010339
+    },
+    {
+      "code": "7031",
+      "currentRecipe": {
+        "BK7H": 16,
+        "G7": 8,
+        "V23": 27.5,
+        "W064": 54.5
+      },
+      "currentTruthDE": 10.05523747991515,
+      "oracleRecipe": {
+        "G7": 30,
+        "W064": 70.5,
+        "Y83S": 5.5
+      },
+      "oracleTruthDE": 0.5507446865501737
+    },
+    {
+      "code": "7039",
+      "currentRecipe": {
+        "BK7H": 23,
+        "R101Y": 3.5,
+        "W064": 52,
+        "Y42S": 27.5
+      },
+      "currentTruthDE": 3.3892873926062532,
+      "oracleRecipe": {
+        "BK7H": 28.5,
+        "W064": 63,
+        "Y42S": 7.5,
+        "Y83S": 7
+      },
+      "oracleTruthDE": 0.4138735572726883
+    },
+    {
+      "code": "7048",
+      "currentRecipe": {
+        "073": 43,
+        "BK7H": 20.5,
+        "W064": 33.5,
+        "Y74S": 9
+      },
+      "currentTruthDE": 20.19446675343245,
+      "oracleRecipe": {
+        "BK7H": 16.5,
+        "W064": 83,
+        "Y83S": 6.5
+      },
+      "oracleTruthDE": 0.5871481977929838
+    },
+    {
+      "code": "8011",
+      "currentRecipe": {
+        "BK7H": 24.5,
+        "R101Y": 43.5,
+        "R122S": 7.5,
+        "R254D": 30.5
+      },
+      "currentTruthDE": 8.406867662966507,
+      "oracleRecipe": {
+        "073": 41.5,
+        "V23": 43.5,
+        "Y83S": 21
+      },
+      "oracleTruthDE": 4.800524610964727
+    },
+    {
+      "code": "8023",
+      "currentRecipe": {
+        "BK7H": 3.5,
+        "R101Y": 55.5,
+        "R254D": 25.5,
+        "Y83S": 21.5
+      },
+      "currentTruthDE": 12.607667668019838,
+      "oracleRecipe": {
+        "073": 35.5,
+        "BK7H": 9.5,
+        "Y83S": 61
+      },
+      "oracleTruthDE": 2.043886313142664
+    },
+    {
+      "code": "9004",
+      "currentRecipe": {
+        "BK7H": 106
+      },
+      "currentTruthDE": 5.747185944402677,
+      "oracleRecipe": {
+        "G7": 33.5,
+        "V23": 72.5
+      },
+      "oracleTruthDE": 5.444276860659108
+    },
+    {
+      "code": "9017",
+      "currentRecipe": {
+        "BK7H": 106
+      },
+      "currentTruthDE": 6.3345067634936925,
+      "oracleRecipe": {
+        "B150S": 4,
+        "G7": 23.5,
+        "V23": 78.5
+      },
+      "oracleTruthDE": 5.963846593582939
+    },
+    {
+      "code": "1005",
+      "currentRecipe": {
+        "R101V": 6,
+        "R101Y": 2.5,
+        "W064": 11.5,
+        "Y83S": 86
+      },
+      "currentTruthDE": 11.382989721397678,
+      "oracleRecipe": {
+        "G36": 3,
+        "Y83S": 103
+      },
+      "oracleTruthDE": 1.9883726919364142
+    },
+    {
+      "code": "1016",
+      "currentRecipe": {
+        "W064": 9.5,
+        "Y42S": 1.5,
+        "Y74S": 80.5,
+        "Y83S": 14.5
+      },
+      "currentTruthDE": 11.04294107142098,
+      "oracleRecipe": {
+        "W064": 59.5,
+        "Y74S": 46.5
+      },
+      "oracleTruthDE": 1.7487440053635792
+    },
+    {
+      "code": "1026",
+      "currentRecipe": {
+        "W064": 26,
+        "Y74S": 80
+      },
+      "currentTruthDE": 9.754354341861827,
+      "oracleRecipe": {
+        "W064": 65.5,
+        "Y74S": 40.5
+      },
+      "oracleTruthDE": 8.548507612785187
+    },
+    {
+      "code": "1037",
+      "currentRecipe": {
+        "R101V": 1,
+        "R254D": 13,
+        "W064": 14.5,
+        "Y83S": 77.5
+      },
+      "currentTruthDE": 18.39247042155937,
+      "oracleRecipe": {
+        "R122S": 2,
+        "Y83S": 104
+      },
+      "oracleTruthDE": 1.1157929886155542
+    },
+    {
+      "code": "2008",
+      "currentRecipe": {
+        "R101Y": 1.5,
+        "R254D": 42,
+        "W064": 18,
+        "Y83S": 44.5
+      },
+      "currentTruthDE": 16.784501846260717,
+      "oracleRecipe": {
+        "073": 30.5,
+        "Y42S": 16,
+        "Y83S": 59.5
+      },
+      "oracleTruthDE": 0.9295914855290938
+    },
+    {
+      "code": "3001",
+      "currentRecipe": {
+        "073": 1,
+        "R101V": 95,
+        "R101Y": 10
+      },
+      "currentTruthDE": 7.350719680590951,
+      "oracleRecipe": {
+        "073": 45.5,
+        "R254D": 53.5,
+        "V23": 7
+      },
+      "oracleTruthDE": 3.9966895037011008
+    },
+    {
+      "code": "3012",
+      "currentRecipe": {
+        "R101V": 18.5,
+        "R122S": 19.5,
+        "W064": 57.5,
+        "Y74S": 10.5
+      },
+      "currentTruthDE": 14.799584775154212,
+      "oracleRecipe": {
+        "R254D": 10,
+        "W064": 67,
+        "Y42S": 29
+      },
+      "oracleTruthDE": 2.448647639135613
+    },
+    {
+      "code": "3022",
+      "currentRecipe": {
+        "R101Y": 10,
+        "R122S": 26,
+        "R254D": 45.5,
+        "W064": 24.5
+      },
+      "currentTruthDE": 19.243503593787125,
+      "oracleRecipe": {
+        "073": 19,
+        "R101V": 19.5,
+        "W064": 67.5
+      },
+      "oracleTruthDE": 0.5652158195555025
+    },
+    {
+      "code": "4001",
+      "currentRecipe": {
+        "R101V": 8,
+        "R122S": 2,
+        "V23": 57.5,
+        "W064": 38.5
+      },
+      "currentTruthDE": 19.643865823327758,
+      "oracleRecipe": {
+        "B153S": 13,
+        "R122S": 15,
+        "W064": 78
+      },
+      "oracleTruthDE": 3.5482970429505647
+    },
+    {
+      "code": "4009",
+      "currentRecipe": {
+        "073": 40.5,
+        "V23": 25,
+        "W064": 26,
+        "Y42S": 14.5
+      },
+      "currentTruthDE": 24.471114494674755,
+      "oracleRecipe": {
+        "B153S": 7.5,
+        "R101V": 7.5,
+        "W064": 91
+      },
+      "oracleTruthDE": 1.8332972451108156
+    },
+    {
+      "code": "5004",
+      "currentRecipe": {
+        "B150S": 1.5,
+        "BK7H": 85,
+        "V23": 19.5
+      },
+      "currentTruthDE": 11.720658023969385,
+      "oracleRecipe": {
+        "B150S": 35.5,
+        "G7": 17,
+        "V23": 53.5
+      },
+      "oracleTruthDE": 9.291448888277442
+    },
+    {
+      "code": "5013",
+      "currentRecipe": {
+        "B150S": 7,
+        "BK7H": 14.5,
+        "V23": 58.5,
+        "W064": 26
+      },
+      "currentTruthDE": 16.300611781198004,
+      "oracleRecipe": {
+        "B150S": 76,
+        "G7": 24.5,
+        "V23": 5.5
+      },
+      "oracleTruthDE": 4.008789642726977
+    },
+    {
+      "code": "5022",
+      "currentRecipe": {
+        "B150S": 23.5,
+        "BK7H": 20,
+        "V23": 37.5,
+        "W064": 25
+      },
+      "currentTruthDE": 14.895736569294186,
+      "oracleRecipe": {
+        "B150S": 66,
+        "B153S": 36.5,
+        "V23": 3.5
+      },
+      "oracleTruthDE": 3.6957984296635265
+    },
+    {
+      "code": "6003",
+      "currentRecipe": {
+        "BK7H": 15,
+        "G7": 13,
+        "R101Y": 46.5,
+        "Y83S": 31.5
+      },
+      "currentTruthDE": 19.820706765713005,
+      "oracleRecipe": {
+        "G36": 44,
+        "V23": 4,
+        "Y83S": 58
+      },
+      "oracleTruthDE": 0.8983316864061377
+    },
+    {
+      "code": "6011",
+      "currentRecipe": {
+        "BK7H": 9,
+        "G7": 15,
+        "W064": 34.5,
+        "Y74S": 47.5
+      },
+      "currentTruthDE": 6.588930341404332,
+      "oracleRecipe": {
+        "G7": 18,
+        "W064": 48,
+        "Y74S": 40
+      },
+      "oracleTruthDE": 2.938391601915529
+    },
+    {
+      "code": "6019",
+      "currentRecipe": {
+        "W064": 102.5,
+        "Y74S": 3.5
+      },
+      "currentTruthDE": 11.948915860215656,
+      "oracleRecipe": {
+        "G36": 3.5,
+        "W064": 94,
+        "Y74S": 8.5
+      },
+      "oracleTruthDE": 5.4768610384689715
+    },
+    {
+      "code": "6028",
+      "currentRecipe": {
+        "B153S": 14,
+        "BK7H": 28,
+        "W064": 20.5,
+        "Y83S": 43.5
+      },
+      "currentTruthDE": 22.027157493230206,
+      "oracleRecipe": {
+        "G36": 70,
+        "Y74S": 36
+      },
+      "oracleTruthDE": 2.20823182896204
+    },
+    {
+      "code": "6038",
+      "currentRecipe": {
+        "G7": 17,
+        "R101Y": 1.5,
+        "W064": 18,
+        "Y83S": 69.5
+      },
+      "currentTruthDE": 37.241747358146505,
+      "oracleRecipe": {
+        "G36": 9,
+        "W064": 47.5,
+        "Y74S": 49.5
+      },
+      "oracleTruthDE": 16.328298244985216
+    },
+    {
+      "code": "7006",
+      "currentRecipe": {
+        "BK7H": 17.5,
+        "R101Y": 9.5,
+        "W064": 53.5,
+        "Y42S": 25.5
+      },
+      "currentTruthDE": 2.9504618801072526,
+      "oracleRecipe": {
+        "BK7H": 21.5,
+        "R101Y": 9,
+        "W064": 63.5,
+        "Y74S": 12
+      },
+      "oracleTruthDE": 0.5709969524518653
+    },
+    {
+      "code": "7016",
+      "currentRecipe": {
+        "B153S": 2,
+        "BK7H": 56,
+        "V23": 33.5,
+        "W064": 14.5
+      },
+      "currentTruthDE": 5.087006201607511,
+      "oracleRecipe": {
+        "B153S": 20.5,
+        "BK7H": 48.5,
+        "G36": 37
+      },
+      "oracleTruthDE": 0.10218033188692766
+    },
+    {
+      "code": "7032",
+      "currentRecipe": {
+        "073": 2,
+        "V23": 14,
+        "W064": 77.5,
+        "Y74S": 12.5
+      },
+      "currentTruthDE": 17.001075928048667,
+      "oracleRecipe": {
+        "G7": 4,
+        "W064": 97,
+        "Y83S": 5
+      },
+      "oracleTruthDE": 2.468957411872692
+    },
+    {
+      "code": "7040",
+      "currentRecipe": {
+        "073": 1,
+        "BK7H": 13,
+        "W064": 90,
+        "Y74S": 2
+      },
+      "currentTruthDE": 10.443228213400376,
+      "oracleRecipe": {
+        "G7": 7.5,
+        "W064": 95.5,
+        "Y83S": 3
+      },
+      "oracleTruthDE": 2.900606593268951
+    },
+    {
+      "code": "8000",
+      "currentRecipe": {
+        "BK7H": 7,
+        "R101Y": 20.5,
+        "W064": 13.5,
+        "Y83S": 65
+      },
+      "currentTruthDE": 8.092723060181473,
+      "oracleRecipe": {
+        "B150S": 12.5,
+        "Y83S": 93.5
+      },
+      "oracleTruthDE": 0.2885925363542151
+    },
+    {
+      "code": "8012",
+      "currentRecipe": {
+        "073": 1,
+        "BK7H": 26,
+        "R101V": 79
+      },
+      "currentTruthDE": 5.970367019680611,
+      "oracleRecipe": {
+        "073": 46.5,
+        "R254D": 29.5,
+        "V23": 30
+      },
+      "oracleTruthDE": 3.0468623623047133
+    },
+    {
+      "code": "8024",
+      "currentRecipe": {
+        "BK7H": 12.5,
+        "R101Y": 52.5,
+        "R254D": 28.5,
+        "Y83S": 12.5
+      },
+      "currentTruthDE": 9.276436304676654,
+      "oracleRecipe": {
+        "073": 26.5,
+        "V23": 26,
+        "Y83S": 53.5
+      },
+      "oracleTruthDE": 0.09206097680003643
+    },
+    {
+      "code": "9005",
+      "currentRecipe": {
+        "BK7H": 106
+      },
+      "currentTruthDE": 14.252098990063004,
+      "oracleRecipe": {
+        "B150S": 10,
+        "G7": 18.5,
+        "V23": 77.5
+      },
+      "oracleTruthDE": 13.872356035981808
+    },
+    {
+      "code": "9018",
+      "currentRecipe": {
+        "BK7H": 1,
+        "W064": 105
+      },
+      "currentTruthDE": 4.3081332593971595,
+      "oracleRecipe": {
+        "G7": 2,
+        "W064": 102,
+        "Y83S": 2
+      },
+      "oracleTruthDE": 3.854433385219626
+    },
+    {
+      "code": "1006",
+      "currentRecipe": {
+        "R101Y": 4.5,
+        "R254D": 8,
+        "W064": 12.5,
+        "Y83S": 81
+      },
+      "currentTruthDE": 15.838635963298113,
+      "oracleRecipe": {
+        "B153S": 1.5,
+        "Y83S": 104.5
+      },
+      "oracleTruthDE": 2.360200717000786
+    },
+    {
+      "code": "1017",
+      "currentRecipe": {
+        "R254D": 12,
+        "W064": 31,
+        "Y74S": 31.5,
+        "Y83S": 31.5
+      },
+      "currentTruthDE": 17.79566984715005,
+      "oracleRecipe": {
+        "073": 6,
+        "W064": 59,
+        "Y74S": 41
+      },
+      "oracleTruthDE": 2.598786097766719
+    },
+    {
+      "code": "1027",
+      "currentRecipe": {
+        "R101V": 11,
+        "R254D": 2,
+        "W064": 10,
+        "Y83S": 83
+      },
+      "currentTruthDE": 18.509427610323737,
+      "oracleRecipe": {
+        "G36": 7,
+        "Y83S": 99
+      },
+      "oracleTruthDE": 3.295276919095621
+    },
+    {
+      "code": "2000",
+      "currentRecipe": {
+        "R101Y": 16,
+        "R254D": 17,
+        "W064": 13,
+        "Y83S": 60
+      },
+      "currentTruthDE": 15.008298720009844,
+      "oracleRecipe": {
+        "R101V": 16,
+        "Y83S": 90
+      },
+      "oracleTruthDE": 3.4547803327295026
+    },
+    {
+      "code": "2009",
+      "currentRecipe": {
+        "R101Y": 25.5,
+        "R254D": 45,
+        "W064": 11,
+        "Y83S": 24.5
+      },
+      "currentTruthDE": 17.41344663796284,
+      "oracleRecipe": {
+        "073": 35.5,
+        "R101V": 12,
+        "Y83S": 58.5
+      },
+      "oracleTruthDE": 3.80807023699337
+    },
+    {
+      "code": "3002",
+      "currentRecipe": {
+        "073": 1,
+        "R101V": 88.5,
+        "R101Y": 16.5
+      },
+      "currentTruthDE": 7.504523779081376,
+      "oracleRecipe": {
+        "073": 49,
+        "R254D": 50,
+        "V23": 7
+      },
+      "oracleTruthDE": 4.348485269062531
+    },
+    {
+      "code": "3013",
+      "currentRecipe": {
+        "073": 1,
+        "R101V": 85,
+        "R101Y": 20
+      },
+      "currentTruthDE": 5.788784953895213,
+      "oracleRecipe": {
+        "073": 64,
+        "R254D": 33,
+        "V23": 9
+      },
+      "oracleTruthDE": 3.348384165503368
+    },
+    {
+      "code": "3024",
+      "currentRecipe": {
+        "R254D": 79.5,
+        "W064": 16,
+        "Y74S": 1.5,
+        "Y83S": 9
+      },
+      "currentTruthDE": 13.254882777236602,
+      "oracleRecipe": {
+        "073": 78,
+        "R254D": 5.5,
+        "W064": 22.5
+      },
+      "oracleTruthDE": 4.336682106995269
+    },
+    {
+      "code": "4002",
+      "currentRecipe": {
+        "R101V": 41,
+        "V23": 60.5,
+        "W064": 4.5
+      },
+      "currentTruthDE": 17.7180092485962,
+      "oracleRecipe": {
+        "073": 13.5,
+        "R122S": 62.5,
+        "W064": 30
+      },
+      "oracleTruthDE": 1.1401727834220605
+    },
+    {
+      "code": "4010",
+      "currentRecipe": {
+        "R101V": 6.5,
+        "R122S": 67,
+        "V23": 7,
+        "W064": 25.5
+      },
+      "currentTruthDE": 16.63588617723211,
+      "oracleRecipe": {
+        "R122S": 36,
+        "W064": 70
+      },
+      "oracleTruthDE": 9.605936136012808
+    },
+    {
+      "code": "5005",
+      "currentRecipe": {
+        "B150S": 51,
+        "BK7H": 5,
+        "V23": 24,
+        "W064": 26
+      },
+      "currentTruthDE": 13.28229329175596,
+      "oracleRecipe": {
+        "B150S": 36,
+        "G36": 19,
+        "W064": 51
+      },
+      "oracleTruthDE": 6.895915574745121
+    },
+    {
+      "code": "5014",
+      "currentRecipe": {
+        "G7": 12,
+        "R122S": 59.5,
+        "W064": 34.5
+      },
+      "currentTruthDE": 31.100122334893392,
+      "oracleRecipe": {
+        "B150S": 10,
+        "G36": 9.5,
+        "W064": 86.5
+      },
+      "oracleTruthDE": 1.2744761191757454
+    },
+    {
+      "code": "5023",
+      "currentRecipe": {
+        "G7": 17,
+        "R254D": 7,
+        "V23": 49.5,
+        "W064": 32.5
+      },
+      "currentTruthDE": 20.795187521531165,
+      "oracleRecipe": {
+        "B150S": 19,
+        "G36": 13.5,
+        "W064": 73.5
+      },
+      "oracleTruthDE": 3.122822024641266
+    },
+    {
+      "code": "6004",
+      "currentRecipe": {
+        "BK7H": 35.5,
+        "G7": 48,
+        "W064": 17,
+        "Y74S": 5.5
+      },
+      "currentTruthDE": 14.831356660391192,
+      "oracleRecipe": {
+        "G36": 106
+      },
+      "oracleTruthDE": 6.1302505708866475
+    },
+    {
+      "code": "6012",
+      "currentRecipe": {
+        "B153S": 17.5,
+        "BK7H": 62.5,
+        "R101V": 20,
+        "R101Y": 6
+      },
+      "currentTruthDE": 13.885383897598402,
+      "oracleRecipe": {
+        "G36": 70.5,
+        "V23": 35.5
+      },
+      "oracleTruthDE": 1.6268742762081911
+    },
+    {
+      "code": "6020",
+      "currentRecipe": {
+        "BK7H": 40,
+        "G7": 3.5,
+        "W064": 20.5,
+        "Y74S": 42
+      },
+      "currentTruthDE": 10.696242567817496,
+      "oracleRecipe": {
+        "G36": 62,
+        "V23": 7,
+        "Y83S": 37
+      },
+      "oracleTruthDE": 4.836916871006742
+    },
+    {
+      "code": "6029",
+      "currentRecipe": {
+        "G7": 53.5,
+        "R101Y": 27.5,
+        "W064": 9,
+        "Y83S": 16
+      },
+      "currentTruthDE": 29.00134050203854,
+      "oracleRecipe": {
+        "G36": 38.5,
+        "W064": 7,
+        "Y74S": 60.5
+      },
+      "oracleTruthDE": 10.2426491096748
+    },
+    {
+      "code": "6039",
+      "currentRecipe": {
+        "G7": 2,
+        "W064": 29,
+        "Y42S": 75
+      },
+      "currentTruthDE": 21.633644460743863,
+      "oracleRecipe": {
+        "G36": 3.5,
+        "W064": 39.5,
+        "Y74S": 63
+      },
+      "oracleTruthDE": 5.1568993254465125
+    },
+    {
+      "code": "7008",
+      "currentRecipe": {
+        "BK7H": 12,
+        "R101V": 15.5,
+        "W064": 14,
+        "Y83S": 64.5
+      },
+      "currentTruthDE": 8.650669881649423,
+      "oracleRecipe": {
+        "BK7H": 27,
+        "W064": 7.5,
+        "Y83S": 71.5
+      },
+      "oracleTruthDE": 0.1652748398295556
+    },
+    {
+      "code": "7021",
+      "currentRecipe": {
+        "B150S": 1.5,
+        "BK7H": 85.5,
+        "V23": 19
+      },
+      "currentTruthDE": 4.393153456805985,
+      "oracleRecipe": {
+        "G36": 6,
+        "G7": 44.5,
+        "V23": 55.5
+      },
+      "oracleTruthDE": 3.484423877275897
+    },
+    {
+      "code": "7033",
+      "currentRecipe": {
+        "BK7H": 11.5,
+        "W064": 79,
+        "Y74S": 13.5,
+        "Y83S": 2
+      },
+      "currentTruthDE": 6.039441392281663,
+      "oracleRecipe": {
+        "G7": 13,
+        "W064": 69.5,
+        "Y42S": 23.5
+      },
+      "oracleTruthDE": 1.0174346017905542
+    },
+    {
+      "code": "7042",
+      "currentRecipe": {
+        "BK7H": 8,
+        "W064": 98
+      },
+      "currentTruthDE": 3.291996802577675,
+      "oracleRecipe": {
+        "G7": 9,
+        "W064": 92,
+        "Y83S": 5
+      },
+      "oracleTruthDE": 1.6457777947361252
+    },
+    {
+      "code": "8001",
+      "currentRecipe": {
+        "BK7H": 3.5,
+        "R101Y": 51.5,
+        "W064": 1.5,
+        "Y83S": 49.5
+      },
+      "currentTruthDE": 9.164077272856956,
+      "oracleRecipe": {
+        "073": 18.5,
+        "G36": 9.5,
+        "Y83S": 78
+      },
+      "oracleTruthDE": 1.9327207610739594
+    },
+    {
+      "code": "8014",
+      "currentRecipe": {
+        "BK7H": 45.5,
+        "R101Y": 60.5
+      },
+      "currentTruthDE": 6.943238449968617,
+      "oracleRecipe": {
+        "073": 20,
+        "V23": 60,
+        "Y83S": 26
+      },
+      "oracleTruthDE": 5.4891201867623955
+    },
+    {
+      "code": "8025",
+      "currentRecipe": {
+        "BK7H": 17,
+        "R101V": 42,
+        "Y42S": 38,
+        "Y83S": 9
+      },
+      "currentTruthDE": 3.421277293266721,
+      "oracleRecipe": {
+        "G7": 17,
+        "R101V": 30.5,
+        "Y42S": 58.5
+      },
+      "oracleTruthDE": 0.29670670209116434
+    },
+    {
+      "code": "9006",
+      "currentRecipe": {
+        "073": 5.5,
+        "BK7H": 11,
+        "W064": 83,
+        "Y42S": 6.5
+      },
+      "currentTruthDE": 14.993887009700753,
+      "oracleRecipe": {
+        "BK7H": 6,
+        "W064": 100
+      },
+      "oracleTruthDE": 0.5882346416367147
+    },
+    {
+      "code": "9022",
+      "currentRecipe": {
+        "073": 9.5,
+        "BK7H": 22,
+        "W064": 58.5,
+        "Y42S": 16
+      },
+      "currentTruthDE": 15.368877227908204,
+      "oracleRecipe": {
+        "B150S": 9.5,
+        "W064": 70.5,
+        "Y42S": 26
+      },
+      "oracleTruthDE": 0.9645738183579272
+    },
+    {
+      "code": "1007",
+      "currentRecipe": {
+        "R101Y": 3.5,
+        "R254D": 12.5,
+        "W064": 14,
+        "Y83S": 76
+      },
+      "currentTruthDE": 17.480760416722593,
+      "oracleRecipe": {
+        "R122S": 3,
+        "Y83S": 103
+      },
+      "oracleTruthDE": 1.8261978797485374
+    },
+    {
+      "code": "1018",
+      "currentRecipe": {
+        "R254D": 2,
+        "W064": 17,
+        "Y74S": 2,
+        "Y83S": 85
+      },
+      "currentTruthDE": 19.59773809504895,
+      "oracleRecipe": {
+        "W064": 45.5,
+        "Y74S": 51,
+        "Y83S": 9.5
+      },
+      "oracleTruthDE": 1.714063216027834
+    },
+    {
+      "code": "1028",
+      "currentRecipe": {
+        "R254D": 12,
+        "W064": 14.5,
+        "Y83S": 79.5
+      },
+      "currentTruthDE": 18.85389192514732,
+      "oracleRecipe": {
+        "R101V": 2,
+        "Y83S": 104
+      },
+      "oracleTruthDE": 0.5448536999991115
+    },
+    {
+      "code": "2001",
+      "currentRecipe": {
+        "073": 2,
+        "R101Y": 48,
+        "Y83S": 56
+      },
+      "currentTruthDE": 4.982793193853787,
+      "oracleRecipe": {
+        "073": 102,
+        "BK7H": 4
+      },
+      "oracleTruthDE": 3.2360909112566314
+    },
+    {
+      "code": "2010",
+      "currentRecipe": {
+        "R101Y": 30,
+        "R254D": 44.5,
+        "W064": 9,
+        "Y83S": 22.5
+      },
+      "currentTruthDE": 15.896625142347641,
+      "oracleRecipe": {
+        "073": 22.5,
+        "R101V": 20.5,
+        "Y83S": 63
+      },
+      "oracleTruthDE": 1.217929218699609
+    },
+    {
+      "code": "3003",
+      "currentRecipe": {
+        "073": 1,
+        "R101V": 105
+      },
+      "currentTruthDE": 10.146926716598506,
+      "oracleRecipe": {
+        "R254D": 97,
+        "V23": 9
+      },
+      "oracleTruthDE": 5.378443559949961
+    },
+    {
+      "code": "3014",
+      "currentRecipe": {
+        "R101Y": 6.5,
+        "R122S": 51,
+        "R254D": 11,
+        "W064": 37.5
+      },
+      "currentTruthDE": 20.46932892328455,
+      "oracleRecipe": {
+        "073": 10.5,
+        "R122S": 10.5,
+        "W064": 85
+      },
+      "oracleTruthDE": 1.9830554579808544
+    },
+    {
+      "code": "3026",
+      "currentRecipe": {
+        "R254D": 78.5,
+        "W064": 16,
+        "Y74S": 1.5,
+        "Y83S": 10
+      },
+      "currentTruthDE": 13.453760973829464,
+      "oracleRecipe": {
+        "073": 87,
+        "R254D": 4.5,
+        "W064": 14.5
+      },
+      "oracleTruthDE": 4.358900422462445
+    },
+    {
+      "code": "4003",
+      "currentRecipe": {
+        "R101V": 3,
+        "R122S": 73.5,
+        "R254D": 2,
+        "W064": 27.5
+      },
+      "currentTruthDE": 19.355138062721153,
+      "oracleRecipe": {
+        "R122S": 21,
+        "W064": 85
+      },
+      "oracleTruthDE": 8.037676428275052
+    },
+    {
+      "code": "4011",
+      "currentRecipe": {
+        "BK7H": 6,
+        "R254D": 2,
+        "V23": 52.5,
+        "W064": 45.5
+      },
+      "currentTruthDE": 18.235105834370195,
+      "oracleRecipe": {
+        "B153S": 22.5,
+        "R122S": 5.5,
+        "W064": 78
+      },
+      "oracleTruthDE": 0.8274236046094061
+    },
+    {
+      "code": "5007",
+      "currentRecipe": {
+        "B150S": 43,
+        "B153S": 15.5,
+        "BK7H": 4.5,
+        "W064": 43
+      },
+      "currentTruthDE": 15.71292930726977,
+      "oracleRecipe": {
+        "B150S": 16.5,
+        "G36": 16,
+        "W064": 73.5
+      },
+      "oracleTruthDE": 4.938995551360544
+    },
+    {
+      "code": "5015",
+      "currentRecipe": {
+        "073": 9,
+        "B150S": 46.5,
+        "V23": 23.5,
+        "W064": 27
+      },
+      "currentTruthDE": 27.106210261709194,
+      "oracleRecipe": {
+        "B150S": 11.5,
+        "G36": 11.5,
+        "W064": 83
+      },
+      "oracleTruthDE": 9.886565213861367
+    },
+    {
+      "code": "5024",
+      "currentRecipe": {
+        "G7": 11.5,
+        "R122S": 42.5,
+        "W064": 52
+      },
+      "currentTruthDE": 40.517265410668706,
+      "oracleRecipe": {
+        "B150S": 5.5,
+        "G36": 7.5,
+        "W064": 93
+      },
+      "oracleTruthDE": 5.5491215191984935
+    },
+    {
+      "code": "6005",
+      "currentRecipe": {
+        "BK7H": 31.5,
+        "G7": 39,
+        "W064": 17,
+        "Y74S": 18.5
+      },
+      "currentTruthDE": 15.714734990541116,
+      "oracleRecipe": {
+        "G36": 89.5,
+        "Y74S": 16.5
+      },
+      "oracleTruthDE": 6.980670224026852
+    },
+    {
+      "code": "6013",
+      "currentRecipe": {
+        "073": 41,
+        "BK7H": 19,
+        "W064": 18.5,
+        "Y83S": 27.5
+      },
+      "currentTruthDE": 21.20110759701615,
+      "oracleRecipe": {
+        "G7": 14,
+        "W064": 37,
+        "Y42S": 55
+      },
+      "oracleTruthDE": 1.1500926040378798
+    },
+    {
+      "code": "6021",
+      "currentRecipe": {
+        "G7": 8,
+        "R254D": 21.5,
+        "W064": 46,
+        "Y42S": 30.5
+      },
+      "currentTruthDE": 34.45211137946481,
+      "oracleRecipe": {
+        "G7": 9,
+        "W064": 78.5,
+        "Y74S": 18.5
+      },
+      "oracleTruthDE": 2.960272521827396
+    },
+    {
+      "code": "6032",
+      "currentRecipe": {
+        "G7": 66.5,
+        "R101V": 16.5,
+        "W064": 12,
+        "Y83S": 11
+      },
+      "currentTruthDE": 28.337360326280674,
+      "oracleRecipe": {
+        "G36": 26.5,
+        "W064": 46.5,
+        "Y74S": 33
+      },
+      "oracleTruthDE": 9.759093985053596
+    },
+    {
+      "code": "7000",
+      "currentRecipe": {
+        "BK7H": 11,
+        "W064": 95
+      },
+      "currentTruthDE": 7.016749925840498,
+      "oracleRecipe": {
+        "B150S": 11.5,
+        "W064": 80.5,
+        "Y74S": 14
+      },
+      "oracleTruthDE": 0.9582566367894392
+    },
+    {
+      "code": "7009",
+      "currentRecipe": {
+        "B150S": 16.5,
+        "R101Y": 45.5,
+        "R122S": 20,
+        "W064": 24
+      },
+      "currentTruthDE": 21.38550380911168,
+      "oracleRecipe": {
+        "BK7H": 23.5,
+        "G7": 13,
+        "W064": 51.5,
+        "Y74S": 18
+      },
+      "oracleTruthDE": 0.2246237418622542
+    },
+    {
+      "code": "7022",
+      "currentRecipe": {
+        "BK7H": 45.5,
+        "R122S": 9.5,
+        "W064": 33.5,
+        "Y83S": 17.5
+      },
+      "currentTruthDE": 5.218714145223635,
+      "oracleRecipe": {
+        "G36": 42,
+        "R122S": 34.5,
+        "Y74S": 29.5
+      },
+      "oracleTruthDE": 0.07188820131029694
+    },
+    {
+      "code": "7034",
+      "currentRecipe": {
+        "073": 24.5,
+        "BK7H": 14.5,
+        "Y42S": 60.5,
+        "Y83S": 6.5
+      },
+      "currentTruthDE": 20.284731818271815,
+      "oracleRecipe": {
+        "BK7H": 10,
+        "W064": 71,
+        "Y42S": 25
+      },
+      "oracleTruthDE": 0.7884849601767566
+    },
+    {
+      "code": "7043",
+      "currentRecipe": {
+        "B150S": 21,
+        "R101V": 26,
+        "R101Y": 30.5,
+        "V23": 28.5
+      },
+      "currentTruthDE": 13.197079824078594,
+      "oracleRecipe": {
+        "BK7H": 37,
+        "G7": 17,
+        "W064": 41,
+        "Y74S": 11
+      },
+      "oracleTruthDE": 0.12308278359639845
+    },
+    {
+      "code": "8002",
+      "currentRecipe": {
+        "BK7H": 8.5,
+        "R101Y": 56.5,
+        "R254D": 15.5,
+        "V23": 25.5
+      },
+      "currentTruthDE": 7.379241208666357,
+      "oracleRecipe": {
+        "G7": 13.5,
+        "R101V": 65.5,
+        "Y74S": 27
+      },
+      "oracleTruthDE": 0.21028535160856007
+    },
+    {
+      "code": "8015",
+      "currentRecipe": {
+        "073": 4,
+        "BK7H": 28.5,
+        "R101V": 73.5
+      },
+      "currentTruthDE": 6.771081366239563,
+      "oracleRecipe": {
+        "073": 45,
+        "R254D": 27,
+        "V23": 34
+      },
+      "oracleTruthDE": 4.4937446598232915
+    },
+    {
+      "code": "8028",
+      "currentRecipe": {
+        "BK7H": 38.5,
+        "R101V": 5.5,
+        "R101Y": 59,
+        "Y83S": 3
+      },
+      "currentTruthDE": 6.3260126274023305,
+      "oracleRecipe": {
+        "073": 20,
+        "V23": 54.5,
+        "Y83S": 31.5
+      },
+      "oracleTruthDE": 4.350173279482465
+    },
+    {
+      "code": "9007",
+      "currentRecipe": {
+        "073": 17.5,
+        "BK7H": 20,
+        "W064": 49,
+        "Y42S": 19.5
+      },
+      "currentTruthDE": 18.18552198645881,
+      "oracleRecipe": {
+        "BK7H": 13.5,
+        "W064": 88,
+        "Y42S": 4.5
+      },
+      "oracleTruthDE": 0.8503807686201027
+    },
+    {
+      "code": "9023",
+      "currentRecipe": {
+        "BK7H": 14.5,
+        "W064": 91.5
+      },
+      "currentTruthDE": 3.2725203814478103,
+      "oracleRecipe": {
+        "G36": 5.5,
+        "V23": 13.5,
+        "W064": 87
+      },
+      "oracleTruthDE": 1.1036701760351646
+    }
+  ]
+}
